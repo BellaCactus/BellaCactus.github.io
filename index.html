@@ -5,8 +5,8 @@
   <title>bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- favicon (put favicon.png in repo root) -->
-  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- favicon (tab icon) -->
+  <link rel="icon" type="image/png" href="twi looking.png">
 
   <style>
     :root{
@@ -25,9 +25,6 @@
 
       --shadow: 0 20px 70px rgba(0,0,0,0.55);
       --radius:16px;
-
-      --glass: rgba(255,255,255,0.04);
-      --glass2: rgba(255,255,255,0.02);
     }
 
     *{box-sizing:border-box;}
@@ -45,9 +42,6 @@
       overflow-x:hidden;
     }
 
-    /* hide page until intro ends */
-    body:not(.ready) .siteWrap { visibility:hidden; }
-
     a{color:var(--pink); text-decoration:none;}
     a:hover{text-decoration:underline;}
 
@@ -56,22 +50,7 @@
       margin:0 auto;
       padding:44px 16px 110px;
       position:relative;
-    }
-
-    /* fancy animated gradient text (white <-> pink) */
-    .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
-      background-size: 260% 100%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation: shimmer 4.8s ease-in-out infinite;
-    }
-
-    @keyframes shimmer{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
+      z-index:5;
     }
 
     /* top header */
@@ -101,16 +80,6 @@
       box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
-      flex:0 0 auto;
-    }
-
-    .badge img{
-      width:44px;
-      height:44px;
-      border-radius:12px;
-      object-fit:cover;
-      image-rendering:auto;
-      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
     }
 
     .badge::after{
@@ -121,6 +90,15 @@
       transform: rotate(25deg);
       opacity:0.8;
       pointer-events:none;
+    }
+
+    .badge img{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      object-fit:cover;
+      image-rendering:auto;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
     }
 
     .titlebox{min-width:0;}
@@ -144,7 +122,6 @@
       gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
-      align-items:center;
     }
 
     .chip{
@@ -155,42 +132,32 @@
       background: rgba(255,255,255,0.04);
       color:var(--muted);
       backdrop-filter: blur(6px);
-      display:flex;
-      align-items:center;
-      gap:8px;
     }
+
     .chip strong{color:var(--text); font-weight:600;}
     .chip .dot{
       display:inline-block;
       width:6px;height:6px;
       border-radius:999px;
+      margin-right:6px;
       background:var(--pink);
       box-shadow:0 0 12px rgba(255,120,200,0.6);
     }
 
-    /* tiny music visualizer */
-    .musicBars{
-      display:inline-flex;
-      align-items:flex-end;
-      gap:3px;
-      height:16px;
+    /* animated gradient text (white <-> pink) */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
     }
-    .musicBars span{
-      display:inline-block;
-      width:3px;
-      height:6px;
-      background:var(--pink);
-      border-radius:999px;
-      opacity:0.85;
-      animation: bounce 1s infinite ease-in-out;
-      box-shadow:0 0 12px rgba(255,120,200,0.35);
-    }
-    .musicBars span:nth-child(2){animation-delay:.1s}
-    .musicBars span:nth-child(3){animation-delay:.2s}
-    .musicBars span:nth-child(4){animation-delay:.3s}
-    @keyframes bounce{
-      0%,100%{height:6px}
-      50%{height:16px}
+
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
     }
 
     /* layout panels */
@@ -206,15 +173,18 @@
     }
 
     .panel{
-      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
+      z-index:6;
     }
 
-    .panelInner{ padding:16px 16px; }
+    .panelInner{
+      padding:16px 16px;
+    }
 
     .panelTitle{
       display:flex;
@@ -238,39 +208,6 @@
       color:var(--muted);
     }
 
-    /* buttons */
-    .btnRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color:var(--text);
-      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
-      text-decoration:none;
-      cursor:pointer;
-      user-select:none;
-    }
-    .btn:hover{
-      text-decoration:none;
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.35);
-      background: rgba(255,120,200,0.10);
-    }
-    .btn .k{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:0.8rem;
-      color:var(--pink2);
-    }
-
     /* terminal */
     .terminal{
       background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
@@ -278,6 +215,8 @@
       border-top:1px solid rgba(255,255,255,0.05);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       padding:14px 16px;
+      min-height:170px;
+      border-radius: 0 0 var(--radius) var(--radius);
     }
 
     .termLine{
@@ -287,25 +226,10 @@
       align-items:flex-start;
       white-space:pre-wrap;
       word-break:break-word;
-      font-size:12.8px;
     }
 
     .prompt{color:var(--pink2);}
     .cmd{color:var(--text);}
-
-    /* terminal output area fixed so it never grows the page */
-    .termOutWrap{
-      margin-top:10px;
-      border:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.25);
-      border-radius:14px;
-      padding:10px 10px;
-      max-height:220px;
-      overflow:hidden; /* IMPORTANT: prevents page growth */
-    }
-    #termOut{
-      display:block;
-    }
 
     .cursor{
       display:inline-block;
@@ -360,32 +284,36 @@
       border:1px solid rgba(255,255,255,0.08);
     }
 
-    /* “taped” images sprinkled around (clickable, not a gallery) */
-    .taped{
-      position:absolute;
-      z-index:2;
-      opacity:0.85;
-      filter: drop-shadow(0 18px 34px rgba(0,0,0,0.65));
-      transition: transform .18s ease, opacity .18s ease;
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
-    .taped:hover{ opacity:1; transform: translateY(-2px) rotate(var(--r, 0deg)); }
-    .taped img{
-      display:block;
-      max-width:220px;
-      border-radius:14px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
       border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
     }
-    .taped.small img{ max-width:160px; }
-
-    /* positions (tweak anytime) */
-    .t1{ left:-28px; top:120px; --r:-4deg; transform: rotate(-4deg); }
-    .t2{ right:-28px; top:260px; --r:3deg; transform: rotate(3deg); }
-    .t3{ left:-18px; top:740px; --r:2deg; transform: rotate(2deg); }
-    .t4{ right:-26px; top:980px; --r:-2deg; transform: rotate(-2deg); }
-
-    @media (max-width: 980px){
-      .taped{ display:none; } /* hide wall posters on small screens */
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn .k{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:0.8rem;
+      color:var(--pink2);
     }
 
     /* floating oneko */
@@ -393,13 +321,13 @@
       position:fixed;
       bottom:12px;
       right:12px;
+      pointer-events:auto;
       opacity:0.95;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      transform: translateZ(0);
       animation: floaty 3.6s ease-in-out infinite;
-      z-index:10;
-      pointer-events:auto;
+      z-index:50;
       cursor:pointer;
-      user-select:none;
     }
     @keyframes floaty{
       0%{transform: translateY(0);}
@@ -409,6 +337,48 @@
     .oneko img{
       width:52px;
       image-rendering:pixelated;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* sticker layer */
+    .stickerLayer{
+      position:fixed;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .sticker{
+      position:absolute;
+      border-radius:16px;
+      overflow:hidden;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,0.65));
+      opacity:0.22;              /* default dim */
+      transform-origin:center;
+      pointer-events:auto;       /* can hover */
+      transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
+      cursor: pointer;
+      user-select:none;
+      -webkit-user-drag:none;
+      will-change: transform, opacity;
+    }
+
+    /* when hover: vanish so text becomes readable */
+    .sticker:hover{
+      opacity:0 !important;      /* disappear */
+      filter:none;
+    }
+
+    .sticker img{
+      display:block;
+      width:100%;
+      height:auto;
+      border-radius:16px;
+      user-select:none;
+      -webkit-user-drag:none;
+      image-rendering:auto;
     }
 
     /* footer */
@@ -419,511 +389,262 @@
       font-size:0.86rem;
     }
 
-    /* INTRO OVERLAY */
-    .intro{
-      position:fixed;
-      inset:0;
-      background:
-        radial-gradient(900px 600px at 30% 20%, rgba(255,120,200,0.20), transparent 60%),
-        radial-gradient(900px 600px at 80% 70%, rgba(255,179,230,0.12), transparent 60%),
-        linear-gradient(180deg, #050505, #090909);
+    /* tiny music visualizer */
+    .musicRow{
       display:flex;
       align-items:center;
-      justify-content:center;
-      z-index:9999;
-      opacity:1;
-      transition: opacity 1.2s ease;
+      gap:10px;
+      flex-wrap:wrap;
     }
-    .intro.fadeOut{
-      opacity:0;
-      pointer-events:none;
-    }
-    .introCard{
-      width:min(880px, 92vw);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.55);
-      box-shadow: 0 30px 120px rgba(0,0,0,0.65);
-      overflow:hidden;
-      position:relative;
-    }
-    .introTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.35);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px;
-      color:rgba(255,255,255,0.85);
-    }
-    .introTop .left{
-      display:flex; align-items:center; gap:10px;
-    }
-    .pill{
+    .viz{
       display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
+      align-items:flex-end;
+      gap:3px;
+      height:14px;
+      padding:6px 8px;
+      border-radius:12px;
       border:1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.05);
-      color:rgba(255,255,255,0.82);
     }
-    .introBody{
-      padding:14px;
-      display:grid;
-      grid-template-columns: 1.3fr 0.7fr;
-      gap:12px;
-      align-items:stretch;
+    .bar{
+      width:3px;
+      height:6px;
+      border-radius:999px;
+      background: var(--pink2);
+      opacity:0.9;
+      animation: bop 0.9s ease-in-out infinite;
     }
-    @media (max-width: 860px){
-      .introBody{ grid-template-columns: 1fr; }
+    .bar:nth-child(2){animation-delay:0.1s}
+    .bar:nth-child(3){animation-delay:0.2s}
+    .bar:nth-child(4){animation-delay:0.3s}
+    .bar:nth-child(5){animation-delay:0.4s}
+    @keyframes bop{
+      0%,100%{height:4px; opacity:0.6}
+      50%{height:14px; opacity:1}
     }
-    .introVideo{
-      border-radius:14px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,0.10);
-      background:#000;
-      position:relative;
-      min-height:260px;
-    }
-    .introVideo video{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit:cover;
-    }
-    .introAscii{
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.35);
-      padding:12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:12px;
-      line-height:1.25;
-      color:rgba(255,255,255,0.9);
-      overflow:hidden;
-      position:relative;
-    }
-    .introAscii .pink{ color:var(--pink2); text-shadow:0 0 12px rgba(255,120,200,0.35); }
-    .introHint{
-      margin-top:10px;
-      font-size:12px;
-      color:rgba(255,255,255,0.7);
+    .paused .bar{
+      animation:none;
+      height:4px;
+      opacity:0.35;
     }
   </style>
 </head>
 
 <body>
-  <!-- INTRO (startup animation) -->
-  <div class="intro" id="intro">
-    <div class="introCard">
-      <div class="introTop">
-        <div class="left">
-          <span class="pill"><span class="dot" style="width:6px;height:6px;border-radius:999px;background:var(--pink);display:inline-block;"></span> booting…</span>
-          <span class="pill">press <span class="pulseText">esc</span> to skip</span>
+  <div class="stickerLayer" id="stickerLayer" aria-hidden="true"></div>
+
+  <div class="wrap" id="pageWrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <!-- put your twi icon filename here -->
+          <img src="twi looking.png" alt="icon">
         </div>
-        <div class="pill">
-          <span class="musicBars" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
-          </span>
-          <span id="trackName">soundtrack: loading</span>
+        <div class="titlebox">
+          <h1 class="pulseText">bella cactus</h1>
+          <div class="sub">reverse engineering + coding + servers + technical minecraft + whatever brain buff i rolled this week :3</div>
         </div>
       </div>
 
-      <div class="introBody">
-        <div class="introVideo">
-          <!-- put your intro mp4 in repo root -->
-          <video id="introVideo" autoplay muted playsinline>
-            <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4">
-          </video>
-        </div>
-
-        <div class="introAscii" aria-label="boot ascii">
-<pre style="margin:0;white-space:pre;">
-<span class="pink">bella@cactus</span>:~$ init
-[ ok ] loading vibes
-[ ok ] applying black/white/pink
-[ ok ] starting terminal daemon
-[ ok ] mounting projects
-[ ok ] spawning oneko (optional)
-<span class="pink">bella@cactus</span>:~$ run site
-</pre>
-          <div class="introHint">if the video fails to load, it’ll still continue.</div>
-        </div>
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
+        <div class="chip">timezone: <strong>nz</strong></div>
+        <div class="chip">last update: <strong id="date"></strong></div>
       </div>
     </div>
-  </div>
 
-  <!-- SITE -->
-  <div class="siteWrap">
-    <div class="wrap">
-
-      <!-- “wall” images integrated around the layout (click to open) -->
-      <!-- these filenames must match whatever you uploaded -->
-      <a class="taped t1" href="ponies in bed.jpg" target="_blank" rel="noreferrer"><img src="ponies in bed.jpg" alt=""></a>
-      <a class="taped t2" href="twi and trixy.jpg" target="_blank" rel="noreferrer"><img src="twi and trixy.jpg" alt=""></a>
-      <a class="taped taped small t3" href="twi looking.png" target="_blank" rel="noreferrer"><img src="twi looking.png" alt=""></a>
-      <a class="taped t4" href="yuri meme.png" target="_blank" rel="noreferrer"><img src="yuri meme.png" alt=""></a>
-
-      <div class="top">
-        <div class="brand">
-          <div class="badge" aria-hidden="true">
-            <!-- make bc badge be the twi-looking img -->
-            <img id="badgeImg" src="twi looking.png" alt="bc">
-          </div>
-          <div class="titlebox">
-            <h1 class="pulseText">bella cactus</h1>
-            <div class="sub">reverse engineering + coding + servers + technical minecraft + whatever brain buff i rolled this week :3</div>
-          </div>
-        </div>
-
-        <div class="chips">
-          <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
-          <div class="chip">timezone: <strong>nz</strong></div>
-          <div class="chip">last update: <strong id="date"></strong></div>
-        </div>
-      </div>
-
-      <div class="grid">
-        <!-- left main -->
-        <section class="panel">
-          <div class="panelTitle">
-            <h2>links</h2>
-            <div class="small">
-              <span class="musicBars" aria-hidden="true" title="soundtrack">
-                <span></span><span></span><span></span><span></span>
-              </span>
-              <span style="margin-left:8px;" id="nowPlaying">soundtrack: loading</span>
-              &nbsp;•&nbsp;
-              <button class="btn" id="pauseBtn" type="button" style="padding:6px 10px;border-radius:10px;">
-                <span class="k">pause</span>
-              </button>
-              <button class="btn" id="rerollBtn" type="button" style="padding:6px 10px;border-radius:10px;">
-                <span class="k">reroll</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="panelInner">
-            <div class="btnRow">
-              <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
-                <span class="k">git</span> bella-limiter
-              </a>
-              <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
-                <span class="k">yt</span> @BellaCactusYT
-              </a>
-              <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer">
-                <span class="k">yt</span> videos
-              </a>
-            </div>
-
-            <div class="terminal" aria-label="terminal">
-              <div class="termLine">
-                <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
-                <span class="cmd" id="typed"></span><span class="cursor"></span>
-              </div>
-
-              <!-- output is capped so the page never grows -->
-              <div class="termOutWrap">
-                <div id="termOut"></div>
-              </div>
-
-              <div class="asciiBox">
-                <pre class="ascii" id="ascii"></pre>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- right sidebar -->
-        <aside class="panel">
-          <div class="panelTitle">
-            <h2>about</h2>
-            <div class="small pulseText">hi :3</div>
-          </div>
-          <div class="panelInner">
-            <p>
-              hey, i’m <span class="pulseText">bella</span> (aka bowen / bellacactus).
-              this site is basically a dump of everything my brain locks onto.
-            </p>
-
-            <p class="small" style="margin-top:-6px;">
-              reverse engineering, coding, software/hardware, servers, and pulling stuff apart to see how it ticks.
-              configs at 3am are normal.
-            </p>
-
-            <ul class="clean">
-              <li>
-                <strong class="pulseText">games</strong>
-                <span class="tag">destiny 2</span>
-                <span class="tag">geometry dash</span>
-                <span class="tag">minecraft (technical)</span>
-              </li>
-              <li>
-                <strong class="pulseText">studying</strong>
-                <span class="tag">level 6</span>
-                <span class="tag">computing</span>
-              </li>
-              <li>
-                <strong class="pulseText">passions</strong>
-                <span class="tag">reverse eng</span>
-                <span class="tag">tools</span>
-                <span class="tag">automation</span>
-                <span class="tag">servers</span>
-              </li>
-            </ul>
-
-            <div class="btnRow" style="margin-top:14px;">
-              <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
-              <a class="btn" href="#videos"><span class="k">cat</span> youtube</a>
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      <section class="panel" id="projects" style="margin-top:14px;">
+    <div class="grid" id="links">
+      <!-- left main -->
+      <section class="panel">
         <div class="panelTitle">
-          <h2>projects</h2>
-          <div class="small">stuff i’m working on / polishing</div>
+          <h2>links</h2>
+          <div class="small musicRow">
+            <span class="pulseText" id="trackName">soundtrack: (none)</span>
+            <span class="viz" id="viz"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+            <a class="btn" id="pauseBtn"><span class="k">pause</span></a>
+            <a class="btn" id="rerollBtn"><span class="k">reroll</span></a>
+          </div>
         </div>
         <div class="panelInner">
-          <ul class="clean">
-            <li>
-              <strong class="pulseText">bella limiter</strong>
-              <span class="tag">wpf overlay</span>
-              <span class="tag">network-y</span>
-              <div class="small" style="margin-top:6px;">
-                repo: <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
-              </div>
-            </li>
+          <div class="btnRow">
+            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+              <span class="k">git</span> bella-limiter
+            </a>
+            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> @BellaCactusYT
+            </a>
+            <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> videos
+            </a>
+          </div>
 
-            <li>
-              <strong class="pulseText">site</strong>
-              <span class="tag">github pages</span>
-              <span class="tag">terminal vibe</span>
-              <div class="small" style="margin-top:6px;">
-                this is the “good enough” front page. more pages coming when you drop them in.
-              </div>
-            </li>
+          <div class="terminal" aria-label="terminal">
+            <div class="termLine">
+              <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+              <span class="cmd" id="typed"></span><span class="cursor"></span>
+            </div>
+            <div id="termOut"></div>
 
-            <li>
-              <strong class="pulseText">future</strong>
-              <span class="tag">writeups</span>
-              <span class="tag">tools</span>
-              <span class="tag">server docs</span>
-              <div class="small" style="margin-top:6px;">
-                maybe a writeups section when motivation respawns.
-              </div>
-            </li>
-          </ul>
+            <div class="asciiBox">
+<pre class="ascii" id="ascii"><span class="pink"> /\_/\</span>
+( o.o )   bella@cactus
+ > ^ <    links + projects + chaos</pre>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="panel" id="videos" style="margin-top:14px;">
+      <!-- right sidebar -->
+      <aside class="panel">
         <div class="panelTitle">
-          <h2>youtube</h2>
-          <div class="small">clips / experiments / random stuff</div>
+          <h2>about</h2>
+          <div class="small pulseText">hi :3</div>
         </div>
         <div class="panelInner">
           <p>
-            i upload on <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="pulseText">@BellaCactusYT</span></a>.
-            mostly gaming, experiments, and whatever i’m messing with.
+            hey, i’m <span class="pulseText">bella</span> (aka bowen / bellacactus).
+            this site is basically a dump of everything my brain latches onto.
+          </p>
+          <p class="small">
+            reverse engineering, coding, software/hardware, servers, and pulling stuff apart
+            until the configs at 3am are normal.
           </p>
 
-          <div class="btnRow">
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer"><span class="k">yt</span> videos</a>
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer"><span class="k">yt</span> shorts</a>
+          <ul class="clean">
+            <li>
+              <strong class="pulseText">games</strong>
+              <span class="tag">destiny 2</span>
+              <span class="tag">geometry dash</span>
+              <span class="tag">minecraft (technical)</span>
+            </li>
+            <li>
+              <strong class="pulseText">studying</strong>
+              <span class="tag">level 6</span>
+              <span class="tag">computing</span>
+            </li>
+            <li>
+              <strong class="pulseText">passions</strong>
+              <span class="tag">reverse eng</span>
+              <span class="tag">tools</span>
+              <span class="tag">automation</span>
+              <span class="tag">servers</span>
+            </li>
+          </ul>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
+            <a class="btn" href="#videos"><span class="k">cat</span> youtube</a>
           </div>
         </div>
-      </section>
-
-      <div class="footer">
-        © <span class="pulseText">bella cactus</span> • html + stubbornness
-      </div>
+      </aside>
     </div>
 
-    <!-- floating oneko (click me) -->
-    <div class="oneko" id="onekoBtn" title=":3">
-      <img id="onekoImg" src="oneko.gif" alt="oneko" />
+    <section class="panel" id="projects" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>projects</h2>
+        <div class="small">stuff i’m working on / polishing</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">bella limiter</strong>
+            <span class="tag">wpf overlay</span>
+            <span class="tag">network-y</span>
+            <div class="small" style="margin-top:6px;">
+              repo: <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">site</strong>
+            <span class="tag">github pages</span>
+            <span class="tag">terminal vibe</span>
+            <div class="small" style="margin-top:6px;">
+              this is the “good enough” front page. more pages coming when you drop them in.
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">future</strong>
+            <span class="tag">writeups</span>
+            <span class="tag">tools</span>
+            <span class="tag">server docs</span>
+            <div class="small" style="margin-top:6px;">
+              maybe a writeups section when motivation respawns.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="videos" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>youtube</h2>
+        <div class="small">clips / experiments / whatever</div>
+      </div>
+      <div class="panelInner">
+        <p>
+          i upload on <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="pulseText">@BellaCactusYT</span></a>.
+          mostly gaming, experiments, and whatever i’m messing with.
+        </p>
+
+        <div class="btnRow">
+          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer"><span class="k">yt</span> videos</a>
+          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer"><span class="k">yt</span> shorts</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      © <span class="pulseText">bella cactus</span> • made with html + stubbornness
     </div>
   </div>
 
+  <!-- oneko easter egg -->
+  <div class="oneko" id="oneko" title="click me :3">
+    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+  </div>
+
+  <audio id="bgm" preload="auto"></audio>
+
   <script>
-    // ---------- date ----------
+    // date
     const d = new Date();
     document.getElementById("date").textContent =
       d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
-    // ---------- oneko fallback filenames ----------
-    const oneko = document.getElementById("onekoImg");
-    const onekoFallbacks = ["oneko.gif", "oneko - Copy.gif", "onekogif"];
-    let onekoTry = 0;
-
-    function tryNextOneko(){
-      onekoTry++;
-      if (onekoTry < onekoFallbacks.length) oneko.src = onekoFallbacks[onekoTry];
-    }
-    oneko.addEventListener("error", tryNextOneko);
-
-    // ---------- badge fallback (if twi image name differs) ----------
-    const badgeImg = document.getElementById("badgeImg");
-    const badgeFallbacks = ["twi looking.png", "twi looking.jpg", "twi looking.jpeg"];
-    let badgeTry = 0;
-    badgeImg.addEventListener("error", () => {
-      badgeTry++;
-      if (badgeTry < badgeFallbacks.length) badgeImg.src = badgeFallbacks[badgeTry];
-    });
-
-    // ---------- soundtrack (random) ----------
-    const tracks = [
-      "530 0.mp3",
-      "bipolar.mp3",
-      "Tay-K - I Love My Choppa [Official Audio] 4.mp3",
-      "Who I Smoke (Official Music Video).mp3"
-    ];
-
-    let audio = null;
-    let currentTrack = null;
-    const nowPlaying = document.getElementById("nowPlaying");
-    const trackName = document.getElementById("trackName");
-    const pauseBtn = document.getElementById("pauseBtn");
-    const rerollBtn = document.getElementById("rerollBtn");
-
-    function pickTrack(){
-      return tracks[Math.floor(Math.random() * tracks.length)];
-    }
-
-    function setTrack(name){
-      currentTrack = name;
-      nowPlaying.textContent = "soundtrack: " + name.replace(".mp3","").slice(0,42);
-      trackName.textContent = "soundtrack: " + name.replace(".mp3","").slice(0,42);
-    }
-
-    function startAudio(forceNew=false){
-      try{
-        if (audio){
-          audio.pause();
-          audio.src = "";
-          audio = null;
-        }
-        const t = forceNew ? pickTrack() : (currentTrack || pickTrack());
-        setTrack(t);
-        audio = new Audio(t);
-        audio.loop = true;
-        audio.volume = 0.35;
-        audio.play().catch(() => {
-          // browsers may block autoplay; user can press pause/play to start
-        });
-      }catch(e){
-        // ignore
-      }
-    }
-
-    pauseBtn.addEventListener("click", () => {
-      if (!audio){ startAudio(false); return; }
-      if (audio.paused){
-        audio.play().catch(()=>{});
-        pauseBtn.querySelector(".k").textContent = "pause";
-      }else{
-        audio.pause();
-        pauseBtn.querySelector(".k").textContent = "play";
+    // oneko fallback: if oneko.gif doesn't exist, try "onekogif"
+    const onekoImg = document.getElementById("onekoImg");
+    onekoImg.addEventListener("error", () => {
+      if (!onekoImg.dataset.tried) {
+        onekoImg.dataset.tried = "1";
+        onekoImg.src = "oneko - Copy.gif";
       }
     });
 
-    rerollBtn.addEventListener("click", () => {
-      startAudio(true);
-      pauseBtn.querySelector(".k").textContent = "pause";
-    });
-
-    // try to start audio immediately
-    startAudio(false);
-
-    // ---------- oneko easter egg (lil jon yeah) ----------
-    document.getElementById("onekoBtn").addEventListener("click", () => {
-      try{
-        const sfx = new Audio("lil-jon-yeah.mp3");
-        sfx.volume = 0.85;
-        sfx.play().catch(()=>{});
-      }catch(e){}
-    });
-
-    // ---------- intro logic ----------
-    const intro = document.getElementById("intro");
-    const introVideo = document.getElementById("introVideo");
-
-    function endIntro(){
-      if (!intro) return;
-      intro.classList.add("fadeOut");
-      setTimeout(() => {
-        intro.remove();
-        document.body.classList.add("ready");
-      }, 1200);
-    }
-
-    // if video ends -> reveal site
-    if (introVideo){
-      introVideo.addEventListener("ended", endIntro);
-      introVideo.addEventListener("error", () => {
-        // if mp4 missing, just end after a short beat
-        setTimeout(endIntro, 1200);
-      });
-      // if autoplay is blocked, end after 2.2s
-      setTimeout(() => {
-        if (document.body.classList.contains("ready")) return;
-        if (introVideo.paused) endIntro();
-      }, 2200);
-    } else {
-      setTimeout(endIntro, 1200);
-    }
-
-    // ESC to skip intro
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") endIntro();
-    });
-
-    // ---------- ascii (main terminal) ----------
-    const asciiEl = document.getElementById("ascii");
-    asciiEl.innerHTML =
-`<span class="pink">   /\\_/\\</span>
-  ( o.o )
-   > ^ <     <span class="pink">bella@cactus</span>
-  --------
-  links + projects + chaos
-`;
-
-    // ---------- terminal typing (NO infinite output growth) ----------
+    // terminal: type once, then just idle cursor (no more output growth)
     const typedEl = document.getElementById("typed");
     const outEl = document.getElementById("termOut");
 
     const scriptLines = [
-      { cmd: "whoami", out: "bella (BellaCactus)" },
-      { cmd: "cd interests", out: "reverse engineering • coding • software • hardware • servers • technical mc" },
-      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech  (and more)" },
-      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
-      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" }
+      { cmd: "whoami", out: "bella (Bellacactus)" },
+      { cmd: "$ cd interests", out: "reverse engineering • coding • software • hardware • servers • technical mc" },
+      { cmd: "$ ls games/", out: "destiny2  geometry-dash  minecraft-tech  (and more)" },
+      { cmd: "$ open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
     ];
 
     let lineIndex = 0;
     let charIndex = 0;
-    let phase = "typing"; // typing -> pause -> output -> next -> idleLoop
-    let finished = false;
-
-    // keeps last N lines so the output box stays stable (extra safety)
-    const MAX_OUT_LINES = 9;
+    let current = scriptLines[0].cmd;
+    let phase = "typing"; // typing -> printing -> idle
+    let idleBlink = false;
 
     function pushOutput(text){
       const div = document.createElement("div");
       div.className = "termLine";
-      div.innerHTML = `<span class="prompt">&gt;</span> <span class="cmd">${escapeHtml(text)}</span>`;
+      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
-
-      // trim old lines
-      while (outEl.children.length > MAX_OUT_LINES) {
-        outEl.removeChild(outEl.firstChild);
-      }
+      if (outEl.children.length > 8) outEl.removeChild(outEl.firstChild);
     }
 
     function escapeHtml(s){
@@ -932,75 +653,223 @@
         .replaceAll("<","&lt;")
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replaceAll("'","&#39;");
     }
 
     function tick(){
-      if (finished){
-        // keep “typing animation” without adding output: just animate a tiny loop in typed text
-        const dots = ["", ".", "..", "..."];
-        const t = Math.floor(Date.now()/450) % dots.length;
-        typedEl.textContent = "idle" + dots[t];
-        requestAnimationFrame(() => setTimeout(tick, 80));
-        return;
-      }
-
-      const current = scriptLines[lineIndex];
-      if (!current){
-        finished = true;
-        tick();
+      if (phase === "idle"){
+        // keep “typing vibe” without adding new lines
+        idleBlink = !idleBlink;
+        typedEl.textContent = idleBlink ? "idle" : "idle";
+        requestAnimationFrame(() => {});
+        setTimeout(tick, 650);
         return;
       }
 
       if (phase === "typing"){
-        const full = current.cmd;
-        typedEl.textContent = full.slice(0, charIndex);
+        typedEl.textContent = current.slice(0, charIndex);
         charIndex++;
-
-        if (charIndex > full.length){
-          phase = "pause";
+        if (charIndex > current.length){
+          phase = "printing";
           setTimeout(tick, 320);
           return;
         }
-
-        setTimeout(tick, 26 + Math.random()*24);
+        setTimeout(tick, 28 + Math.random()*35);
         return;
       }
 
-      if (phase === "pause"){
-        phase = "output";
-        setTimeout(tick, 180);
-        return;
-      }
-
-      if (phase === "output"){
-        // append the command + output (only once)
-        pushOutput(`$ ${current.cmd}`);
-        pushOutput(current.out);
-
-        // move to next line
+      if (phase === "printing"){
+        pushOutput(scriptLines[lineIndex].out);
         lineIndex++;
-        charIndex = 0;
-        typedEl.textContent = "";
-        phase = "typing";
-
-        // if we just finished the last line, go idle WITHOUT appending anymore
         if (lineIndex >= scriptLines.length){
-          finished = true;
+          typedEl.textContent = "idle";
+          phase = "idle";
+          setTimeout(tick, 700);
+          return;
+        }
+        // next cmd
+        current = scriptLines[lineIndex].cmd;
+        charIndex = 0;
+        phase = "typing";
+        setTimeout(tick, 420);
+      }
+    }
+    tick();
+
+    // music: replace with your filenames when uploaded
+    const tracks = [
+      { name: "530 0", file: "530 0.mp3" },
+      { name: "bipolar (wifiskeleton)", file: "bipolar.mp3" },
+      { name: "i love my choppa (tay-k)", file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3" },
+      { name: "who i smoke", file: "Who I Smoke (Official Music Video).mp3" },
+    ];
+
+    const bgm = document.getElementById("bgm");
+    const trackName = document.getElementById("trackName");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const rerollBtn = document.getElementById("rerollBtn");
+    const viz = document.getElementById("viz");
+
+    function pickTrack(){
+      const t = tracks[Math.floor(Math.random()*tracks.length)];
+      bgm.src = encodeURI(t.file);
+      trackName.textContent = `soundtrack: ${t.name}`;
+      bgm.volume = 0.55;
+      bgm.play().catch(()=>{});
+      viz.classList.remove("paused");
+    }
+
+    pauseBtn.addEventListener("click", () => {
+      if (bgm.paused){
+        bgm.play().catch(()=>{});
+        viz.classList.remove("paused");
+        pauseBtn.innerHTML = `<span class="k">pause</span>`;
+      } else {
+        bgm.pause();
+        viz.classList.add("paused");
+        pauseBtn.innerHTML = `<span class="k">play</span>`;
+      }
+    });
+
+    function rerollAll(){
+      placeStickers();
+      pickTrack();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "r") rerollAll();
+    });
+
+    rerollBtn.addEventListener("click", rerollAll);
+
+    bgm.addEventListener("ended", () => pickTrack());
+
+    pickTrack();
+
+    // oneko click easter egg: play lil jon yeah once
+    const oneko = document.getElementById("oneko");
+    let lilJonReady = true;
+    oneko.addEventListener("click", () => {
+      if (!lilJonReady) return;
+      lilJonReady = false;
+      const sfx = new Audio("lil-jon-yeah.mp3");
+      sfx.volume = 0.9;
+      sfx.play().catch(()=>{});
+      setTimeout(()=> lilJonReady = true, 1500);
+    });
+
+    // stickers: random size / rotation / location + avoid center content rectangle
+    const stickerLayer = document.getElementById("stickerLayer");
+
+    // put ALL your fun images here (filenames must match repo)
+    const stickerFiles = [
+      "ponies in bed.jpg",
+      "twi and trixy.jpg",
+      "twi looking.png",
+      "yuri meme.png",
+      "hello-everypony-mlp-dexter.mp4.gif",
+      "oneko - Copyd.png",
+      "onekoss.png",
+      "onekosss.png",
+      "onekossssthibnk.png",
+      "onekossssurpised.png"
+    ];
+
+    function rand(min,max){ return min + Math.random()*(max-min); }
+    function randi(min,max){ return Math.floor(rand(min,max+1)); }
+
+    function rectsOverlap(a,b){
+      return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b.y+b.h < a.y);
+    }
+
+    function placeStickers(){
+      stickerLayer.innerHTML = "";
+
+      // “safe zone” = the main content area where we don't want stickers
+      const wrap = document.getElementById("pageWrap");
+      const r = wrap.getBoundingClientRect();
+      const safe = {
+        x: r.left + 10,
+        y: r.top + 10,
+        w: r.width - 20,
+        h: Math.min(r.height, window.innerHeight) - 20
+      };
+
+      // how many stickers
+      const count = Math.min(10, stickerFiles.length);
+
+      // pick random unique
+      const pool = stickerFiles.slice();
+      const pick = [];
+      while (pick.length < count && pool.length){
+        pick.push(pool.splice(randi(0, pool.length-1), 1)[0]);
+      }
+
+      for (const file of pick){
+        const el = document.createElement("div");
+        el.className = "sticker";
+
+        const img = document.createElement("img");
+        img.src = encodeURI(file);
+        img.alt = "";
+
+        // random size
+        const w = randi(150, 360);
+        el.style.width = w + "px";
+
+        // random rotation + small tilt
+        const rot = rand(-18, 18);
+        el.style.transform = `rotate(${rot}deg)`;
+
+        // try to find a position that doesn't overlap safe zone too much
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        let placed = false;
+        for (let tries = 0; tries < 120; tries++){
+          const x = rand(-40, vw - w + 40);
+          const y = rand(-30, vh - (w*0.6) + 30);
+
+          const test = { x, y, w, h: w*0.72 };
+          // if overlap safe zone -> reject (we want readable center)
+          if (rectsOverlap(test, safe)) continue;
+
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+          placed = true;
+          break;
         }
 
-        setTimeout(tick, 520);
-        return;
+        // if we couldn't place cleanly, shove it to edges
+        if (!placed){
+          const side = randi(0,3);
+          if (side === 0){ el.style.left = "-20px"; el.style.top = randi(0, vh-220)+"px"; }
+          if (side === 1){ el.style.left = (vw-220)+"px"; el.style.top = randi(0, vh-220)+"px"; }
+          if (side === 2){ el.style.left = randi(0, vw-220)+"px"; el.style.top = "-20px"; }
+          if (side === 3){ el.style.left = randi(0, vw-220)+"px"; el.style.top = (vh-220)+"px"; }
+        }
+
+        // click opens image in new tab (still “clicky”)
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(file, "_blank", "noopener,noreferrer");
+        });
+
+        el.appendChild(img);
+        stickerLayer.appendChild(el);
       }
     }
 
-    // start terminal when page is ready (after intro)
-    const startWatcher = setInterval(() => {
-      if (document.body.classList.contains("ready")){
-        clearInterval(startWatcher);
-        tick();
-      }
-    }, 120);
+    // place now + on resize (debounced)
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(placeStickers, 180);
+    });
+
+    // run once after layout settles
+    setTimeout(placeStickers, 120);
   </script>
 </body>
 </html>
