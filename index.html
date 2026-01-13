@@ -6,15 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- favicon (tab icon) -->
-  <link rel="icon" type="image/png" href="twi looking.png">
+  <link rel="icon" type="image/png" href="twi looking.png" />
 
   <style>
     :root{
       --bg:#070707;
       --bg2:#0b0b0b;
-      --panel:#0f0f10;
-      --panel2:#131315;
-      --border:#26262a;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
 
       --text:#f7f7f7;
       --muted:#b9b9c2;
@@ -25,6 +25,9 @@
 
       --shadow: 0 20px 70px rgba(0,0,0,0.55);
       --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
     *{box-sizing:border-box;}
@@ -37,7 +40,7 @@
         radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
         linear-gradient(180deg, var(--bg), var(--bg2));
       color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: var(--sans);
       line-height:1.55;
       overflow-x:hidden;
     }
@@ -45,15 +48,30 @@
     a{color:var(--pink); text-decoration:none;}
     a:hover{text-decoration:underline;}
 
+    /* shimmer text (white <-> pink) */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
     .wrap{
       max-width:980px;
       margin:0 auto;
       padding:44px 16px 110px;
       position:relative;
-      z-index:5;
+      z-index:2;
     }
 
-    /* top header */
+    /* top */
     .top{
       display:flex;
       align-items:center;
@@ -61,14 +79,12 @@
       gap:14px;
       margin-bottom:18px;
     }
-
     .brand{
       display:flex;
       align-items:center;
       gap:14px;
       min-width:0;
     }
-
     .badge{
       width:56px;
       height:56px;
@@ -78,29 +94,15 @@
       display:grid;
       place-items:center;
       box-shadow: var(--shadow);
-      position:relative;
       overflow:hidden;
     }
-
-    .badge::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%);
-      transform: rotate(25deg);
-      opacity:0.8;
-      pointer-events:none;
-    }
-
     .badge img{
-      width:42px;
-      height:42px;
-      border-radius:12px;
+      width:100%;
+      height:100%;
       object-fit:cover;
       image-rendering:auto;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+      filter: saturate(1.05) contrast(1.05);
     }
-
     .titlebox{min-width:0;}
     h1{
       margin:0;
@@ -110,20 +112,18 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
     .sub{
       margin:4px 0 0;
       color:var(--muted);
       font-size:0.98rem;
+      max-width:560px;
     }
-
     .chips{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
-
     .chip{
       font-size:0.82rem;
       padding:6px 10px;
@@ -133,7 +133,6 @@
       color:var(--muted);
       backdrop-filter: blur(6px);
     }
-
     .chip strong{color:var(--text); font-weight:600;}
     .chip .dot{
       display:inline-block;
@@ -144,23 +143,7 @@
       box-shadow:0 0 12px rgba(255,120,200,0.6);
     }
 
-    /* animated gradient text (white <-> pink) */
-    .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
-      background-size: 260% 100%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation: shimmer 4.8s ease-in-out infinite;
-    }
-
-    @keyframes shimmer{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
-    }
-
-    /* layout panels */
+    /* layout */
     .grid{
       display:grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -170,22 +153,18 @@
     @media (max-width: 860px){
       .grid{grid-template-columns:1fr;}
       .chips{justify-content:flex-start;}
+      .sub{max-width:100%;}
     }
 
     .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
-      z-index:6;
     }
-
-    .panelInner{
-      padding:16px 16px;
-    }
-
+    .panelInner{ padding:16px 16px; }
     .panelTitle{
       display:flex;
       align-items:center;
@@ -195,17 +174,49 @@
       border-bottom:1px solid rgba(255,255,255,0.06);
       background: rgba(0,0,0,0.18);
     }
-
     .panelTitle h2{
       margin:0;
       font-size:1.05rem;
       color:var(--pink2);
       letter-spacing:0.3px;
     }
-
     .small{
       font-size:0.86rem;
       color:var(--muted);
+    }
+
+    /* buttons */
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{
+      font-family: var(--mono);
+      font-size:0.8rem;
+      color:var(--pink2);
     }
 
     /* terminal */
@@ -213,12 +224,10 @@
       background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
                   rgba(0,0,0,0.35);
       border-top:1px solid rgba(255,255,255,0.05);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: var(--mono);
       padding:14px 16px;
-      min-height:170px;
-      border-radius: 0 0 var(--radius) var(--radius);
+      min-height:190px;
     }
-
     .termLine{
       display:flex;
       gap:8px;
@@ -227,10 +236,8 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
-
     .prompt{color:var(--pink2);}
     .cmd{color:var(--text);}
-
     .cursor{
       display:inline-block;
       width:9px;
@@ -256,6 +263,7 @@
       line-height:1.15;
       margin:0;
       color:rgba(255,255,255,0.92);
+      font-family: var(--mono);
     }
     .ascii .pink{
       color:var(--pink2);
@@ -284,36 +292,66 @@
       border:1px solid rgba(255,255,255,0.08);
     }
 
-    .btnRow{
+    /* music widget */
+    .musicBar{
       display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:10px;
-      flex-wrap:wrap;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.25);
       margin-top:10px;
     }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color:var(--text);
-      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
-      text-decoration:none;
-      cursor:pointer;
-      user-select:none;
+    .nowPlaying{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
     }
-    .btn:hover{
-      text-decoration:none;
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.35);
-      background: rgba(255,120,200,0.10);
+    .nowPlaying .t{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:320px;
     }
-    .btn .k{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:0.8rem;
-      color:var(--pink2);
+    .bars{
+      width:46px;
+      height:18px;
+      display:flex;
+      gap:3px;
+      align-items:flex-end;
+    }
+    .bars span{
+      width:7px;
+      height:6px;
+      background: var(--pink);
+      border-radius:3px;
+      box-shadow:0 0 12px rgba(255,120,200,0.35);
+      animation: bounce 0.9s ease-in-out infinite;
+      transform-origin:bottom;
+      opacity:0.9;
+    }
+    .bars span:nth-child(2){animation-delay:0.12s;}
+    .bars span:nth-child(3){animation-delay:0.24s;}
+    .bars span:nth-child(4){animation-delay:0.36s;}
+    .bars span:nth-child(5){animation-delay:0.48s;}
+    @keyframes bounce{
+      0%,100%{transform:scaleY(0.35);}
+      50%{transform:scaleY(1.15);}
+    }
+    .paused .bars span{ animation-play-state:paused; opacity:0.35; }
+
+    #waveform{
+      width:100%;
+      height:48px;
+      display:block;
+      margin-top:8px;
+      opacity:0.88;
     }
 
     /* floating oneko */
@@ -321,13 +359,13 @@
       position:fixed;
       bottom:12px;
       right:12px;
-      pointer-events:auto;
+      z-index:5;
       opacity:0.95;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
       transform: translateZ(0);
       animation: floaty 3.6s ease-in-out infinite;
-      z-index:50;
       cursor:pointer;
+      user-select:none;
     }
     @keyframes floaty{
       0%{transform: translateY(0);}
@@ -337,48 +375,72 @@
     .oneko img{
       width:52px;
       image-rendering:pixelated;
-      user-select:none;
-      -webkit-user-drag:none;
     }
 
-    /* sticker layer */
-    .stickerLayer{
+    /* wall images (random sprinkled) */
+    #wall{
       position:fixed;
       inset:0;
-      z-index:2;
+      z-index:1;
       pointer-events:none;
       overflow:hidden;
     }
-
     .sticker{
       position:absolute;
-      border-radius:16px;
-      overflow:hidden;
-      filter: drop-shadow(0 18px 40px rgba(0,0,0,0.65));
-      opacity:0.22;              /* default dim */
-      transform-origin:center;
-      pointer-events:auto;       /* can hover */
-      transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
-      cursor: pointer;
+      pointer-events:auto;
+      transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+      opacity:0.55;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.45));
       user-select:none;
-      -webkit-user-drag:none;
-      will-change: transform, opacity;
     }
-
-    /* when hover: vanish so text becomes readable */
     .sticker:hover{
-      opacity:0 !important;      /* disappear */
+      opacity:0.06; /* hover = basically disappears so you can read */
       filter:none;
     }
-
     .sticker img{
       display:block;
       width:100%;
-      height:auto;
+      height:100%;
+      object-fit:contain;
+      border-radius:10px;
+    }
+
+    /* intro gate */
+    #introGate{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      background: #000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:12px;
+    }
+    #introGate.hidden{display:none;}
+    #introVideo{
+      width:min(980px, 92vw);
+      max-height:60vh;
       border-radius:16px;
-      user-select:none;
-      -webkit-user-drag:none;
-      image-rendering:auto;
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.8);
+      background:#000;
+    }
+    .introAscii{
+      width:min(980px, 92vw);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background: rgba(255,255,255,0.04);
+      padding:12px 14px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.55);
+    }
+    .introHint{
+      color:var(--muted);
+      font-family: var(--mono);
+      font-size:0.82rem;
+      opacity:0.85;
+      text-align:center;
+      padding:0 12px;
     }
 
     /* footer */
@@ -387,84 +449,80 @@
       text-align:center;
       color:var(--muted);
       font-size:0.86rem;
+      z-index:2;
+      position:relative;
     }
 
-    /* tiny music visualizer */
-    .musicRow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
+    /* hacker output */
+    .kv{
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.92);
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0;
     }
-    .viz{
-      display:inline-flex;
-      align-items:flex-end;
-      gap:3px;
-      height:14px;
-      padding:6px 8px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-    }
-    .bar{
-      width:3px;
-      height:6px;
-      border-radius:999px;
-      background: var(--pink2);
-      opacity:0.9;
-      animation: bop 0.9s ease-in-out infinite;
-    }
-    .bar:nth-child(2){animation-delay:0.1s}
-    .bar:nth-child(3){animation-delay:0.2s}
-    .bar:nth-child(4){animation-delay:0.3s}
-    .bar:nth-child(5){animation-delay:0.4s}
-    @keyframes bop{
-      0%,100%{height:4px; opacity:0.6}
-      50%{height:14px; opacity:1}
-    }
-    .paused .bar{
-      animation:none;
-      height:4px;
-      opacity:0.35;
+    .warn{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+      margin-top:10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="stickerLayer" id="stickerLayer" aria-hidden="true"></div>
+  <!-- sprinkled stickers behind everything -->
+  <div id="wall" aria-hidden="true"></div>
 
-  <div class="wrap" id="pageWrap">
+  <!-- intro gate -->
+  <div id="introGate">
+    <video id="introVideo" autoplay muted playsinline>
+      <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4" />
+    </video>
+
+    <div class="introAscii">
+      <pre class="ascii" id="introAscii"></pre>
+    </div>
+
+    <div class="introHint">
+      if autoplay is blocked, click the video once. after it ends, the site spawns. (:3)
+    </div>
+
+    <button class="btn" id="skipIntro" type="button" style="pointer-events:auto;">
+      <span class="k">esc</span> skip intro
+    </button>
+  </div>
+
+  <!-- main -->
+  <div class="wrap" id="main" style="visibility:hidden;">
     <div class="top">
       <div class="brand">
         <div class="badge" aria-hidden="true">
-          <!-- put your twi icon filename here -->
-          <img src="twi looking.png" alt="icon">
+          <img src="twi looking.png" alt="badge" />
         </div>
         <div class="titlebox">
           <h1 class="pulseText">bella cactus</h1>
-          <div class="sub">reverse engineering + coding + servers + technical minecraft + whatever brain buff i rolled this week :3</div>
+          <div class="sub">coding, reverse engineering, servers, and whatever i’m obsessed with this week</div>
         </div>
       </div>
 
       <div class="chips">
         <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
         <div class="chip">timezone: <strong>nz</strong></div>
-        <div class="chip">last update: <strong id="date"></strong></div>
+        <div class="chip">mode: <strong>building</strong></div>
       </div>
     </div>
 
-    <div class="grid" id="links">
-      <!-- left main -->
+    <div class="grid">
+      <!-- left -->
       <section class="panel">
         <div class="panelTitle">
           <h2>links</h2>
-          <div class="small musicRow">
-            <span class="pulseText" id="trackName">soundtrack: (none)</span>
-            <span class="viz" id="viz"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
-            <a class="btn" id="pauseBtn"><span class="k">pause</span></a>
-            <a class="btn" id="rerollBtn"><span class="k">reroll</span></a>
-          </div>
+          <div class="small">last update: <span id="date"></span></div>
         </div>
+
         <div class="panelInner">
           <div class="btnRow">
             <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
@@ -473,11 +531,31 @@
             <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
               <span class="k">yt</span> @BellaCactusYT
             </a>
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer">
-              <span class="k">yt</span> videos
-            </a>
+            <button class="btn" id="reroll" type="button">
+              <span class="k">rng</span> reroll wall + track
+            </button>
           </div>
 
+          <!-- music -->
+          <div class="musicBar" id="musicBar">
+            <div class="nowPlaying">
+              <div class="t">soundtrack: <span class="pulseText" id="trackName">loading…</span></div>
+              <div class="t" id="trackMeta">click play if browser blocks autoplay</div>
+            </div>
+            <div class="bars" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <div class="btnRow">
+            <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
+            <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
+            <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
+          </div>
+
+          <canvas id="waveform" height="48"></canvas>
+
+          <!-- terminal -->
           <div class="terminal" aria-label="terminal">
             <div class="termLine">
               <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
@@ -486,15 +564,13 @@
             <div id="termOut"></div>
 
             <div class="asciiBox">
-<pre class="ascii" id="ascii"><span class="pink"> /\_/\</span>
-( o.o )   bella@cactus
- > ^ <    links + projects + chaos</pre>
+              <pre class="ascii" id="asciiAnimal"></pre>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- right sidebar -->
+      <!-- right -->
       <aside class="panel">
         <div class="panelTitle">
           <h2>about</h2>
@@ -502,12 +578,8 @@
         </div>
         <div class="panelInner">
           <p>
-            hey, i’m <span class="pulseText">bella</span> (aka bowen / bellacactus).
-            this site is basically a dump of everything my brain latches onto.
-          </p>
-          <p class="small">
-            reverse engineering, coding, software/hardware, servers, and pulling stuff apart
-            until the configs at 3am are normal.
+            i’m <span class="pulseText">bella</span>. i build stuff that’s useful, weird, or both.
+            i’m into <span class="pulseText">reverse engineering</span>, coding, software/hardware, and server nonsense.
           </p>
 
           <ul class="clean">
@@ -533,7 +605,7 @@
 
           <div class="btnRow" style="margin-top:14px;">
             <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
-            <a class="btn" href="#videos"><span class="k">cat</span> youtube</a>
+            <a class="btn" href="#intel"><span class="k">scan</span> intel</a>
           </div>
         </div>
       </aside>
@@ -548,328 +620,749 @@
         <ul class="clean">
           <li>
             <strong class="pulseText">bella limiter</strong>
-            <span class="tag">wpf overlay</span>
+            <span class="tag">overlay</span>
             <span class="tag">network-y</span>
             <div class="small" style="margin-top:6px;">
               repo: <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
             </div>
           </li>
-
           <li>
             <strong class="pulseText">site</strong>
             <span class="tag">github pages</span>
             <span class="tag">terminal vibe</span>
             <div class="small" style="margin-top:6px;">
-              this is the “good enough” front page. more pages coming when you drop them in.
-            </div>
-          </li>
-
-          <li>
-            <strong class="pulseText">future</strong>
-            <span class="tag">writeups</span>
-            <span class="tag">tools</span>
-            <span class="tag">server docs</span>
-            <div class="small" style="margin-top:6px;">
-              maybe a writeups section when motivation respawns.
+              placeholder now, will expand when your wamp pages land.
             </div>
           </li>
         </ul>
       </div>
     </section>
 
-    <section class="panel" id="videos" style="margin-top:14px;">
+    <!-- spicy intel panel (consent / permission based) -->
+    <section class="panel" id="intel" style="margin-top:14px;">
       <div class="panelTitle">
-        <h2>youtube</h2>
-        <div class="small">clips / experiments / whatever</div>
+        <h2>intel (local)</h2>
+        <div class="small">shows what the browser exposes on this device</div>
       </div>
       <div class="panelInner">
-        <p>
-          i upload on <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="pulseText">@BellaCactusYT</span></a>.
-          mostly gaming, experiments, and whatever i’m messing with.
-        </p>
+        <pre class="kv" id="intelOut">loading…</pre>
 
         <div class="btnRow">
-          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer"><span class="k">yt</span> videos</a>
-          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer"><span class="k">yt</span> shorts</a>
+          <button class="btn" id="btnIP" type="button"><span class="k">net</span> reveal public ip</button>
+          <button class="btn" id="btnGeo" type="button"><span class="k">gps</span> request location</button>
+          <button class="btn" id="btnNotify" type="button"><span class="k">ping</span> request notifications</button>
+          <button class="btn" id="btnClipboard" type="button"><span class="k">clip</span> read clipboard</button>
+          <button class="btn" id="btnMedia" type="button"><span class="k">av</span> request mic/cam</button>
+          <button class="btn" id="btnDevices" type="button"><span class="k">ls</span> enumerate devices</button>
+          <button class="btn" id="btnStorage" type="button"><span class="k">df</span> storage estimate</button>
+          <button class="btn" id="btnBattery" type="button"><span class="k">bat</span> battery</button>
+          <button class="btn" id="btnWebGL" type="button"><span class="k">gpu</span> webgl renderer</button>
+        </div>
+
+        <div class="warn">
+          note: this page does <span class="pulseText">not</span> silently fingerprint or track people.
+          buttons trigger standard browser permission prompts. data stays on-page. ip lookup calls a public api when clicked.
         </div>
       </div>
     </section>
 
     <div class="footer">
-      © <span class="pulseText">bella cactus</span> • made with html + stubbornness
+      © <span class="pulseText">bella cactus</span> • html + stubbornness
     </div>
   </div>
 
-  <!-- oneko easter egg -->
-  <div class="oneko" id="oneko" title="click me :3">
+  <!-- floating oneko -->
+  <div class="oneko" id="oneko" title="click me" aria-hidden="false">
     <img id="onekoImg" src="oneko.gif" alt="oneko" />
   </div>
 
-  <audio id="bgm" preload="auto"></audio>
+  <!-- audio elements -->
+  <audio id="bgm" preload="auto" loop></audio>
+  <audio id="yeah" preload="auto" src="lil-jon-yeah.mp3"></audio>
 
   <script>
+    // --------- tiny helpers
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const rand = (a, b) => a + Math.random() * (b - a);
+
     // date
     const d = new Date();
-    document.getElementById("date").textContent =
-      d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
+    $("date").textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
-    // oneko fallback: if oneko.gif doesn't exist, try "onekogif"
-    const onekoImg = document.getElementById("onekoImg");
+    // oneko fallback filename
+    const onekoImg = $("onekoImg");
     onekoImg.addEventListener("error", () => {
       if (!onekoImg.dataset.tried) {
         onekoImg.dataset.tried = "1";
-        onekoImg.src = "oneko - Copy.gif";
+        onekoImg.src = "onekogif";
       }
     });
 
-    // terminal: type once, then just idle cursor (no more output growth)
-    const typedEl = document.getElementById("typed");
-    const outEl = document.getElementById("termOut");
+    // oneko easter egg: click -> play "yeah"
+    $("oneko").addEventListener("click", async () => {
+      try {
+        await yepResumeAudio();
+        const y = $("yeah");
+        y.currentTime = 0;
+        y.play().catch(()=>{});
+      } catch(e){}
+    });
 
-    const scriptLines = [
-      { cmd: "whoami", out: "bella (Bellacactus)" },
-      { cmd: "$ cd interests", out: "reverse engineering • coding • software • hardware • servers • technical mc" },
-      { cmd: "$ ls games/", out: "destiny2  geometry-dash  minecraft-tech  (and more)" },
-      { cmd: "$ open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+    // --------- INTRO GATE (video then show site)
+    const introGate = $("introGate");
+    const introVideo = $("introVideo");
+    const main = $("main");
+    const skipIntro = $("skipIntro");
+
+    const introFrames = [
+`   <span class="pink">[ booting… ]</span>
+   hello everypony sequence armed
+   loading: terminal • music • stickers`,
+`   <span class="pink">[ handshake ]</span>
+   user: bella
+   theme: black/white/pink`,
+`   <span class="pink">[ ok ]</span>
+   press play if autoplay blocks
+   then we drop into the site :3`
+    ];
+
+    function setIntroAscii(i){
+      $("introAscii").innerHTML = introFrames[i % introFrames.length];
+    }
+    let introAsciiTick = 0;
+    setIntroAscii(0);
+    const introInterval = setInterval(() => setIntroAscii(++introAsciiTick), 900);
+
+    function showSite(){
+      clearInterval(introInterval);
+      introGate.classList.add("hidden");
+      main.style.visibility = "visible";
+      // spawn stickers + start terminal + pick track
+      rerollAll();
+      startTerminal();
+      refreshIntelBase();
+    }
+
+    skipIntro.addEventListener("click", () => {
+      try { introVideo.pause(); } catch(e){}
+      showSite();
+    });
+
+    introVideo.addEventListener("ended", showSite);
+
+    // if autoplay is blocked, clicking video should start it
+    introVideo.addEventListener("click", () => {
+      introVideo.play().catch(()=>{});
+    });
+
+    // --------- STICKERS (random wall images, hover fades)
+    const wall = $("wall");
+
+    // EDIT THIS LIST to match your actual filenames
+    const stickerFiles = [
+      "twi looking.png",
+      "twi and trixy.jpg",
+      "ponies in bed.jpg",
+      "yuri meme.png"
+    ];
+
+    function clearWall(){
+      while(wall.firstChild) wall.removeChild(wall.firstChild);
+    }
+
+    function spawnStickers(){
+      clearWall();
+
+      const count = window.innerWidth < 700 ? 7 : 12;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      for (let i = 0; i < count; i++){
+        const div = document.createElement("div");
+        div.className = "sticker";
+
+        const img = document.createElement("img");
+        img.src = stickerFiles[i % stickerFiles.length];
+
+        // random size
+        const size = rand(120, 260);
+        div.style.width = `${size}px`;
+        div.style.height = `${size}px`;
+
+        // random position (avoid top center where header is)
+        let x = rand(-20, w - size + 20);
+        let y = rand(-20, h - size + 20);
+
+        // keep a safer zone around top content
+        if (y < 180 && x > (w*0.15) && x < (w*0.85)) y = rand(220, h - size);
+
+        div.style.left = `${x}px`;
+        div.style.top = `${y}px`;
+
+        // random rotation
+        const rot = rand(-22, 22);
+        div.style.transform = `rotate(${rot}deg)`;
+
+        // click opens image in new tab (you asked to keep click)
+        div.style.pointerEvents = "auto";
+        div.addEventListener("click", (e) => {
+          e.stopPropagation();
+          window.open(img.src, "_blank", "noopener");
+        });
+
+        div.appendChild(img);
+        wall.appendChild(div);
+      }
+    }
+
+    window.addEventListener("resize", () => {
+      // reroll positions on resize so it stays nice
+      spawnStickers();
+    });
+
+    // --------- MUSIC (random soundtrack + waveform)
+    // EDIT THESE to match exact filenames in repo root
+    const tracks = [
+      { file: "530 0.mp3", label: "530 (kanye)" },
+      { file: "bipolar.mp3", label: "bipolar (wifiskeleton)" },
+      { file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3", label: "i love my choppa (tay-k)" },
+      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" }
+    ];
+
+    const bgm = $("bgm");
+    const musicBar = $("musicBar");
+    const trackName = $("trackName");
+    const trackMeta = $("trackMeta");
+
+    let trackIndex = Math.floor(Math.random() * tracks.length);
+    let muted = false;
+
+    async function yepResumeAudio(){
+      // resume audio context if needed (waveform uses it)
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+    }
+
+    function loadTrack(i){
+      trackIndex = (i + tracks.length) % tracks.length;
+      const t = tracks[trackIndex];
+      bgm.src = t.file;
+      trackName.textContent = t.label;
+      trackMeta.textContent = `file: ${t.file}`;
+    }
+
+    $("playPause").addEventListener("click", async () => {
+      await yepResumeAudio();
+      if (bgm.paused) {
+        bgm.play().catch(()=>{});
+        musicBar.classList.remove("paused");
+        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+      } else {
+        bgm.pause();
+        musicBar.classList.add("paused");
+        $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
+      }
+    });
+
+    $("nextTrack").addEventListener("click", async () => {
+      await yepResumeAudio();
+      loadTrack(trackIndex + 1);
+      bgm.play().catch(()=>{});
+      musicBar.classList.remove("paused");
+      $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+    });
+
+    $("mute").addEventListener("click", () => {
+      muted = !muted;
+      bgm.muted = muted;
+      $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
+    });
+
+    // waveform
+    const waveformCanvas = $("waveform");
+    const wf = waveformCanvas.getContext("2d");
+
+    let audioCtx = null;
+    let analyser = null;
+    let data = null;
+    let srcNode = null;
+
+    function setupWaveform(){
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      srcNode = audioCtx.createMediaElementSource(bgm);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      data = new Uint8Array(analyser.frequencyBinCount);
+
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      drawWave();
+    }
+
+    function drawWave(){
+      requestAnimationFrame(drawWave);
+      if (!analyser) return;
+
+      // fit canvas to display size
+      const rect = waveformCanvas.getBoundingClientRect();
+      const cw = Math.floor(rect.width * devicePixelRatio);
+      const ch = Math.floor(rect.height * devicePixelRatio);
+      if (waveformCanvas.width !== cw || waveformCanvas.height !== ch){
+        waveformCanvas.width = cw;
+        waveformCanvas.height = ch;
+      }
+
+      analyser.getByteTimeDomainData(data);
+
+      wf.clearRect(0,0,cw,ch);
+
+      // line
+      wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
+      wf.strokeStyle = "#ff78c8";
+      wf.shadowColor = "#ff78c8";
+      wf.shadowBlur = 16;
+
+      wf.beginPath();
+      for (let i = 0; i < data.length; i++){
+        const x = (i / (data.length - 1)) * cw;
+        const y = (data[i] / 255) * ch;
+        if (i === 0) wf.moveTo(x, y);
+        else wf.lineTo(x, y);
+      }
+      wf.stroke();
+
+      // tiny center line
+      wf.shadowBlur = 0;
+      wf.globalAlpha = 0.22;
+      wf.beginPath();
+      wf.moveTo(0, ch/2);
+      wf.lineTo(cw, ch/2);
+      wf.strokeStyle = "#ffffff";
+      wf.stroke();
+      wf.globalAlpha = 1;
+    }
+
+    // set initial track
+    loadTrack(trackIndex);
+    musicBar.classList.add("paused");
+
+    // start waveform when user interacts (browser rules)
+    document.addEventListener("click", () => setupWaveform(), { once:true });
+
+    // --------- TERMINAL (types script, stops growing, then idles)
+    const typedEl = $("typed");
+    const outEl = $("termOut");
+
+    const terminalScript = [
+      { cmd: "whoami", out: "bella (aka BellaCactus)" },
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
+      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
+      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
+      { cmd: "scan --local", out: "intel panel loaded (scroll a bit)  ->  /#intel" }
     ];
 
     let lineIndex = 0;
     let charIndex = 0;
-    let current = scriptLines[0].cmd;
-    let phase = "typing"; // typing -> printing -> idle
-    let idleBlink = false;
+    let typing = false;
+    let idle = false;
 
-    function pushOutput(text){
+    function pushOutputLine(text){
       const div = document.createElement("div");
       div.className = "termLine";
       div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
-      if (outEl.children.length > 8) outEl.removeChild(outEl.firstChild);
+
+      // keep it from extending forever: keep only last N lines
+      const maxLines = 6;
+      while(outEl.children.length > maxLines){
+        outEl.removeChild(outEl.firstChild);
+      }
     }
 
     function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#39;");
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
     }
 
-    function tick(){
-      if (phase === "idle"){
-        // keep “typing vibe” without adding new lines
-        idleBlink = !idleBlink;
-        typedEl.textContent = idleBlink ? "idle" : "idle";
-        requestAnimationFrame(() => {});
-        setTimeout(tick, 650);
+    function startTerminal(){
+      if (typing) return;
+      typing = true;
+      idle = false;
+      lineIndex = 0;
+      charIndex = 0;
+      typedEl.textContent = "";
+
+      tickType();
+    }
+
+    function tickType(){
+      if (!typing) return;
+
+      if (lineIndex >= terminalScript.length){
+        // finished script: idle typing effect without output
+        typing = false;
+        idle = true;
+        idleType();
         return;
       }
 
-      if (phase === "typing"){
-        typedEl.textContent = current.slice(0, charIndex);
-        charIndex++;
-        if (charIndex > current.length){
-          phase = "printing";
-          setTimeout(tick, 320);
-          return;
-        }
-        setTimeout(tick, 28 + Math.random()*35);
-        return;
-      }
+      const current = terminalScript[lineIndex].cmd;
+      typedEl.textContent = current.slice(0, charIndex);
 
-      if (phase === "printing"){
-        pushOutput(scriptLines[lineIndex].out);
+      charIndex++;
+
+      if (charIndex > current.length){
+        // commit line
+        pushOutputLine(`$ ${terminalScript[lineIndex].cmd}`);
+        pushOutputLine(terminalScript[lineIndex].out);
+
+        // next command after a beat
         lineIndex++;
-        if (lineIndex >= scriptLines.length){
-          typedEl.textContent = "idle";
-          phase = "idle";
-          setTimeout(tick, 700);
-          return;
-        }
-        // next cmd
-        current = scriptLines[lineIndex].cmd;
         charIndex = 0;
-        phase = "typing";
-        setTimeout(tick, 420);
-      }
-    }
-    tick();
-
-    // music: replace with your filenames when uploaded
-    const tracks = [
-      { name: "530 0", file: "530 0.mp3" },
-      { name: "bipolar (wifiskeleton)", file: "bipolar.mp3" },
-      { name: "i love my choppa (tay-k)", file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3" },
-      { name: "who i smoke", file: "Who I Smoke (Official Music Video).mp3" },
-    ];
-
-    const bgm = document.getElementById("bgm");
-    const trackName = document.getElementById("trackName");
-    const pauseBtn = document.getElementById("pauseBtn");
-    const rerollBtn = document.getElementById("rerollBtn");
-    const viz = document.getElementById("viz");
-
-    function pickTrack(){
-      const t = tracks[Math.floor(Math.random()*tracks.length)];
-      bgm.src = encodeURI(t.file);
-      trackName.textContent = `soundtrack: ${t.name}`;
-      bgm.volume = 0.55;
-      bgm.play().catch(()=>{});
-      viz.classList.remove("paused");
-    }
-
-    pauseBtn.addEventListener("click", () => {
-      if (bgm.paused){
-        bgm.play().catch(()=>{});
-        viz.classList.remove("paused");
-        pauseBtn.innerHTML = `<span class="k">pause</span>`;
+        typedEl.textContent = "";
+        setTimeout(tickType, 520);
       } else {
-        bgm.pause();
-        viz.classList.add("paused");
-        pauseBtn.innerHTML = `<span class="k">play</span>`;
+        setTimeout(tickType, 34 + Math.random()*22);
       }
-    });
-
-    function rerollAll(){
-      placeStickers();
-      pickTrack();
     }
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "r") rerollAll();
-    });
+    function idleType(){
+      if (!idle) return;
+      // loop a little fake typing without adding output
+      const pool = ["_", " ", ".", "..", "...", " ", "_"];
+      let i = 0;
+      const loop = () => {
+        if (!idle) return;
+        typedEl.textContent = pool[i++ % pool.length];
+        setTimeout(loop, 280);
+      };
+      loop();
+    }
 
-    rerollBtn.addEventListener("click", rerollAll);
+    // --------- ASCII ANIMALS
+    const animals = [
+` /\\_/\\
+( o.o )
+ > ^ <`,
 
-    bgm.addEventListener("ended", () => pickTrack());
+` (\\_/)
+ ( •_•)
+ / >🍪`,
 
-    pickTrack();
+`  /\\_/\\
+ (=^.^=)
+ (")(")`,
 
-    // oneko click easter egg: play lil jon yeah once
-    const oneko = document.getElementById("oneko");
-    let lilJonReady = true;
-    oneko.addEventListener("click", () => {
-      if (!lilJonReady) return;
-      lilJonReady = false;
-      const sfx = new Audio("lil-jon-yeah.mp3");
-      sfx.volume = 0.9;
-      sfx.play().catch(()=>{});
-      setTimeout(()=> lilJonReady = true, 1500);
-    });
+`  /\\_/\\
+ ( >.< )
+  >🍓<`,
 
-    // stickers: random size / rotation / location + avoid center content rectangle
-    const stickerLayer = document.getElementById("stickerLayer");
-
-    // put ALL your fun images here (filenames must match repo)
-    const stickerFiles = [
-      "ponies in bed.jpg",
-      "twi and trixy.jpg",
-      "twi looking.png",
-      "yuri meme.png",
-      "hello-everypony-mlp-dexter.mp4.gif",
-      "oneko - Copyd.png",
-      "onekoss.png",
-      "onekosss.png",
-      "onekossssthibnk.png",
-      "onekossssurpised.png"
+`   /\\_/\\
+  ( •ω• )
+  /    \\`
     ];
 
-    function rand(min,max){ return min + Math.random()*(max-min); }
-    function randi(min,max){ return Math.floor(rand(min,max+1)); }
+    let animalIndex = Math.floor(Math.random()*animals.length);
+    function setAnimal(i){
+      $("asciiAnimal").textContent = animals[(i + animals.length) % animals.length];
+    }
+    setAnimal(animalIndex);
+    setInterval(() => setAnimal(++animalIndex), 6500);
 
-    function rectsOverlap(a,b){
-      return !(a.x+a.w < b.x || b.x+b.w < a.x || a.y+a.h < b.y || b.y+b.h < a.y);
+    // --------- REROLL
+    function rerollAll(){
+      // reroll stickers
+      spawnStickers();
+      // reroll track
+      loadTrack(Math.floor(Math.random() * tracks.length));
+      // reset paused status (doesn't force play)
+      musicBar.classList.add("paused");
+      $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
+    }
+    $("reroll").addEventListener("click", rerollAll);
+
+    // --------- INTEL PANEL (max info via safe APIs + permission buttons)
+    const intelOut = $("intelOut");
+
+    const intel = {
+      base: {},
+      ip: null,
+      geo: null,
+      notify: null,
+      clipboard: null,
+      media: null,
+      devices: null,
+      storage: null,
+      battery: null,
+      webgl: null
+    };
+
+    function fmt(obj){
+      return JSON.stringify(obj, null, 2);
     }
 
-    function placeStickers(){
-      stickerLayer.innerHTML = "";
+    function refreshIntelBase(){
+      const nav = navigator;
 
-      // “safe zone” = the main content area where we don't want stickers
-      const wrap = document.getElementById("pageWrap");
-      const r = wrap.getBoundingClientRect();
-      const safe = {
-        x: r.left + 10,
-        y: r.top + 10,
-        w: r.width - 20,
-        h: Math.min(r.height, window.innerHeight) - 20
+      intel.base = {
+        time: new Date().toString(),
+        location: {
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
+          locale: nav.language || "unknown",
+          languages: nav.languages || []
+        },
+        browser: {
+          userAgent: nav.userAgent,
+          platform: nav.platform || "unknown",
+          vendor: nav.vendor || "unknown",
+          cookieEnabled: nav.cookieEnabled,
+          doNotTrack: nav.doNotTrack || null
+        },
+        screen: {
+          width: screen.width,
+          height: screen.height,
+          availWidth: screen.availWidth,
+          availHeight: screen.availHeight,
+          colorDepth: screen.colorDepth,
+          pixelRatio: devicePixelRatio
+        },
+        hardware: {
+          cores: nav.hardwareConcurrency || null,
+          memoryGB: nav.deviceMemory || null,
+          touchPoints: nav.maxTouchPoints || 0
+        },
+        network: {
+          online: nav.onLine,
+          connection: (nav.connection || nav.mozConnection || nav.webkitConnection) ? {
+            effectiveType: (nav.connection || {}).effectiveType || null,
+            downlink: (nav.connection || {}).downlink || null,
+            rtt: (nav.connection || {}).rtt || null,
+            saveData: (nav.connection || {}).saveData || null
+          } : null
+        },
+        permissions: {
+          notifications: (typeof Notification !== "undefined") ? Notification.permission : "unsupported"
+        }
       };
 
-      // how many stickers
-      const count = Math.min(10, stickerFiles.length);
-
-      // pick random unique
-      const pool = stickerFiles.slice();
-      const pick = [];
-      while (pick.length < count && pool.length){
-        pick.push(pool.splice(randi(0, pool.length-1), 1)[0]);
-      }
-
-      for (const file of pick){
-        const el = document.createElement("div");
-        el.className = "sticker";
-
-        const img = document.createElement("img");
-        img.src = encodeURI(file);
-        img.alt = "";
-
-        // random size
-        const w = randi(150, 360);
-        el.style.width = w + "px";
-
-        // random rotation + small tilt
-        const rot = rand(-18, 18);
-        el.style.transform = `rotate(${rot}deg)`;
-
-        // try to find a position that doesn't overlap safe zone too much
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-
-        let placed = false;
-        for (let tries = 0; tries < 120; tries++){
-          const x = rand(-40, vw - w + 40);
-          const y = rand(-30, vh - (w*0.6) + 30);
-
-          const test = { x, y, w, h: w*0.72 };
-          // if overlap safe zone -> reject (we want readable center)
-          if (rectsOverlap(test, safe)) continue;
-
-          el.style.left = x + "px";
-          el.style.top = y + "px";
-          placed = true;
-          break;
-        }
-
-        // if we couldn't place cleanly, shove it to edges
-        if (!placed){
-          const side = randi(0,3);
-          if (side === 0){ el.style.left = "-20px"; el.style.top = randi(0, vh-220)+"px"; }
-          if (side === 1){ el.style.left = (vw-220)+"px"; el.style.top = randi(0, vh-220)+"px"; }
-          if (side === 2){ el.style.left = randi(0, vw-220)+"px"; el.style.top = "-20px"; }
-          if (side === 3){ el.style.left = randi(0, vw-220)+"px"; el.style.top = (vh-220)+"px"; }
-        }
-
-        // click opens image in new tab (still “clicky”)
-        el.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          window.open(file, "_blank", "noopener,noreferrer");
-        });
-
-        el.appendChild(img);
-        stickerLayer.appendChild(el);
-      }
+      renderIntel();
     }
 
-    // place now + on resize (debounced)
-    let resizeTimer = null;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(placeStickers, 180);
+    function renderIntel(){
+      const out = {
+        base: intel.base,
+        ip: intel.ip,
+        geo: intel.geo,
+        notifications: intel.notify,
+        clipboard: intel.clipboard,
+        media: intel.media,
+        devices: intel.devices,
+        storage: intel.storage,
+        battery: intel.battery,
+        webgl: intel.webgl
+      };
+      intelOut.textContent = fmt(out);
+    }
+
+    // IP (explicit click)
+    $("btnIP").addEventListener("click", async () => {
+      try{
+        intel.ip = { status: "fetching…" };
+        renderIntel();
+        const res = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+        const j = await res.json();
+        intel.ip = { publicIP: j.ip };
+      }catch(e){
+        intel.ip = { error: String(e) };
+      }
+      renderIntel();
     });
 
-    // run once after layout settles
-    setTimeout(placeStickers, 120);
+    // GEO (permission prompt)
+    $("btnGeo").addEventListener("click", async () => {
+      if (!navigator.geolocation){
+        intel.geo = { error: "geolocation unsupported" };
+        renderIntel();
+        return;
+      }
+      intel.geo = { status: "requesting…" };
+      renderIntel();
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          intel.geo = {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            accuracyMeters: pos.coords.accuracy,
+            heading: pos.coords.heading,
+            speed: pos.coords.speed,
+            timestamp: new Date(pos.timestamp).toString()
+          };
+          renderIntel();
+        },
+        (err) => {
+          intel.geo = { error: err.message || String(err) };
+          renderIntel();
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    });
+
+    // Notifications (permission prompt)
+    $("btnNotify").addEventListener("click", async () => {
+      try{
+        if (typeof Notification === "undefined"){
+          intel.notify = { error: "notifications unsupported" };
+          renderIntel();
+          return;
+        }
+        const perm = await Notification.requestPermission();
+        intel.notify = { permission: perm };
+      }catch(e){
+        intel.notify = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // Clipboard read (permission prompt, must be https and user gesture)
+    $("btnClipboard").addEventListener("click", async () => {
+      try{
+        if (!navigator.clipboard || !navigator.clipboard.readText){
+          intel.clipboard = { error: "clipboard API unsupported (or blocked)" };
+          renderIntel();
+          return;
+        }
+        const txt = await navigator.clipboard.readText();
+        intel.clipboard = { textPreview: txt.slice(0, 200), length: txt.length };
+      }catch(e){
+        intel.clipboard = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // Mic/Cam permission
+    $("btnMedia").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+          intel.media = { error: "mediaDevices unsupported" };
+          renderIntel();
+          return;
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:true });
+        // stop immediately, we only needed permission
+        stream.getTracks().forEach(t => t.stop());
+        intel.media = { permission: "granted (stream opened then stopped)" };
+      }catch(e){
+        intel.media = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // Enumerate devices (works best after media permission)
+    $("btnDevices").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){
+          intel.devices = { error: "enumerateDevices unsupported" };
+          renderIntel();
+          return;
+        }
+        const list = await navigator.mediaDevices.enumerateDevices();
+        intel.devices = {
+          count: list.length,
+          kinds: list.reduce((acc, d) => {
+            acc[d.kind] = (acc[d.kind] || 0) + 1;
+            return acc;
+          }, {}),
+          devices: list.map(d => ({
+            kind: d.kind,
+            label: d.label || "(label hidden until permission)",
+            deviceId: d.deviceId ? "(present)" : "(none)",
+            groupId: d.groupId ? "(present)" : "(none)"
+          }))
+        };
+      }catch(e){
+        intel.devices = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // Storage estimate
+    $("btnStorage").addEventListener("click", async () => {
+      try{
+        if (!navigator.storage || !navigator.storage.estimate){
+          intel.storage = { error: "storage estimate unsupported" };
+          renderIntel();
+          return;
+        }
+        const est = await navigator.storage.estimate();
+        intel.storage = {
+          quotaBytes: est.quota ?? null,
+          usageBytes: est.usage ?? null,
+          usageDetails: est.usageDetails ?? null
+        };
+      }catch(e){
+        intel.storage = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // Battery
+    $("btnBattery").addEventListener("click", async () => {
+      try{
+        if (!navigator.getBattery){
+          intel.battery = { error: "battery API unsupported" };
+          renderIntel();
+          return;
+        }
+        const b = await navigator.getBattery();
+        intel.battery = {
+          charging: b.charging,
+          level: b.level,
+          chargingTime: b.chargingTime,
+          dischargingTime: b.dischargingTime
+        };
+      }catch(e){
+        intel.battery = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // WebGL renderer/vendor
+    $("btnWebGL").addEventListener("click", async () => {
+      try{
+        const c = document.createElement("canvas");
+        const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+        if (!gl){
+          intel.webgl = { error: "webgl unavailable" };
+          renderIntel();
+          return;
+        }
+        const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+        const vendor = dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+        const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+        intel.webgl = {
+          vendor,
+          renderer,
+          version: gl.getParameter(gl.VERSION),
+          shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        };
+      }catch(e){
+        intel.webgl = { error: String(e) };
+      }
+      renderIntel();
+    });
+
+    // update base intel when online/offline changes
+    window.addEventListener("online", refreshIntelBase);
+    window.addEventListener("offline", refreshIntelBase);
+
+    // --------- start
+    // show site will be triggered by video end or skip
   </script>
 </body>
 </html>
