@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>bella limiter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- favicon: change filename if needed -->
+  <link rel="icon" type="image/png" href="twi looking.png">
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.05);
+      --panel2: rgba(255,255,255,0.035);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --shadow: 0 18px 60px rgba(0,0,0,0.62);
+      --radius:18px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+      background:
+        radial-gradient(900px 600px at 15% 12%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    a{ color:var(--pink); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 42px 16px 110px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* animated gradient text */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    /* top bar */
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+    .badge{
+      width:56px;
+      height:56px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;
+      place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position: relative;
+    }
+    .badge::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%);
+      transform: rotate(25deg);
+      opacity:0.85;
+      pointer-events:none;
+    }
+    .badge img{
+      width:44px;
+      height:44px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .titlebox{ min-width:0; }
+    h1{
+      margin:0;
+      font-size: 2rem;
+      letter-spacing: 0.4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .sub{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      backdrop-filter: blur(6px);
+    }
+    .chip strong{ color: var(--text); font-weight:600; }
+    .chip .dot{
+      display:inline-block;
+      width:6px;height:6px;border-radius:999px;
+      margin-right:6px;
+      background: var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
+    }
+
+    /* nav buttons */
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .k{
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--pink2);
+    }
+
+    /* panels */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+      .chips{ justify-content:flex-start; }
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position: relative;
+    }
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h2{
+      margin:0;
+      font-size:1.05rem;
+      color: var(--pink2);
+      letter-spacing:0.3px;
+    }
+    .small{
+      font-size:0.86rem;
+      color: var(--muted);
+    }
+    .panelInner{
+      padding: 16px 16px;
+    }
+
+    /* terminal */
+    .terminal{
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
+                  rgba(0,0,0,0.35);
+      border-top:1px solid rgba(255,255,255,0.05);
+      font-family: var(--mono);
+      padding:14px 16px;
+      min-height: 230px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow:hidden;
+    }
+    .termLine{
+      display:flex;
+      gap:8px;
+      margin:6px 0;
+      align-items:flex-start;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .prompt{ color: var(--pink2); }
+    .cmd{ color: var(--text); }
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.1em;
+      background: var(--pink);
+      margin-left:2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align:-2px;
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+    @keyframes blink{ 50%{opacity:0;} }
+
+    .asciiBox{
+      margin-top: 12px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    pre.ascii{
+      margin:0;
+      white-space:pre;
+      font-size:12px;
+      line-height:1.15;
+      color: rgba(255,255,255,0.92);
+    }
+    .ascii .pink{
+      color: var(--pink2);
+      text-shadow: 0 0 10px rgba(255,120,200,0.35);
+    }
+
+    /* feature list */
+    ul.clean{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+    ul.clean li{
+      padding:10px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.10);
+    }
+    ul.clean li:last-child{ border-bottom:none; }
+
+    .tag{
+      display:inline-block;
+      font-size:0.72rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--pink2);
+      margin-left:6px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    /* code block */
+    .codeblock{
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.35;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px;
+      overflow:auto;
+      color: rgba(255,255,255,0.92);
+    }
+    .codeblock .pink{ color: var(--pink2); }
+
+    /* stickers: random floaty mlp images that fade on hover */
+    .stickerLayer{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .sticker{
+      position: absolute;
+      pointer-events: auto; /* allow hover */
+      opacity: 0.22;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      filter: drop-shadow(0 22px 30px rgba(0,0,0,0.55));
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(2px);
+    }
+    .sticker:hover{
+      opacity: 0.02; /* basically disappears */
+    }
+    .sticker img{
+      display:block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* oneko (optional) */
+    .oneko{
+      position:fixed;
+      bottom:12px;
+      right:12px;
+      opacity:0.95;
+      pointer-events:auto;
+      cursor:pointer;
+      z-index: 5;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      animation: floaty 3.6s ease-in-out infinite;
+      user-select:none;
+    }
+    @keyframes floaty{
+      0%{transform: translateY(0);}
+      50%{transform: translateY(-6px);}
+      100%{transform: translateY(0);}
+    }
+    .oneko img{
+      width:52px;
+      image-rendering:pixelated;
+      display:block;
+    }
+
+    /* tiny music visualizer */
+    .musicBar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+    }
+    .bars{
+      display:flex;
+      gap:4px;
+      height: 14px;
+      align-items:flex-end;
+      width: 54px;
+    }
+    .bar{
+      width: 4px;
+      height: 4px;
+      background: var(--pink2);
+      border-radius: 99px;
+      opacity: 0.9;
+      box-shadow: 0 0 10px rgba(255,120,200,0.25);
+      animation: bop 0.9s ease-in-out infinite;
+    }
+    .bar:nth-child(2){ animation-delay: 0.12s; }
+    .bar:nth-child(3){ animation-delay: 0.24s; }
+    .bar:nth-child(4){ animation-delay: 0.36s; }
+    .bar:nth-child(5){ animation-delay: 0.48s; }
+    .bar:nth-child(6){ animation-delay: 0.60s; }
+    @keyframes bop{
+      0%{ height: 4px; opacity: 0.55; }
+      50%{ height: 14px; opacity: 1; }
+      100%{ height: 4px; opacity: 0.55; }
+    }
+    .musicMeta{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .musicMeta .name{
+      font-size:0.9rem;
+      color: var(--text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .musicMeta .hint{
+      font-size:0.8rem;
+      color: var(--muted);
+    }
+
+    /* footer */
+    .footer{
+      margin-top: 18px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- randomized sticker layer -->
+  <div class="stickerLayer" id="stickerLayer" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <!-- use twi looking as the little icon square -->
+          <img src="twi looking.png" alt="icon">
+        </div>
+        <div class="titlebox">
+          <h1 class="pulseText">bella limiter</h1>
+          <div class="sub">feature rundown + how it behaves, in human words (mostly)</div>
+
+          <div class="btnRow">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer"><span class="k">git</span> repo</a>
+            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="k">yt</span> channel</a>
+            <a class="btn" href="#features"><span class="k">ls</span> features</a>
+            <a class="btn" href="#config"><span class="k">cat</span> config</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
+        <div class="chip">build: <strong>experimental</strong></div>
+        <div class="chip">last update: <strong id="date"></strong></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- left: terminal + summary -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>what it is</h2>
+          <div class="small">quick vibes check</div>
+        </div>
+        <div class="panelInner">
+          <p>
+            <span class="pulseText">bella limiter</span> is a WPF overlay tool with module toggles + hotkeys,
+            built for experimenting with network-y behavior and keeping control close to the keyboard.
+            it’s more “lab bench” than “polished product”, and that’s kinda the point (:3
+          </p>
+
+          <div class="musicBar" title="visualizer is just vibes, not real audio analysis">
+            <div class="bars" aria-hidden="true">
+              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+              <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <div class="musicMeta">
+              <div class="name"><span class="pulseText">status:</span> overlay online</div>
+              <div class="hint">hotkeys, modules, toggles, configs</div>
+            </div>
+          </div>
+
+          <div class="terminal" aria-label="terminal">
+            <div class="termLine">
+              <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+              <span class="cmd" id="typed"></span><span class="cursor"></span>
+            </div>
+            <div id="termOut"></div>
+
+            <div class="asciiBox">
+<pre class="ascii" id="ascii">
+ <span class="pink"> /\_/\</span>    bella limiter
+( o.o )   modules + overlay + chaos control
+ > ^ <    press buttons, watch reality bend a tiny bit
+
+ <span class="pink">  /\_/\</span>   <span class="pink"> /\_/\</span>   <span class="pink"> /\_/\</span>
+ ( -.- )  ( o.o )  ( >.< )
+  > ^ <    > ^ <    > ^ <
+</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- right: quick facts -->
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>quick facts</h2>
+          <div class="small pulseText">hi :3</div>
+        </div>
+        <div class="panelInner">
+          <ul class="clean">
+            <li>
+              <strong class="pulseText">ui</strong>
+              <span class="tag">wpf overlay</span>
+              <span class="tag">toggle modules</span>
+            </li>
+            <li>
+              <strong class="pulseText">controls</strong>
+              <span class="tag">hotkeys</span>
+              <span class="tag">start on launch</span>
+              <span class="tag">auto disable</span>
+            </li>
+            <li>
+              <strong class="pulseText">data</strong>
+              <span class="tag">config json</span>
+              <span class="tag">logging</span>
+              <span class="tag">db optional</span>
+            </li>
+            <li>
+              <strong class="pulseText">intent</strong>
+              <span class="tag">personal tool</span>
+              <span class="tag">experiments</span>
+              <span class="tag">learning</span>
+            </li>
+          </ul>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <a class="btn" href="#download"><span class="k">get</span> download</a>
+            <a class="btn" href="#faq"><span class="k">?</span> faq</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- features -->
+    <section class="panel" id="features" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>features</h2>
+        <div class="small">what you can actually do</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">overlay controls</strong>
+            <span class="tag">always-on-top</span>
+            <span class="tag">drag</span>
+            <span class="tag">position offsets</span>
+            <div class="small" style="margin-top:6px;">
+              UI stays out of your way but still lives on-screen when you need it.
+              offsets let you tuck it into the corner like a little gremlin panel.
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">module toggles</strong>
+            <span class="tag">per-mode</span>
+            <span class="tag">enable/disable</span>
+            <div class="small" style="margin-top:6px;">
+              modules are the main vibe: flip stuff on/off fast, and keep separate profiles (like PVE/PVP).
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">hotkeys</strong>
+            <span class="tag">fast</span>
+            <span class="tag">muscle memory</span>
+            <div class="small" style="margin-top:6px;">
+              everything important is keybindable. no menu-diving mid-chaos.
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">buffering / resync options</strong>
+            <span class="tag">stability</span>
+            <span class="tag">control</span>
+            <div class="small" style="margin-top:6px;">
+              toggle buffer behavior and resync behavior depending on the mode.
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">logging + storage</strong>
+            <span class="tag">db</span>
+            <span class="tag">optional</span>
+            <div class="small" style="margin-top:6px;">
+              logs exist for debugging and figuring out what’s happening. keypress logging can be off.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- config -->
+    <section class="panel" id="config" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>config</h2>
+        <div class="small">where the personality lives</div>
+      </div>
+      <div class="panelInner">
+        <p class="small">
+          settings are stored in a json config. you can tune overlay offsets, module toggles, and keybinds without touching code.
+        </p>
+
+        <div class="codeblock" role="region" aria-label="config snippet">
+<pre>{
+  "<span class="pink">CurrentModule</span>": "PVE",
+  "<span class="pink">Settings</span>": {
+    "Overlay_StartOnLaunch": true,
+    "Overlay_LeftOffset": 110,
+    "Overlay_BottomOffset": 100,
+    "Overlay_DisableOnInactivity": true
+  },
+  "<span class="pink">Modules</span>": {
+    "PVE": {
+      "Enabled": true,
+      "Keybind": [162, 50],
+      "Settings": {
+        "Buffer": true,
+        "AutoResync": true
+      }
+    }
+  }
+}</pre>
+        </div>
+
+        <div class="btnRow">
+          <a class="btn" href="#faq"><span class="k">man</span> notes</a>
+          <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer"><span class="k">open</span> repo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- download -->
+    <section class="panel" id="download" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>download</h2>
+        <div class="small">optional. experimental. you know the vibes.</div>
+      </div>
+      <div class="panelInner">
+        <p class="small">
+          if you’re adding a direct download later, link it here. (github releases is easiest.)
+        </p>
+
+        <div class="btnRow">
+          <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+            <span class="k">git</span> repo / releases
+          </a>
+          <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+            <span class="k">yt</span> videos
+          </a>
+        </div>
+
+        <div class="small" style="margin-top:12px;">
+          notes:
+          <ul style="margin:6px 0 0 18px; color: var(--muted);">
+            <li>windows only</li>
+            <li>overlay tools can look “sus” to antivirus sometimes</li>
+            <li>use responsibly, it’s a personal experiment tool</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- faq -->
+    <section class="panel" id="faq" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>faq</h2>
+        <div class="small">tiny answers</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">why does it look “sus”?</strong>
+            <div class="small" style="margin-top:6px;">
+              overlays + hotkeys + hooking-adjacent behavior = “antivirus eyebrow raise”.
+              doesn’t automatically mean malicious, just… a spicy tool shape.
+            </div>
+          </li>
+          <li>
+            <strong class="pulseText">is it finished?</strong>
+            <div class="small" style="margin-top:6px;">
+              finished is a myth. it’s usable, but it’s a living creature.
+            </div>
+          </li>
+          <li>
+            <strong class="pulseText">can i theme it?</strong>
+            <div class="small" style="margin-top:6px;">
+              depends on whether the UI reads theme values from config/resources. site side: yes, infinite.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="footer">
+      © <span class="pulseText">bella cactus</span> • limiter page • made with html + spite
+    </div>
+  </div>
+
+  <!-- optional oneko easter egg (click me) -->
+  <div class="oneko" title="click me" aria-label="oneko">
+    <img id="onekoImg" src="oneko.gif" alt="oneko">
+  </div>
+
+  <!-- lil jon yeah easter egg audio (only plays if file exists) -->
+  <audio id="liljon" preload="auto">
+    <source src="lil-jon-yeah.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // date
+    const d = new Date();
+    document.getElementById("date").textContent =
+      d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
+
+    // oneko gif fallback (supports your weird filename "onekogif")
+    const oneko = document.getElementById("onekoImg");
+    oneko.addEventListener("error", () => {
+      if (!oneko.dataset.tried) {
+        oneko.dataset.tried = "1";
+        oneko.src = "onekogif";
+      }
+    });
+
+    // click oneko -> try play lil jon yeah (if present)
+    const liljon = document.getElementById("liljon");
+    document.querySelector(".oneko").addEventListener("click", () => {
+      // attempt to play, ignore if blocked
+      try { liljon.currentTime = 0; liljon.play(); } catch (e) {}
+      // tiny visual feedback
+      oneko.style.transform = "translateY(-10px) scale(1.06)";
+      setTimeout(() => oneko.style.transform = "", 140);
+    });
+
+    // stickers: random sizes/orientations/positions, fade on hover
+    const stickerLayer = document.getElementById("stickerLayer");
+
+    const stickers = [
+      "ponies in bed.jpg",
+      "twi and trixy.jpg",
+      "twi looking.png",
+      "yuri meme.png"
+    ];
+
+    // deterministic-ish per refresh, but still random enough
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function makeStickers(){
+      // remove old
+      stickerLayer.innerHTML = "";
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      // amount scales with screen size
+      const count = clamp(Math.floor((w * h) / 260000), 3, 7);
+
+      for (let i = 0; i < count; i++){
+        const src = stickers[Math.floor(Math.random() * stickers.length)];
+        const el = document.createElement("div");
+        el.className = "sticker";
+
+        // random sizing
+        const size = rand(140, 320);
+        const aspect = rand(0.75, 1.25);
+        el.style.width = `${size}px`;
+        el.style.height = `${size * aspect}px`;
+
+        // random position with padding so it doesn't sit on edges
+        const pad = 16;
+        const left = rand(pad, Math.max(pad, w - size - pad));
+        const top  = rand(pad, Math.max(pad, h - (size * aspect) - pad));
+        el.style.left = `${left}px`;
+        el.style.top  = `${top}px`;
+
+        // random rotation
+        const rot = rand(-12, 12);
+        el.style.transform = `rotate(${rot}deg)`;
+
+        // different opacity vibes
+        el.style.opacity = String(rand(0.14, 0.26));
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "";
+        el.appendChild(img);
+
+        stickerLayer.appendChild(el);
+      }
+    }
+
+    makeStickers();
+    window.addEventListener("resize", () => {
+      // re-roll on resize so it doesn't look busted
+      makeStickers();
+    });
+
+    // terminal: types through lines, prints outputs, then loops ONLY the cursor typing (no new output)
+    const typedEl = document.getElementById("typed");
+    const outEl = document.getElementById("termOut");
+
+    const scriptLines = [
+      { cmd: "whoami", out: "bella (BellaCactus)" },
+      { cmd: "limiter --status", out: "overlay: online | module: ready | keys: armed" },
+      { cmd: "limiter --list-modules", out: "PVE, PVP, API Block, Reconnect, Duality, GamePauser, (etc)" },
+      { cmd: "cat vibe.txt", out: "control > chaos. but also chaos > boredom." },
+      { cmd: "open repo", out: "https://github.com/BellaCactus/bella-limiter-" }
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let phase = "typing"; // typing -> output -> nextline -> idle
+
+    function addOut(line){
+      const div = document.createElement("div");
+      div.className = "termLine";
+      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(line)}</span>`;
+      outEl.appendChild(div);
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function tick(){
+      const current = scriptLines[lineIndex];
+
+      if (phase === "typing"){
+        const full = current.cmd;
+        typedEl.textContent = full.slice(0, charIndex);
+        charIndex++;
+
+        if (charIndex > full.length){
+          phase = "output";
+          setTimeout(tick, 320);
+          return;
+        }
+
+        setTimeout(tick, 28 + Math.random() * 22);
+        return;
+      }
+
+      if (phase === "output"){
+        addOut(current.out);
+        phase = "nextline";
+        setTimeout(tick, 320);
+        return;
+      }
+
+      if (phase === "nextline"){
+        lineIndex++;
+        charIndex = 0;
+
+        if (lineIndex >= scriptLines.length){
+          // done: go idle typing loop without adding output or extending page
+          phase = "idle";
+          typedEl.textContent = "";
+          setTimeout(tick, 200);
+          return;
+        }
+
+        phase = "typing";
+        setTimeout(tick, 220);
+        return;
+      }
+
+      if (phase === "idle"){
+        // idle: just animate the command line typing without ever printing
+        const idleWords = ["", "limiter --help", "echo hi :3", "reroll stickers", "status", "ls", "cd ..", "cat limiter.html"];
+        const word = idleWords[Math.floor(Math.random() * idleWords.length)];
+
+        // type + delete loop
+        let i = 0;
+        let dir = 1;
+
+        const loop = () => {
+          typedEl.textContent = word.slice(0, i);
+
+          i += dir;
+          if (i >= word.length + 1){
+            dir = -1;
+            setTimeout(loop, 700);
+            return;
+          }
+          if (i <= 0){
+            dir = 1;
+            // occasionally reroll stickers as a little background vibe
+            if (Math.random() < 0.35) makeStickers();
+            setTimeout(loop, 260);
+            return;
+          }
+
+          setTimeout(loop, 40 + Math.random() * 35);
+        };
+
+        loop();
+        return;
+      }
+    }
+
+    tick();
+  </script>
+</body>
+</html>
