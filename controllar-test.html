@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>bella cactus | controllar test</title>
+  <link rel="icon" type="image/png" href="twi looking.png" />
+<meta name="color-scheme" content="dark" />
+<style>
+:root{
+  --bg:#070707;
+  --bg2:#0b0b0b;
+  --panel: rgba(255,255,255,0.055);
+  --panel2: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.10);
+
+  --text:#f7f7f7;
+  --muted:#b9b9c2;
+
+  --pink:#ff78c8;
+  --pink2:#ffb3e6;
+  --pink3:#ff4db8;
+
+  --shadow: 0 20px 70px rgba(0,0,0,0.55);
+  --radius:16px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 700px at 70% 10%, rgba(255,79,216,0.15), transparent 55%),
+              radial-gradient(900px 600px at 20% 80%, rgba(0,255,210,0.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  line-height: 1.5;
+}
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(7,7,11,0.62);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.brand .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,79,216,0.2);
+}
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: none;
+  color: var(--text);
+}
+.btn:hover { background: rgba(255,255,255,0.07); }
+.container {
+  max-width: 1100px;
+  margin: 22px auto 80px;
+  padding: 0 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 18px;
+  overflow: hidden;
+}
+img, video, canvas { max-width: 100%; height: auto; }
+pre, code { font-family: var(--mono); }
+pre {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.25);
+  overflow: auto;
+}
+img:hover { opacity: 0.12; transition: opacity 120ms linear; }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:300 900;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/inter/Inter-VariableFont_slnt,wght.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:Cardo;font-style:normal;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:italic;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_italic_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:normal;font-weight:700;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_700.woff2') format('woff2');}
+
+/* Custom styles for the navigation menu to add an animated underline */
+    .main-nav a {
+        position: relative;
+        text-decoration: none;
+        padding-bottom: 8px; /* Add space for the underline */
+    }
+    .main-nav a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        /* This gradient matches the theme of your main page */
+        background-image: linear-gradient(to right, #f97316, #facc15);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+    }
+    .main-nav a:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+body {
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            color: #e0e0e0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 840px; /* Canvas width + padding */
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #e0e0e0;
+        }
+        #status {
+            font-size: 1.1rem;
+            height: 20px;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+        #status.connected {
+            color: #00ff7f; /* Spring Green */
+        }
+        #status.disconnected {
+            color: #ff4d4d; /* Light Red */
+        }
+        canvas {
+            border-radius: 15px;
+            border: 2px solid #00ff7f;
+            box-shadow: 0 0 30px rgba(0, 255, 127, 0.3);
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .debugger-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 840px;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .debugger {
+            padding: 15px;
+            background-color: #2c2c54;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            flex-grow: 1;
+        }
+        #button-states {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .button-state {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #1a1a2e;
+            transition: all 0.1s ease;
+        }
+        .button-state.pressed {
+            background-color: #00ff7f;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        /* D-Pad Visualizer Styles */
+        #dpad-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #dpad-visualizer {
+            width: 90px;
+            height: 90px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 2px;
+        }
+        .dpad-button {
+            background-color: #1a1a2e;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+        }
+        #dpad-up { grid-area: 1 / 2 / 2 / 3; }
+        #dpad-left { grid-area: 2 / 1 / 3 / 2; }
+        #dpad-right { grid-area: 2 / 3 / 3 / 4; }
+        #dpad-down { grid-area: 3 / 2 / 4 / 3; }
+        .dpad-button.pressed {
+            background-color: #00ff7f;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+</head>
+<body>
+    <div style="position:fixed;top:14px;left:14px;z-index:50">
+      <a class="btn" href="index.html" style="backdrop-filter: blur(6px);"><span class="k">cd</span> home</a>
+    </div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <div style="min-width:0">
+        <div class="brand-title">penjis trollar tes</div>
+        <div class="brand-sub">staticized for github pages</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="./index.html">↩ home</a>
+      <a class="btn" href="javascript:history.back()">← back</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card" id="app">
+
+
+
+<title>Gamepad Controller Tester</title>
+
+<style>
+body {
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            color: #e0e0e0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 840px; /* Canvas width + padding */
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #e0e0e0;
+        }
+        #status {
+            font-size: 1.1rem;
+            height: 20px;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+        #status.connected {
+            color: #00ff7f; /* Spring Green */
+        }
+        #status.disconnected {
+            color: #ff4d4d; /* Light Red */
+        }
+        canvas {
+            border-radius: 15px;
+            border: 2px solid #00ff7f;
+            box-shadow: 0 0 30px rgba(0, 255, 127, 0.3);
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .debugger-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 840px;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .debugger {
+            padding: 15px;
+            background-color: #2c2c54;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            flex-grow: 1;
+        }
+        #button-states {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .button-state {
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #1a1a2e;
+            transition: all 0.1s ease;
+        }
+        .button-state.pressed {
+            background-color: #00ff7f;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        /* D-Pad Visualizer Styles */
+        #dpad-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #dpad-visualizer {
+            width: 90px;
+            height: 90px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 2px;
+        }
+        .dpad-button {
+            background-color: #1a1a2e;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+        }
+        #dpad-up { grid-area: 1 / 2 / 2 / 3; }
+        #dpad-left { grid-area: 2 / 1 / 3 / 2; }
+        #dpad-right { grid-area: 2 / 3 / 3 / 4; }
+        #dpad-down { grid-area: 3 / 2 / 4 / 3; }
+        .dpad-button.pressed {
+            background-color: #00ff7f;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+a{color:var(--pink);text-decoration:none;}a:hover{text-decoration:underline;}
+
+</style>
+<div class="container">
+<h1>test yo bich ass controllar</h1>
+<p class="disconnected" id="status">Connect controller and press a button</p>
+<canvas height="600" id="gameCanvas" style="border-color: rgb(255, 132, 0); box-shadow: rgba(255, 132, 0, 0.5) 0px 0px 30px;" width="800"></canvas>
+</div>
+ Debugger display area 
+<div class="debugger-container">
+<div class="debugger" id="axis-debugger">
+<h2>Analog Stick Axes n shit</h2>
+<div id="axis-values">Please connect a controller…</div>
+</div>
+<div class="debugger" id="button-debugger">
+<h2>Buttons &amp; D-Pad type shit</h2>
+<div id="dpad-container">
+<div id="dpad-visualizer">
+<div class="dpad-button" id="dpad-up">↑</div>
+<div class="dpad-button" id="dpad-left">←</div>
+<div class="dpad-button" id="dpad-right">→</div>
+<div class="dpad-button" id="dpad-down">↓</div>
+</div>
+<span>D-Pad Status took to long to make this shit tspmo</span>
+</div>
+<div id="button-states">…</div>
+</div>
+</div>
+<script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusDisplay = document.getElementById('status');
+        const axisValuesDisplay = document.getElementById('axis-values');
+        const buttonStatesDisplay = document.getElementById('button-states');
+        const dpadUp = document.getElementById('dpad-up');
+        const dpadDown = document.getElementById('dpad-down');
+        const dpadLeft = document.getElementById('dpad-left');
+        const dpadRight = document.getElementById('dpad-right');
+
+        let gamepadIndex;
+        let isBackgroundImageLoaded = false;
+        let isBallImageLoaded = false;
+        let gameLoopStarted = false;
+        let hue = 0;
+
+        const backgroundImage = new Image();
+        backgroundImage.crossOrigin = "Anonymous";
+        backgroundImage.src = "https://i.imgur.com/Ra5wlPH.jpeg";
+
+        const ballImage = new Image();
+        ballImage.crossOrigin = "Anonymous";
+        ballImage.src = "https://i.imgur.com/FSWEQrW.gif";
+
+        const ball1 = { x: canvas.width / 4, y: canvas.height / 2, radius: 35, speed: 5 };
+        const ball2 = { x: (canvas.width / 4) * 3, y: canvas.height / 2, radius: 35, speed: 5 };
+
+        window.addEventListener('gamepadconnected', (e) => {
+            gamepadIndex = e.gamepad.index;
+            statusDisplay.textContent = 'Controller Connected!';
+            statusDisplay.className = 'connected';
+        });
+
+        window.addEventListener('gamepaddisconnected', (e) => {
+            gamepadIndex = undefined;
+            statusDisplay.textContent = 'Controller Disconnected!';
+            statusDisplay.className = 'disconnected';
+            axisValuesDisplay.textContent = "Controller disconnected.";
+            buttonStatesDisplay.innerHTML = "";
+        });
+
+        // Helper function to check if a value is close to a target
+        function isClose(a, b, epsilon = 0.05) {
+            return Math.abs(a - b) < epsilon;
+        }
+
+        function update() {
+            if (gamepadIndex !== undefined) {
+                const gamepad = navigator.getGamepads()[gamepadIndex];
+                if (gamepad) {
+                    const deadzone = 0.1;
+                    
+                    let axisHTML = '';
+                    gamepad.axes.forEach((axis, index) => {
+                        axisHTML += `<div>Axis ${index}: ${axis.toFixed(4)}</div>`;
+                    });
+                    axisValuesDisplay.innerHTML = axisHTML;
+
+                    // --- Button Tester Logic ---
+                    // **FIX:** Now displays ALL buttons, so you can see Button 13 etc.
+                    let buttonHTML = '';
+                    gamepad.buttons.forEach((button, index) => {
+                        const isPressed = button.pressed;
+                        const value = button.value.toFixed(2);
+                        buttonHTML += `<div class="button-state ${isPressed ? 'pressed' : ''}">
+                            Button ${index}: ${isPressed ? 'PRESSED' : 'Released'} (Value: ${value})
+                        </div>`;
+                    });
+                    buttonStatesDisplay.innerHTML = buttonHTML;
+
+                    // --- D-Pad Logic ---
+                    dpadUp.classList.remove('pressed');
+                    dpadDown.classList.remove('pressed');
+                    dpadLeft.classList.remove('pressed');
+                    dpadRight.classList.remove('pressed');
+
+                    // **FIX:** The D-Pad now ONLY listens to the hat switch (Axis 9)
+                    // This prevents the conflict with other buttons like Button 13.
+                    const hatSwitch = gamepad.axes[9];
+                    if (hatSwitch !== undefined && hatSwitch < 2) {
+                        // Up values: -1 (U), -0.714 (U+R), 1.0 (U+L)
+                        if (isClose(hatSwitch, -1.0) || isClose(hatSwitch, -0.714) || isClose(hatSwitch, 1.0)) {
+                            dpadUp.classList.add('pressed');
+                        }
+                        // Down values: 0.142 (D), -0.142 (D+R), 0.428 (D+L)
+                        if (isClose(hatSwitch, 0.142) || isClose(hatSwitch, -0.142) || isClose(hatSwitch, 0.428)) {
+                            dpadDown.classList.add('pressed');
+                        }
+                        // Left values: 0.714 (L), 0.428 (D+L), 1.0 (U+L)
+                        if (isClose(hatSwitch, 0.714) || isClose(hatSwitch, 0.428) || isClose(hatSwitch, 1.0)) {
+                            dpadLeft.classList.add('pressed');
+                        }
+                        // Right values: -0.428 (R), -0.714 (U+R), -0.142 (D+R)
+                        if (isClose(hatSwitch, -0.428) || isClose(hatSwitch, -0.714) || isClose(hatSwitch, -0.142)) {
+                            dpadRight.classList.add('pressed');
+                        }
+                    }
+
+                    // --- Ball Control Logic ---
+                    const leftXAxis = gamepad.axes[0] || 0;
+                    const leftYAxis = gamepad.axes[1] || 0;
+                    if (Math.abs(leftXAxis) > deadzone) ball1.x += leftXAxis * ball1.speed;
+                    if (Math.abs(leftYAxis) > deadzone) ball1.y += leftYAxis * ball1.speed;
+
+                    const rightXAxis = gamepad.axes[2] || 0;
+                    const rightYAxis = gamepad.axes[5] || 0; 
+                    if (Math.abs(rightXAxis) > deadzone) ball2.x += rightXAxis * ball2.speed;
+                    if (Math.abs(rightYAxis) > deadzone) ball2.y += rightYAxis * ball2.speed;
+
+                    [ball1, ball2].forEach(ball => {
+                        if (ball.x - ball.radius < 0) ball.x = ball.radius;
+                        if (ball.x + ball.radius > canvas.width) ball.x = canvas.width - ball.radius;
+                        if (ball.y - ball.radius < 0) ball.y = ball.radius;
+                        if (ball.y + ball.radius > canvas.height) ball.y = canvas.height - ball.radius;
+                    });
+                }
+            }
+        }
+
+        function drawBall(ball) {
+            ctx.save();
+            ctx.shadowBlur = 25;
+            ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
+            
+            if (isBallImageLoaded) {
+                ctx.drawImage(ballImage, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
+            } else {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+                ctx.fill();
+                ctx.closePath();
+            }
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (isBackgroundImageLoaded) {
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillStyle = '#2c2c54';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            drawBall(ball1);
+            drawBall(ball2);
+        }
+
+        function gameLoop() {
+            hue = (hue + 1) % 360; 
+            const dynamicColor = `hsl(${hue}, 100%, 50%)`;
+            const dynamicShadowColor = `hsla(${hue}, 100%, 50%, 0.5)`;
+            canvas.style.borderColor = dynamicColor;
+            canvas.style.boxShadow = `0 0 30px ${dynamicShadowColor}`;
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            if (!gameLoopStarted) {
+                gameLoop();
+                gameLoopStarted = true;
+            }
+        }
+        
+        backgroundImage.onload = () => { isBackgroundImageLoaded = true; startGame(); };
+        backgroundImage.onerror = () => { console.error("BG image error."); isBackgroundImageLoaded = false; startGame(); }
+        ballImage.onload = () => { isBallImageLoaded = true; };
+        ballImage.onerror = () => { console.error("Ball image error."); isBallImageLoaded = false; };
+    </script>
+<p class="is-style-text-display"></p>
+
+  </section>
+</main>
+
+<script>
+(() => {
+  const admin = document.getElementById('wpadminbar');
+  if (admin) admin.remove();
+})();
+</script>
+<script>
+const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const statusDisplay = document.getElementById('status');
+        const axisValuesDisplay = document.getElementById('axis-values');
+        const buttonStatesDisplay = document.getElementById('button-states');
+        const dpadUp = document.getElementById('dpad-up');
+        const dpadDown = document.getElementById('dpad-down');
+        const dpadLeft = document.getElementById('dpad-left');
+        const dpadRight = document.getElementById('dpad-right');
+
+        let gamepadIndex;
+        let isBackgroundImageLoaded = false;
+        let isBallImageLoaded = false;
+        let gameLoopStarted = false;
+        let hue = 0;
+
+        const backgroundImage = new Image();
+        backgroundImage.crossOrigin = "Anonymous";
+        backgroundImage.src = "https://i.imgur.com/Ra5wlPH.jpeg";
+
+        const ballImage = new Image();
+        ballImage.crossOrigin = "Anonymous";
+        ballImage.src = "https://i.imgur.com/FSWEQrW.gif";
+
+        const ball1 = { x: canvas.width / 4, y: canvas.height / 2, radius: 35, speed: 5 };
+        const ball2 = { x: (canvas.width / 4) * 3, y: canvas.height / 2, radius: 35, speed: 5 };
+
+        window.addEventListener('gamepadconnected', (e) => {
+            gamepadIndex = e.gamepad.index;
+            statusDisplay.textContent = 'Controller Connected!';
+            statusDisplay.className = 'connected';
+        });
+
+        window.addEventListener('gamepaddisconnected', (e) => {
+            gamepadIndex = undefined;
+            statusDisplay.textContent = 'Controller Disconnected!';
+            statusDisplay.className = 'disconnected';
+            axisValuesDisplay.textContent = "Controller disconnected.";
+            buttonStatesDisplay.innerHTML = "";
+        });
+
+        // Helper function to check if a value is close to a target
+        function isClose(a, b, epsilon = 0.05) {
+            return Math.abs(a - b) < epsilon;
+        }
+
+        function update() {
+            if (gamepadIndex !== undefined) {
+                const gamepad = navigator.getGamepads()[gamepadIndex];
+                if (gamepad) {
+                    const deadzone = 0.1;
+                    
+                    let axisHTML = '';
+                    gamepad.axes.forEach((axis, index) => {
+                        axisHTML += `<div>Axis ${index}: ${axis.toFixed(4)}</div>`;
+                    });
+                    axisValuesDisplay.innerHTML = axisHTML;
+
+                    // --- Button Tester Logic ---
+                    // **FIX:** Now displays ALL buttons, so you can see Button 13 etc.
+                    let buttonHTML = '';
+                    gamepad.buttons.forEach((button, index) => {
+                        const isPressed = button.pressed;
+                        const value = button.value.toFixed(2);
+                        buttonHTML += `<div class="button-state ${isPressed ? 'pressed' : ''}">
+                            Button ${index}: ${isPressed ? 'PRESSED' : 'Released'} (Value: ${value})
+                        </div>`;
+                    });
+                    buttonStatesDisplay.innerHTML = buttonHTML;
+
+                    // --- D-Pad Logic ---
+                    dpadUp.classList.remove('pressed');
+                    dpadDown.classList.remove('pressed');
+                    dpadLeft.classList.remove('pressed');
+                    dpadRight.classList.remove('pressed');
+
+                    // **FIX:** The D-Pad now ONLY listens to the hat switch (Axis 9)
+                    // This prevents the conflict with other buttons like Button 13.
+                    const hatSwitch = gamepad.axes[9];
+                    if (hatSwitch !== undefined && hatSwitch < 2) {
+                        // Up values: -1 (U), -0.714 (U+R), 1.0 (U+L)
+                        if (isClose(hatSwitch, -1.0) || isClose(hatSwitch, -0.714) || isClose(hatSwitch, 1.0)) {
+                            dpadUp.classList.add('pressed');
+                        }
+                        // Down values: 0.142 (D), -0.142 (D+R), 0.428 (D+L)
+                        if (isClose(hatSwitch, 0.142) || isClose(hatSwitch, -0.142) || isClose(hatSwitch, 0.428)) {
+                            dpadDown.classList.add('pressed');
+                        }
+                        // Left values: 0.714 (L), 0.428 (D+L), 1.0 (U+L)
+                        if (isClose(hatSwitch, 0.714) || isClose(hatSwitch, 0.428) || isClose(hatSwitch, 1.0)) {
+                            dpadLeft.classList.add('pressed');
+                        }
+                        // Right values: -0.428 (R), -0.714 (U+R), -0.142 (D+R)
+                        if (isClose(hatSwitch, -0.428) || isClose(hatSwitch, -0.714) || isClose(hatSwitch, -0.142)) {
+                            dpadRight.classList.add('pressed');
+                        }
+                    }
+
+                    // --- Ball Control Logic ---
+                    const leftXAxis = gamepad.axes[0] || 0;
+                    const leftYAxis = gamepad.axes[1] || 0;
+                    if (Math.abs(leftXAxis) > deadzone) ball1.x += leftXAxis * ball1.speed;
+                    if (Math.abs(leftYAxis) > deadzone) ball1.y += leftYAxis * ball1.speed;
+
+                    const rightXAxis = gamepad.axes[2] || 0;
+                    const rightYAxis = gamepad.axes[5] || 0; 
+                    if (Math.abs(rightXAxis) > deadzone) ball2.x += rightXAxis * ball2.speed;
+                    if (Math.abs(rightYAxis) > deadzone) ball2.y += rightYAxis * ball2.speed;
+
+                    [ball1, ball2].forEach(ball => {
+                        if (ball.x - ball.radius < 0) ball.x = ball.radius;
+                        if (ball.x + ball.radius > canvas.width) ball.x = canvas.width - ball.radius;
+                        if (ball.y - ball.radius < 0) ball.y = ball.radius;
+                        if (ball.y + ball.radius > canvas.height) ball.y = canvas.height - ball.radius;
+                    });
+                }
+            }
+        }
+
+        function drawBall(ball) {
+            ctx.save();
+            ctx.shadowBlur = 25;
+            ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
+            
+            if (isBallImageLoaded) {
+                ctx.drawImage(ballImage, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
+            } else {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+                ctx.fill();
+                ctx.closePath();
+            }
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (isBackgroundImageLoaded) {
+                ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillStyle = '#2c2c54';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            drawBall(ball1);
+            drawBall(ball2);
+        }
+
+        function gameLoop() {
+            hue = (hue + 1) % 360; 
+            const dynamicColor = `hsl(${hue}, 100%, 50%)`;
+            const dynamicShadowColor = `hsla(${hue}, 100%, 50%, 0.5)`;
+            canvas.style.borderColor = dynamicColor;
+            canvas.style.boxShadow = `0 0 30px ${dynamicShadowColor}`;
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            if (!gameLoopStarted) {
+                gameLoop();
+                gameLoopStarted = true;
+            }
+        }
+        
+        backgroundImage.onload = () => { isBackgroundImageLoaded = true; startGame(); };
+        backgroundImage.onerror = () => { console.error("BG image error."); isBackgroundImageLoaded = false; startGame(); }
+        ballImage.onload = () => { isBallImageLoaded = true; };
+        ballImage.onerror = () => { console.error("Ball image error."); isBallImageLoaded = false; };
+
+( function() {
+		var skipLinkTarget = document.querySelector( 'main' ),
+			sibling,
+			skipLinkTargetID,
+			skipLink;
+
+		// Early exit if a skip-link target can't be located.
+		if ( ! skipLinkTarget ) {
+			return;
+		}
+
+		/*
+		 * Get the site wrapper.
+		 * The skip-link will be injected in the beginning of it.
+		 */
+		sibling = document.querySelector( '.wp-site-blocks' );
+
+		// Early exit if the root element was not found.
+		if ( ! sibling ) {
+			return;
+		}
+
+		// Get the skip-link target's ID, and generate one if it doesn't exist.
+		skipLinkTargetID = skipLinkTarget.id;
+		if ( ! skipLinkTargetID ) {
+			skipLinkTargetID = 'wp--skip-link--target';
+			skipLinkTarget.id = skipLinkTargetID;
+		}
+
+		// Create the skip link.
+		skipLink = document.createElement( 'a' );
+		skipLink.classList.add( 'skip-link', 'screen-reader-text' );
+		skipLink.id = 'wp-skip-link';
+		skipLink.href = '#' + skipLinkTargetID;
+		skipLink.innerText = 'Skip to content';
+
+		// Inject the skip link.
+		sibling.parentElement.insertBefore( skipLink, sibling );
+	}() );
+	
+//# sourceURL=wp-block-template-skip-link-js-after
+
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"http://localhost/Bowencactus.com/wp-includes/js/wp-emoji-release.min.js?ver=6.9"}}
+</script>
+</body>
+</html>

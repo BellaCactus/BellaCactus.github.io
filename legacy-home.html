@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>bella cactus | legacy home</title>
+  <link rel="icon" type="image/png" href="twi looking.png" />
+<meta name="color-scheme" content="dark" />
+<style>
+:root{
+  --bg:#070707;
+  --bg2:#0b0b0b;
+  --panel: rgba(255,255,255,0.055);
+  --panel2: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.10);
+
+  --text:#f7f7f7;
+  --muted:#b9b9c2;
+
+  --pink:#ff78c8;
+  --pink2:#ffb3e6;
+  --pink3:#ff4db8;
+
+  --shadow: 0 20px 70px rgba(0,0,0,0.55);
+  --radius:16px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 700px at 70% 10%, rgba(255,79,216,0.15), transparent 55%),
+              radial-gradient(900px 600px at 20% 80%, rgba(0,255,210,0.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  line-height: 1.5;
+}
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(7,7,11,0.62);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.brand .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,79,216,0.2);
+}
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: none;
+  color: var(--text);
+}
+.btn:hover { background: rgba(255,255,255,0.07); }
+.container {
+  max-width: 1100px;
+  margin: 22px auto 80px;
+  padding: 0 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 18px;
+  overflow: hidden;
+}
+img, video, canvas { max-width: 100%; height: auto; }
+pre, code { font-family: var(--mono); }
+pre {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.25);
+  overflow: auto;
+}
+img:hover { opacity: 0.12; transition: opacity 120ms linear; }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:300 900;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/inter/Inter-VariableFont_slnt,wght.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:Cardo;font-style:normal;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:italic;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_italic_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:normal;font-weight:700;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_700.woff2') format('woff2');}
+
+*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mx-auto{margin-left:auto;margin-right:auto}.my-6{margin-top:1.5rem;margin-bottom:1.5rem}.mb-4{margin-bottom:1rem}.mb-8{margin-bottom:2rem}.flex{display:flex}.w-\[420px\]{width:420px}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-5xl{max-width:64rem}.max-w-full{max-width:100%}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.gap-8{gap:2rem}.rounded-lg{border-radius:0.5rem}.border-b{border-bottom-width:1px}.border-gray-800{--tw-border-opacity:1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1))}.bg-transparent{background-color:transparent}.p-4{padding:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-16{padding-bottom:4rem}.pt-12{padding-top:3rem}.text-center{text-align:center}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-semibold{font-weight:600}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:p-8{padding:2rem}}@media (min-width: 768px){.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}
+
+/* Custom styles for the navigation menu to add an animated underline */
+    .main-nav a {
+        position: relative;
+        text-decoration: none;
+        padding-bottom: 8px; /* Add space for the underline */
+    }
+    .main-nav a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        /* This gradient matches the theme of your main page */
+        background-image: linear-gradient(to right, #f97316, #facc15);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+    }
+    .main-nav a:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1c1917; /* Fallback color - Dark Brown/Orange */
+            background-image: linear-gradient(rgba(28, 25, 23, 0.95), rgba(28, 25, 23, 0.98)), url('https://images.pexels.com/photos/1631677/pexels-photo-1631677.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #E5E7EB; /* Light Gray */
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #f97316, #facc15); /* Orange to Yellow */
+        }
+        .card {
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #374151;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #f97316; /* Updated hover color - Orange */
+            transform: translateY(-5px);
+        }
+        .btn-project {
+            background-color: #374151;
+            color: #E5E7EB;
+            transition: all 0.3s ease;
+            border: 1px solid #4B5563;
+        }
+        .btn-project:hover {
+            background-color: #4B5563;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-color: #f97316; /* Updated hover color - Orange */
+        }
+        @keyframes rgb-animation {
+            0% { border-color: #ff0000; }
+            14% { border-color: #ff7f00; }
+            28% { border-color: #ffff00; }
+            42% { border-color: #00ff00; }
+            57% { border-color: #0000ff; }
+            71% { border-color: #4b0082; }
+            85% { border-color: #9400d3; }
+            100% { border-color: #ff0000; }
+        }
+        @keyframes score-rgb-animation {
+            0% { color: #ff0000; }
+            14% { color: #ff7f00; }
+            28% { color: #ffff00; }
+            42% { color: #00ff00; }
+            57% { color: #0000ff; }
+            71% { color: #4b0082; }
+            85% { color: #9400d3; }
+            100% { color: #ff0000; }
+        }
+        #game-container {
+            position: relative;
+            background-color: #000;
+            border: 4px solid;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: rgb-animation 5s infinite linear;
+        }
+        canvas {
+            display: block;
+        }
+        #message-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        #message-box h2 {
+            margin-top: 0;
+            font-size: 2em;
+            text-transform: uppercase;
+        }
+        #message-box p {
+            font-size: 1.2em;
+            margin: 8px 0;
+        }
+        #score-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
+            animation: score-rgb-animation 5s infinite linear;
+        }
+        #controls-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: right;
+        }
+        .loading-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+</head>
+<body>
+    <div style="position:fixed;top:14px;left:14px;z-index:50">
+      <a class="btn" href="index.html" style="backdrop-filter: blur(6px);"><span class="k">cd</span> home</a>
+    </div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <div style="min-width:0">
+        <div class="brand-title">BowenCactus.com</div>
+        <div class="brand-sub">staticized for github pages</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="./index.html">↩ home</a>
+      <a class="btn" href="javascript:history.back()">← back</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card" id="app">
+
+<div class="wp-block-file aligncenter"><a href="/wp-content/uploads/2025/09/game.html" id="wp-block-file--media-318c739d-3164-434b-9971-ec0b204bf738">game</a><a aria-describedby="wp-block-file--media-318c739d-3164-434b-9971-ec0b204bf738" class="wp-block-file__button wp-element-button" download="" href="/wp-content/uploads/2025/09/game.html">Download</a></div>
+<p class="has-text-align-center"><strong>if it doesnt work just click above</strong></p>
+
+
+<title>Jump King</title>
+
+
+<style>
+body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1c1917; /* Fallback color - Dark Brown/Orange */
+            background-image: linear-gradient(rgba(28, 25, 23, 0.95), rgba(28, 25, 23, 0.98)), url('https://images.pexels.com/photos/1631677/pexels-photo-1631677.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #E5E7EB; /* Light Gray */
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #f97316, #facc15); /* Orange to Yellow */
+        }
+        .card {
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #374151;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #f97316; /* Updated hover color - Orange */
+            transform: translateY(-5px);
+        }
+        .btn-project {
+            background-color: #374151;
+            color: #E5E7EB;
+            transition: all 0.3s ease;
+            border: 1px solid #4B5563;
+        }
+        .btn-project:hover {
+            background-color: #4B5563;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-color: #f97316; /* Updated hover color - Orange */
+        }
+        @keyframes rgb-animation {
+            0% { border-color: #ff0000; }
+            14% { border-color: #ff7f00; }
+            28% { border-color: #ffff00; }
+            42% { border-color: #00ff00; }
+            57% { border-color: #0000ff; }
+            71% { border-color: #4b0082; }
+            85% { border-color: #9400d3; }
+            100% { border-color: #ff0000; }
+        }
+        @keyframes score-rgb-animation {
+            0% { color: #ff0000; }
+            14% { color: #ff7f00; }
+            28% { color: #ffff00; }
+            42% { color: #00ff00; }
+            57% { color: #0000ff; }
+            71% { color: #4b0082; }
+            85% { color: #9400d3; }
+            100% { color: #ff0000; }
+        }
+        #game-container {
+            position: relative;
+            background-color: #000;
+            border: 4px solid;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: rgb-animation 5s infinite linear;
+        }
+        canvas {
+            display: block;
+        }
+        #message-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        #message-box h2 {
+            margin-top: 0;
+            font-size: 2em;
+            text-transform: uppercase;
+        }
+        #message-box p {
+            font-size: 1.2em;
+            margin: 8px 0;
+        }
+        #score-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
+            animation: score-rgb-animation 5s infinite linear;
+        }
+        #controls-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: right;
+        }
+        .loading-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+a{color:var(--pink);text-decoration:none;}a:hover{text-decoration:underline;}
+
+</style>
+<div class="container mx-auto max-w-5xl px-6 pt-12 pb-16 flex flex-col items-center">
+<h1 class="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-4 text-center">
+            Play <span class="text-gradient">Hump King</span>
+</h1>
+<p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto text-center mb-8">
+            A simple, yet challenging platformer. How high can you go?
+        </p>
+<div class="card p-4 sm:p-8 rounded-lg shadow-lg max-w-full w-[420px] mb-8">
+<div id="game-container">
+<canvas id="gameCanvas"></canvas>
+<div id="score-display">Score: 0</div>
+<div id="controls-info">WASD/Arrows to Move, Space/Gamepad Button to Hump, R/B to Reset, Enter for Fullscreen</div>
+<div id="message-box">
+<h2 id="message-title"></h2>
+<p id="message-score"></p>
+</div>
+<div class="loading-message">Loading…</div>
+</div>
+</div>
+<a class="btn-project px-6 py-3 rounded-lg font-bold" href="javascript:history.back()">
+            ← Back
+        </a>
+</div>
+<script>
+        window.onload = function() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const messageBox = document.getElementById('message-box');
+            const messageTitle = document.getElementById('message-title');
+            const messageScore = document.getElementById('message-score');
+            const scoreDisplay = document.getElementById('score-display');
+            const loadingMessage = document.querySelector('.loading-message');
+            const gameContainer = document.getElementById('game-container');
+
+            const GAME_WIDTH = 400;
+            const GAME_HEIGHT = 600;
+
+            canvas.width = GAME_WIDTH;
+            canvas.height = GAME_HEIGHT;
+
+            // Player object
+            const player = {
+                x: GAME_WIDTH / 2 - 20,
+                y: GAME_HEIGHT - 60,
+                width: 40,
+                height: 40,
+                velocityY: 0,
+                velocityX: 0,
+                speed: 4,
+                gravity: 0.3, 
+                jumpPower: -10, // Adjusted jump strength
+                onGround: false,
+                jumpsLeft: 2,
+                facing: 1 // 1 for right, -1 for left
+            };
+
+            // Game variables
+            let score = 0;
+            let gameOver = false;
+            let platforms = [];
+            let enemies = [];
+            let keys = {};
+            let gamepadIndex = null;
+            let cameraY = 0; // Vertical camera position
+            let jumpPressed = false; // Flag to handle jump input
+            let resetPressed = false; // Flag to prevent multiple resets on key held
+            let enterPressed = false; // Flag to prevent multiple fullscreen requests
+            let animationFrameId = null; // Store animation frame ID
+
+            // Image assets
+            const characterImage = new Image();
+            const backgroundImage = new Image();
+            const platformImage = new Image();
+            const enemyImage = new Image();
+            
+            const imageSources = {
+                character: "https://i.imgur.com/W43w0bM.png",
+                background: "https://i.imgur.com/YhmigBs.jpeg",
+                platform: "https://i.imgur.com/FSWEQrW.gif",
+                enemy: "https://i.imgur.com/F1rL7Jc.jpeg"
+            };
+
+            // A simple function to load an image with a promise
+            function loadImage(url) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => {
+                        console.error(`Failed to load image at ${url}. This may be due to a CORS issue.`);
+                        reject(new Error(`Failed to load image at ${url}`));
+                    };
+                    img.src = url;
+                });
+            }
+
+            // Event listeners for keyboard
+            document.addEventListener('keydown', (e) => {
+                keys[e.key] = true;
+            });
+
+            document.addEventListener('keyup', (e) => {
+                keys[e.key] = false;
+            });
+
+            // Event listeners for gamepad
+            window.addEventListener('gamepadconnected', (e) => {
+                console.log('Gamepad connected at index %d: %s. %d buttons, %d axes.',
+                    e.gamepad.index, e.gamepad.id,
+                    e.gamepad.buttons.length, e.gamepad.axes.length);
+                gamepadIndex = e.gamepad.index;
+            });
+
+            window.addEventListener('gamepaddisconnected', (e) => {
+                console.log('Gamepad disconnected from index %d: %s.',
+                    e.gamepad.index, e.gamepad.id);
+                if (gamepadIndex === e.gamepad.index) {
+                    gamepadIndex = null;
+                }
+            });
+            
+            // Function to generate platforms
+            function generatePlatforms(startY, count) {
+                const newPlatforms = [];
+                for (let i = 0; i < count; i++) {
+                    const platformWidth = Math.random() * (120 - 60) + 60;
+                    const platformX = Math.random() * (GAME_WIDTH - platformWidth);
+                    const platformY = startY - (i * 150);
+                    newPlatforms.push({ x: platformX, y: platformY, width: platformWidth, height: 20 });
+                }
+                return newPlatforms;
+            }
+
+            // Function to generate enemies
+            function generateEnemies(startY, count) {
+                const newEnemies = [];
+                for (let i = 0; i < count; i++) {
+                    const enemyWidth = 40;
+                    const enemyHeight = 40;
+                    const enemyX = Math.random() * (GAME_WIDTH - enemyWidth);
+                    const enemyY = startY - (Math.random() * 100 + 50); // Offset enemies to avoid spawning on platforms
+                    const enemySpeed = Math.random() * 2 + 1;
+                    const enemyDirection = Math.random() > 0.5 ? 1 : -1;
+                    newEnemies.push({ x: enemyX, y: enemyY, width: enemyWidth, height: enemyHeight, speed: enemySpeed, direction: enemyDirection });
+                }
+                return newEnemies;
+            }
+
+            // Function to reset the game state
+            function resetGame() {
+                // Initial ground platform at the bottom
+                platforms = [{ x: 0, y: GAME_HEIGHT - 30, width: GAME_WIDTH, height: 20 }];
+                
+                // Position player on the ground platform
+                player.x = GAME_WIDTH / 2 - player.width / 2;
+                player.y = GAME_HEIGHT - 30 - player.height;
+                player.velocityY = 0;
+                
+                score = 0;
+                gameOver = false;
+                cameraY = 0;
+                
+                // Generate initial platforms and enemies
+                platforms = platforms.concat(generatePlatforms(GAME_HEIGHT - 200, 10));
+                enemies = generateEnemies(GAME_HEIGHT - 200, 3);
+                
+                messageBox.style.display = 'none';
+            }
+
+            // Function to draw the player
+            function drawPlayer() {
+                ctx.save();
+                ctx.translate(player.x + player.width / 2, player.y - cameraY + player.height / 2);
+                ctx.scale(player.facing, 1);
+                ctx.drawImage(characterImage, -player.width / 2, -player.height / 2, player.width, player.height);
+                ctx.restore();
+            }
+            
+            // Function to draw platforms
+            function drawPlatforms() {
+                platforms.forEach(platform => {
+                    ctx.drawImage(platformImage, platform.x, platform.y - cameraY, platform.width, platform.height);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(platform.x, platform.y - cameraY, platform.width, platform.height);
+                });
+            }
+
+            // Function to draw enemies
+            function drawEnemies() {
+                enemies.forEach(enemy => {
+                    ctx.drawImage(enemyImage, enemy.x, enemy.y - cameraY, enemy.width, enemy.height);
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(enemy.x, enemy.y - cameraY, enemy.width, enemy.height);
+                });
+            }
+            
+            // Function to handle player updates
+            function updatePlayer() {
+                // Apply gravity
+                player.velocityY += player.gravity;
+                player.y += player.velocityY;
+                
+                // Apply horizontal velocity
+                player.x += player.velocityX;
+
+                // Keep player within horizontal bounds
+                if (player.x < 0) {
+                    player.x = 0;
+                }
+                if (player.x + player.width > GAME_WIDTH) {
+                    player.x = GAME_WIDTH - player.width;
+                }
+                
+                // If player falls below the screen, end game
+                if (player.y - cameraY > GAME_HEIGHT) {
+                    endGame();
+                }
+
+                // Smoothly adjust camera
+                const targetCameraY = player.y - GAME_HEIGHT / 2 + player.height / 2;
+                cameraY += (targetCameraY - cameraY) * 0.1;
+
+                // Check for collisions with platforms
+                let onGroundThisFrame = false;
+                platforms.forEach(platform => {
+                    if (
+                        player.y + player.height >= platform.y &&
+                        player.y + player.height <= platform.y + platform.height &#038;&#038;
+                        player.x + player.width > platform.x &&
+                        player.x < platform.x + platform.width &#038;&#038;
+                        player.velocityY >= 0
+                    ) {
+                        player.velocityY = 0;
+                        player.y = platform.y - player.height;
+                        onGroundThisFrame = true;
+                    }
+                });
+                if (onGroundThisFrame && !player.onGround) {
+                    player.jumpsLeft = 2; // Reset jumps only on landing
+                }
+                player.onGround = onGroundThisFrame;
+            }
+
+            // Function to update enemies
+            function updateEnemies() {
+                enemies.forEach(enemy => {
+                    enemy.x += enemy.speed * enemy.direction;
+                    // Reverse direction if hitting a wall
+                    if (enemy.x <= 0 || enemy.x + enemy.width >= GAME_WIDTH) {
+                        enemy.direction *= -1;
+                    }
+                });
+
+                // Check for collision with player
+                enemies.forEach(enemy => {
+                    if (
+                        player.x < enemy.x + enemy.width &#038;&#038;
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &#038;&#038;
+                        player.y + player.height > enemy.y
+                    ) {
+                        endGame();
+                    }
+                });
+            }
+
+            // Function to handle player input
+            function handleInput() {
+                player.velocityX = 0;
+                const gamepad = navigator.getGamepads()[gamepadIndex];
+
+                // Horizontal Movement
+                if (keys['a'] || keys['ArrowLeft']) {
+                    player.velocityX = -player.speed;
+                    player.facing = -1;
+                }
+                if (keys['d'] || keys['ArrowRight']) {
+                    player.velocityX = player.speed;
+                    player.facing = 1;
+                }
+                if (gamepad && gamepad.axes[0]) {
+                    player.velocityX = gamepad.axes[0] * player.speed;
+                    if (player.velocityX < 0) player.facing = -1;
+                    if (player.velocityX > 0) player.facing = 1;
+                }
+
+                // Jump
+                if ((keys[' '] && !jumpPressed) || (gamepad && gamepad.buttons[0]?.pressed && !jumpPressed)) {
+                    if (player.jumpsLeft > 0) {
+                        player.velocityY = player.jumpPower;
+                        player.jumpsLeft--;
+                        jumpPressed = true;
+                    }
+                }
+                if (!keys[' '] && !(gamepad && gamepad.buttons[0]?.pressed)) {
+                    jumpPressed = false;
+                }
+
+                // Reset
+                if ((keys['r'] || (gamepad && gamepad.buttons[1]?.pressed)) && !resetPressed) {
+                    resetGame();
+                    resetPressed = true;
+                }
+                if (!keys['r'] && !(gamepad && gamepad.buttons[1]?.pressed)) {
+                    resetPressed = false;
+                }
+
+                // Fullscreen
+                if (keys['Enter'] && !enterPressed) {
+                    if (!document.fullscreenElement) {
+                        if (gameContainer.requestFullscreen) {
+                            gameContainer.requestFullscreen();
+                        } else if (gameContainer.mozRequestFullScreen) { /* Firefox */
+                            gameContainer.mozRequestFullScreen();
+                        } else if (gameContainer.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                            gameContainer.webkitRequestFullscreen();
+                        } else if (gameContainer.msRequestFullscreen) { /* IE/Edge */
+                            gameContainer.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.mozCancelFullScreen) { /* Firefox */
+                            document.mozCancelFullScreen();
+                        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) { /* IE/Edge */
+                            document.msExitFullscreen();
+                        }
+                    }
+                    enterPressed = true;
+                }
+                if (!keys['Enter']) {
+                    enterPressed = false;
+                }
+            }
+
+            // Function to end the game
+            function endGame() {
+                if (gameOver) return;
+                gameOver = true;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                messageTitle.textContent = "Game Over!";
+                messageScore.textContent = `You reached a score of ${score}.`;
+                messageBox.style.display = 'block';
+
+                // Auto-restart after 2 seconds
+                setTimeout(() => {
+                    resetGame();
+                    gameLoop();
+                }, 2000);
+            }
+
+            // The main game loop
+            function gameLoop() {
+                if (gameOver) return;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+                // Draw background
+                ctx.drawImage(backgroundImage, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+                handleInput();
+                updatePlayer();
+                updateEnemies();
+                
+                // Update score and generate new platforms
+                const currentScore = Math.floor(Math.abs(player.y - (GAME_HEIGHT - 60)) / 100);
+                if (currentScore > score) {
+                    score = currentScore;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                }
+
+                if (platforms.length < 15) {
+                    const lastPlatform = platforms[platforms.length - 1];
+                    const newPlatforms = generatePlatforms(lastPlatform.y - 150, 5);
+                    platforms = platforms.concat(newPlatforms);
+                }
+                // Generate new enemies if needed
+                if (enemies.length < platforms.length / 3) {
+                     const lastPlatform = platforms[platforms.length - 1];
+                     enemies = enemies.concat(generateEnemies(lastPlatform.y - 100, 1));
+                }
+                // Remove enemies and platforms that are off-screen
+                platforms = platforms.filter(platform => (platform.y - cameraY) < GAME_HEIGHT);
+                enemies = enemies.filter(enemy => (enemy.y - cameraY) < GAME_HEIGHT);
+
+                // Draw platforms and enemies
+                drawPlatforms();
+                drawEnemies();
+                drawPlayer();
+                
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+            
+            // Load all assets before starting the game
+            Promise.all([
+                loadImage(imageSources.character),
+                loadImage(imageSources.background),
+                loadImage(imageSources.platform),
+                loadImage(imageSources.enemy)
+            ]).then(images => {
+                // Hide loading message
+                loadingMessage.style.display = 'none';
+
+                characterImage.src = images[0].src;
+                backgroundImage.src = images[1].src;
+                platformImage.src = images[2].src;
+                enemyImage.src = images[3].src;
+                
+                // Start the game loop only after all images have loaded
+                resetGame();
+                gameLoop();
+            }).catch(error => {
+                console.error("Error loading game assets:", error);
+                // Display a user-friendly error message
+                messageTitle.textContent = "Loading Error";
+                messageScore.textContent = "Failed to load game assets. This is likely due to server restrictions. Try hosting the images on your own server and updating the URLs.";
+                messageBox.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            });
+        };
+    </script>
+
+  </section>
+</main>
+
+<script>
+(() => {
+  const admin = document.getElementById('wpadminbar');
+  if (admin) admin.remove();
+})();
+</script>
+<script>
+window.onload = function() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const messageBox = document.getElementById('message-box');
+            const messageTitle = document.getElementById('message-title');
+            const messageScore = document.getElementById('message-score');
+            const scoreDisplay = document.getElementById('score-display');
+            const loadingMessage = document.querySelector('.loading-message');
+            const gameContainer = document.getElementById('game-container');
+
+            const GAME_WIDTH = 400;
+            const GAME_HEIGHT = 600;
+
+            canvas.width = GAME_WIDTH;
+            canvas.height = GAME_HEIGHT;
+
+            // Player object
+            const player = {
+                x: GAME_WIDTH / 2 - 20,
+                y: GAME_HEIGHT - 60,
+                width: 40,
+                height: 40,
+                velocityY: 0,
+                velocityX: 0,
+                speed: 4,
+                gravity: 0.3, 
+                jumpPower: -10, // Adjusted jump strength
+                onGround: false,
+                jumpsLeft: 2,
+                facing: 1 // 1 for right, -1 for left
+            };
+
+            // Game variables
+            let score = 0;
+            let gameOver = false;
+            let platforms = [];
+            let enemies = [];
+            let keys = {};
+            let gamepadIndex = null;
+            let cameraY = 0; // Vertical camera position
+            let jumpPressed = false; // Flag to handle jump input
+            let resetPressed = false; // Flag to prevent multiple resets on key held
+            let enterPressed = false; // Flag to prevent multiple fullscreen requests
+            let animationFrameId = null; // Store animation frame ID
+
+            // Image assets
+            const characterImage = new Image();
+            const backgroundImage = new Image();
+            const platformImage = new Image();
+            const enemyImage = new Image();
+            
+            const imageSources = {
+                character: "https://i.imgur.com/W43w0bM.png",
+                background: "https://i.imgur.com/YhmigBs.jpeg",
+                platform: "https://i.imgur.com/FSWEQrW.gif",
+                enemy: "https://i.imgur.com/F1rL7Jc.jpeg"
+            };
+
+            // A simple function to load an image with a promise
+            function loadImage(url) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => {
+                        console.error(`Failed to load image at ${url}. This may be due to a CORS issue.`);
+                        reject(new Error(`Failed to load image at ${url}`));
+                    };
+                    img.src = url;
+                });
+            }
+
+            // Event listeners for keyboard
+            document.addEventListener('keydown', (e) => {
+                keys[e.key] = true;
+            });
+
+            document.addEventListener('keyup', (e) => {
+                keys[e.key] = false;
+            });
+
+            // Event listeners for gamepad
+            window.addEventListener('gamepadconnected', (e) => {
+                console.log('Gamepad connected at index %d: %s. %d buttons, %d axes.',
+                    e.gamepad.index, e.gamepad.id,
+                    e.gamepad.buttons.length, e.gamepad.axes.length);
+                gamepadIndex = e.gamepad.index;
+            });
+
+            window.addEventListener('gamepaddisconnected', (e) => {
+                console.log('Gamepad disconnected from index %d: %s.',
+                    e.gamepad.index, e.gamepad.id);
+                if (gamepadIndex === e.gamepad.index) {
+                    gamepadIndex = null;
+                }
+            });
+            
+            // Function to generate platforms
+            function generatePlatforms(startY, count) {
+                const newPlatforms = [];
+                for (let i = 0; i < count; i++) {
+                    const platformWidth = Math.random() * (120 - 60) + 60;
+                    const platformX = Math.random() * (GAME_WIDTH - platformWidth);
+                    const platformY = startY - (i * 150);
+                    newPlatforms.push({ x: platformX, y: platformY, width: platformWidth, height: 20 });
+                }
+                return newPlatforms;
+            }
+
+            // Function to generate enemies
+            function generateEnemies(startY, count) {
+                const newEnemies = [];
+                for (let i = 0; i < count; i++) {
+                    const enemyWidth = 40;
+                    const enemyHeight = 40;
+                    const enemyX = Math.random() * (GAME_WIDTH - enemyWidth);
+                    const enemyY = startY - (Math.random() * 100 + 50); // Offset enemies to avoid spawning on platforms
+                    const enemySpeed = Math.random() * 2 + 1;
+                    const enemyDirection = Math.random() > 0.5 ? 1 : -1;
+                    newEnemies.push({ x: enemyX, y: enemyY, width: enemyWidth, height: enemyHeight, speed: enemySpeed, direction: enemyDirection });
+                }
+                return newEnemies;
+            }
+
+            // Function to reset the game state
+            function resetGame() {
+                // Initial ground platform at the bottom
+                platforms = [{ x: 0, y: GAME_HEIGHT - 30, width: GAME_WIDTH, height: 20 }];
+                
+                // Position player on the ground platform
+                player.x = GAME_WIDTH / 2 - player.width / 2;
+                player.y = GAME_HEIGHT - 30 - player.height;
+                player.velocityY = 0;
+                
+                score = 0;
+                gameOver = false;
+                cameraY = 0;
+                
+                // Generate initial platforms and enemies
+                platforms = platforms.concat(generatePlatforms(GAME_HEIGHT - 200, 10));
+                enemies = generateEnemies(GAME_HEIGHT - 200, 3);
+                
+                messageBox.style.display = 'none';
+            }
+
+            // Function to draw the player
+            function drawPlayer() {
+                ctx.save();
+                ctx.translate(player.x + player.width / 2, player.y - cameraY + player.height / 2);
+                ctx.scale(player.facing, 1);
+                ctx.drawImage(characterImage, -player.width / 2, -player.height / 2, player.width, player.height);
+                ctx.restore();
+            }
+            
+            // Function to draw platforms
+            function drawPlatforms() {
+                platforms.forEach(platform => {
+                    ctx.drawImage(platformImage, platform.x, platform.y - cameraY, platform.width, platform.height);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(platform.x, platform.y - cameraY, platform.width, platform.height);
+                });
+            }
+
+            // Function to draw enemies
+            function drawEnemies() {
+                enemies.forEach(enemy => {
+                    ctx.drawImage(enemyImage, enemy.x, enemy.y - cameraY, enemy.width, enemy.height);
+                    ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(enemy.x, enemy.y - cameraY, enemy.width, enemy.height);
+                });
+            }
+            
+            // Function to handle player updates
+            function updatePlayer() {
+                // Apply gravity
+                player.velocityY += player.gravity;
+                player.y += player.velocityY;
+                
+                // Apply horizontal velocity
+                player.x += player.velocityX;
+
+                // Keep player within horizontal bounds
+                if (player.x < 0) {
+                    player.x = 0;
+                }
+                if (player.x + player.width > GAME_WIDTH) {
+                    player.x = GAME_WIDTH - player.width;
+                }
+                
+                // If player falls below the screen, end game
+                if (player.y - cameraY > GAME_HEIGHT) {
+                    endGame();
+                }
+
+                // Smoothly adjust camera
+                const targetCameraY = player.y - GAME_HEIGHT / 2 + player.height / 2;
+                cameraY += (targetCameraY - cameraY) * 0.1;
+
+                // Check for collisions with platforms
+                let onGroundThisFrame = false;
+                platforms.forEach(platform => {
+                    if (
+                        player.y + player.height >= platform.y &&
+                        player.y + player.height <= platform.y + platform.height &#038;&#038;
+                        player.x + player.width > platform.x &&
+                        player.x < platform.x + platform.width &#038;&#038;
+                        player.velocityY >= 0
+                    ) {
+                        player.velocityY = 0;
+                        player.y = platform.y - player.height;
+                        onGroundThisFrame = true;
+                    }
+                });
+                if (onGroundThisFrame && !player.onGround) {
+                    player.jumpsLeft = 2; // Reset jumps only on landing
+                }
+                player.onGround = onGroundThisFrame;
+            }
+
+            // Function to update enemies
+            function updateEnemies() {
+                enemies.forEach(enemy => {
+                    enemy.x += enemy.speed * enemy.direction;
+                    // Reverse direction if hitting a wall
+                    if (enemy.x <= 0 || enemy.x + enemy.width >= GAME_WIDTH) {
+                        enemy.direction *= -1;
+                    }
+                });
+
+                // Check for collision with player
+                enemies.forEach(enemy => {
+                    if (
+                        player.x < enemy.x + enemy.width &#038;&#038;
+                        player.x + player.width > enemy.x &&
+                        player.y < enemy.y + enemy.height &#038;&#038;
+                        player.y + player.height > enemy.y
+                    ) {
+                        endGame();
+                    }
+                });
+            }
+
+            // Function to handle player input
+            function handleInput() {
+                player.velocityX = 0;
+                const gamepad = navigator.getGamepads()[gamepadIndex];
+
+                // Horizontal Movement
+                if (keys['a'] || keys['ArrowLeft']) {
+                    player.velocityX = -player.speed;
+                    player.facing = -1;
+                }
+                if (keys['d'] || keys['ArrowRight']) {
+                    player.velocityX = player.speed;
+                    player.facing = 1;
+                }
+                if (gamepad && gamepad.axes[0]) {
+                    player.velocityX = gamepad.axes[0] * player.speed;
+                    if (player.velocityX < 0) player.facing = -1;
+                    if (player.velocityX > 0) player.facing = 1;
+                }
+
+                // Jump
+                if ((keys[' '] && !jumpPressed) || (gamepad && gamepad.buttons[0]?.pressed && !jumpPressed)) {
+                    if (player.jumpsLeft > 0) {
+                        player.velocityY = player.jumpPower;
+                        player.jumpsLeft--;
+                        jumpPressed = true;
+                    }
+                }
+                if (!keys[' '] && !(gamepad && gamepad.buttons[0]?.pressed)) {
+                    jumpPressed = false;
+                }
+
+                // Reset
+                if ((keys['r'] || (gamepad && gamepad.buttons[1]?.pressed)) && !resetPressed) {
+                    resetGame();
+                    resetPressed = true;
+                }
+                if (!keys['r'] && !(gamepad && gamepad.buttons[1]?.pressed)) {
+                    resetPressed = false;
+                }
+
+                // Fullscreen
+                if (keys['Enter'] && !enterPressed) {
+                    if (!document.fullscreenElement) {
+                        if (gameContainer.requestFullscreen) {
+                            gameContainer.requestFullscreen();
+                        } else if (gameContainer.mozRequestFullScreen) { /* Firefox */
+                            gameContainer.mozRequestFullScreen();
+                        } else if (gameContainer.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                            gameContainer.webkitRequestFullscreen();
+                        } else if (gameContainer.msRequestFullscreen) { /* IE/Edge */
+                            gameContainer.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.mozCancelFullScreen) { /* Firefox */
+                            document.mozCancelFullScreen();
+                        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) { /* IE/Edge */
+                            document.msExitFullscreen();
+                        }
+                    }
+                    enterPressed = true;
+                }
+                if (!keys['Enter']) {
+                    enterPressed = false;
+                }
+            }
+
+            // Function to end the game
+            function endGame() {
+                if (gameOver) return;
+                gameOver = true;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                messageTitle.textContent = "Game Over!";
+                messageScore.textContent = `You reached a score of ${score}.`;
+                messageBox.style.display = 'block';
+
+                // Auto-restart after 2 seconds
+                setTimeout(() => {
+                    resetGame();
+                    gameLoop();
+                }, 2000);
+            }
+
+            // The main game loop
+            function gameLoop() {
+                if (gameOver) return;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+                // Draw background
+                ctx.drawImage(backgroundImage, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+                handleInput();
+                updatePlayer();
+                updateEnemies();
+                
+                // Update score and generate new platforms
+                const currentScore = Math.floor(Math.abs(player.y - (GAME_HEIGHT - 60)) / 100);
+                if (currentScore > score) {
+                    score = currentScore;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                }
+
+                if (platforms.length < 15) {
+                    const lastPlatform = platforms[platforms.length - 1];
+                    const newPlatforms = generatePlatforms(lastPlatform.y - 150, 5);
+                    platforms = platforms.concat(newPlatforms);
+                }
+                // Generate new enemies if needed
+                if (enemies.length < platforms.length / 3) {
+                     const lastPlatform = platforms[platforms.length - 1];
+                     enemies = enemies.concat(generateEnemies(lastPlatform.y - 100, 1));
+                }
+                // Remove enemies and platforms that are off-screen
+                platforms = platforms.filter(platform => (platform.y - cameraY) < GAME_HEIGHT);
+                enemies = enemies.filter(enemy => (enemy.y - cameraY) < GAME_HEIGHT);
+
+                // Draw platforms and enemies
+                drawPlatforms();
+                drawEnemies();
+                drawPlayer();
+                
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+            
+            // Load all assets before starting the game
+            Promise.all([
+                loadImage(imageSources.character),
+                loadImage(imageSources.background),
+                loadImage(imageSources.platform),
+                loadImage(imageSources.enemy)
+            ]).then(images => {
+                // Hide loading message
+                loadingMessage.style.display = 'none';
+
+                characterImage.src = images[0].src;
+                backgroundImage.src = images[1].src;
+                platformImage.src = images[2].src;
+                enemyImage.src = images[3].src;
+                
+                // Start the game loop only after all images have loaded
+                resetGame();
+                gameLoop();
+            }).catch(error => {
+                console.error("Error loading game assets:", error);
+                // Display a user-friendly error message
+                messageTitle.textContent = "Loading Error";
+                messageScore.textContent = "Failed to load game assets. This is likely due to server restrictions. Try hosting the images on your own server and updating the URLs.";
+                messageBox.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            });
+        };
+
+( function() {
+		var skipLinkTarget = document.querySelector( 'main' ),
+			sibling,
+			skipLinkTargetID,
+			skipLink;
+
+		// Early exit if a skip-link target can't be located.
+		if ( ! skipLinkTarget ) {
+			return;
+		}
+
+		/*
+		 * Get the site wrapper.
+		 * The skip-link will be injected in the beginning of it.
+		 */
+		sibling = document.querySelector( '.wp-site-blocks' );
+
+		// Early exit if the root element was not found.
+		if ( ! sibling ) {
+			return;
+		}
+
+		// Get the skip-link target's ID, and generate one if it doesn't exist.
+		skipLinkTargetID = skipLinkTarget.id;
+		if ( ! skipLinkTargetID ) {
+			skipLinkTargetID = 'wp--skip-link--target';
+			skipLinkTarget.id = skipLinkTargetID;
+		}
+
+		// Create the skip link.
+		skipLink = document.createElement( 'a' );
+		skipLink.classList.add( 'skip-link', 'screen-reader-text' );
+		skipLink.id = 'wp-skip-link';
+		skipLink.href = '#' + skipLinkTargetID;
+		skipLink.innerText = 'Skip to content';
+
+		// Inject the skip link.
+		sibling.parentElement.insertBefore( skipLink, sibling );
+	}() );
+	
+//# sourceURL=wp-block-template-skip-link-js-after
+
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"http://localhost/Bowencactus.com/wp-includes/js/wp-emoji-release.min.js?ver=6.9"}}
+</script>
+</body>
+</html>

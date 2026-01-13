@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>bella cactus | dungeoncrawler</title>
+  <link rel="icon" type="image/png" href="twi looking.png" />
+<meta name="color-scheme" content="dark" />
+<style>
+:root{
+  --bg:#070707;
+  --bg2:#0b0b0b;
+  --panel: rgba(255,255,255,0.055);
+  --panel2: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.10);
+
+  --text:#f7f7f7;
+  --muted:#b9b9c2;
+
+  --pink:#ff78c8;
+  --pink2:#ffb3e6;
+  --pink3:#ff4db8;
+
+  --shadow: 0 20px 70px rgba(0,0,0,0.55);
+  --radius:16px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 700px at 70% 10%, rgba(255,79,216,0.15), transparent 55%),
+              radial-gradient(900px 600px at 20% 80%, rgba(0,255,210,0.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  line-height: 1.5;
+}
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(7,7,11,0.62);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.brand .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,79,216,0.2);
+}
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: none;
+  color: var(--text);
+}
+.btn:hover { background: rgba(255,255,255,0.07); }
+.container {
+  max-width: 1100px;
+  margin: 22px auto 80px;
+  padding: 0 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 18px;
+  overflow: hidden;
+}
+img, video, canvas { max-width: 100%; height: auto; }
+pre, code { font-family: var(--mono); }
+pre {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.25);
+  overflow: auto;
+}
+img:hover { opacity: 0.12; transition: opacity 120ms linear; }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:300 900;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/inter/Inter-VariableFont_slnt,wght.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:Cardo;font-style:normal;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:italic;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_italic_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:normal;font-weight:700;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_700.woff2') format('woff2');}
+
+/* Custom styles for the navigation menu to add an animated underline */
+    .main-nav a {
+        position: relative;
+        text-decoration: none;
+        padding-bottom: 8px; /* Add space for the underline */
+    }
+    .main-nav a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        /* This gradient matches the theme of your main page */
+        background-image: linear-gradient(to right, #f97316, #facc15);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+    }
+    .main-nav a:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+</head>
+<body>
+    <div style="position:fixed;top:14px;left:14px;z-index:50">
+      <a class="btn" href="index.html" style="backdrop-filter: blur(6px);"><span class="k">cd</span> home</a>
+    </div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <div style="min-width:0">
+        <div class="brand-title">BowenCactus.com</div>
+        <div class="brand-sub">staticized for github pages</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="./index.html">↩ home</a>
+      <a class="btn" href="javascript:history.back()">← back</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card" id="app">
+
+import React, { useState, useEffect, useCallback, useReducer } from 
+‘react’;
+
+// Use this for a consistent background and colors
+const tailwindConfig = {
+  theme: {
+    extend: {
+      colors: {
+        ‘dark-background’: ‘#1c1917’,
+        ‘card-bg’: ‘rgba(31, 41, 55, 0.8)’,
+        ‘card-border’: ‘#374151’,
+        ‘gradient-start’: ‘#f97316’,
+        ‘gradient-end’: ‘#facc15’,
+        ‘wall’: ‘#2d3748’,
+        ‘floor’: ‘#4a5568’,
+        ‘corridor’: ‘#a0aec0’,
+        ‘room’: ‘#cbd5e0’,
+        ‘exit’: ‘#34d399’,
+        ‘player-color’: ‘lightgray’, // Corrected to a valid color
+        ‘enemy-color’: ‘red’,       // Corrected to a valid color
+        ‘key-color’: ‘gold’,
+      },
+    },
+  },
+};
+
+const TILE_SIZE = 20;
+
+// Game state reducer to handle complex state changes cleanly
+const gameReducer = (state, action) => {
+  switch (action.type) {
+    case ‘START_GAME’:
+      return {
+        …state,
+        …action.payload,
+        gameStatus: ‘playing’,
+        message: ”,
+        messageTitle: ”,
+        isMessageBoxVisible: false,
+      };
+    case ‘UPDATE_GAME_STATE’:
+        const { newPlayer, newEnemies, newCollectibles } = 
+action.payload;
+        const newState = {
+            …state,
+            player: newPlayer,
+            enemies: newEnemies,
+            collectibles: newCollectibles,
+        };
+        // Check win/loss conditions and dispatch an end game action if 
+needed
+        if (
+            newPlayer.keysFound >= state.numKeysRequired &&
+            newPlayer.x === state.exit.x &&
+            newPlayer.y === state.exit.y
+        ) {
+            return {
+                …newState,
+                gameStatus: ‘levelComplete’,
+                isMessageBoxVisible: true,
+                messageTitle: ‘Level Complete!’,
+                message: `You are now on level ${state.level + 1}.`,
+            };
+        }
+        
+        let isCaught = false;
+        newEnemies.forEach(enemy => {
+            if (newPlayer.x === enemy.x && newPlayer.y === 
+enemy.y) {
+                isCaught = true;
+            }
+        });
+
+        if (isCaught) {
+            return {
+                …newState,
+                gameStatus: ‘gameOver’,
+                isMessageBoxVisible: true,
+                messageTitle: ‘Game Over!’,
+                message: `You were caught on level ${state.level}.`,
+            };
+        }
+
+        return newState;
+
+    default:
+      return state;
+  }
+};
+
+const App = () => {
+  const [state, dispatch] = useReducer(gameReducer, {
+    GRID_WIDTH: 0,
+    GRID_HEIGHT: 0,
+    grid: [],
+    player: { x: 0, y: 0, keysFound: 0, size: TILE_SIZE },
+    enemies: [],
+    collectibles: [],
+    exit: { x: 0, y: 0 },
+    keys: {},
+    gamepadIndex: null,
+    gameStatus: ‘loading’,
+    level: 1,
+    numKeysRequired: 1,
+    message: ”,
+    messageTitle: ”,
+    isMessageBoxVisible: false,
+  });
+
+  const { GRID_WIDTH, GRID_HEIGHT, grid, player, enemies, collectibles, 
+exit, gameStatus, level, numKeysRequired, message, messageTitle, 
+isMessageBoxVisible } = state;
+  const canvasRef = React.useRef(null);
+  const animationFrameId = React.useRef(null);
+  const keysRef = React.useRef({});
+  const gamepadIndexRef = React.useRef(null);
+  const lastMoveTimeRef = React.useRef(0);
+  const moveInterval = 200;
+
+  const isWalkable = useCallback((x, y) => {
+    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= 
+GRID_HEIGHT || !grid.length || !grid[y]) {
+      return false;
+    }
+    const tileColor = grid[y][x];
+    return tileColor === tailwindConfig.theme.extend.colors.ROOM || 
+tileColor === tailwindConfig.theme.extend.colors.CORRIDOR || tileColor 
+=== tailwindConfig.theme.extend.colors.EXIT;
+  }, [GRID_WIDTH, GRID_HEIGHT, grid]);
+
+  const getRandomWalkableTile = useCallback(() => {
+    let tile;
+    do {
+      const x = Math.floor(Math.random() * GRID_WIDTH);
+      const y = Math.floor(Math.random() * GRID_HEIGHT);
+      tile = { x, y };
+    } while (!isWalkable(tile.x, tile.y));
+    return tile;
+  }, [GRID_WIDTH, GRID_HEIGHT, isWalkable]);
+
+  const generateDungeon = useCallback((currentLevel) => {
+    const newGrid = Array(GRID_HEIGHT).fill(null).map(() => 
+Array(GRID_WIDTH).fill(tailwindConfig.theme.extend.colors.WALL));
+    const rooms = [];
+    const numRooms = Math.floor(Math.random() * (currentLevel + 4)) + 5;
+
+    for (let i = 0; i < numRooms; i++) {
+      const roomWidth = Math.floor(Math.random() * (currentLevel + 7)) +
+ 3;
+      const roomHeight = Math.floor(Math.random() * (currentLevel + 7)) +
+ 3;
+      const roomX = Math.floor(Math.random() * (GRID_WIDTH - roomWidth -
+ 2)) + 1;
+      const roomY = Math.floor(Math.random() * (GRID_HEIGHT - roomHeight
+ - 2)) + 1;
+
+      let hasOverlap = false;
+      for (const existingRoom of rooms) {
+        if (
+          roomX < existingRoom.x + existingRoom.width &&
+          roomX + roomWidth > existingRoom.x &&
+          roomY < existingRoom.y + existingRoom.height &&
+          roomY + roomHeight > existingRoom.y
+        ) {
+          hasOverlap = true;
+          break;
+        }
+      }
+
+      if (!hasOverlap) {
+        for (let y = roomY; y < roomY + roomHeight; y++) {
+          for (let x = roomX; x < roomX + roomWidth; x++) {
+            if (y >= 0 && y < GRID_HEIGHT && x 
+>= 0 && x < GRID_WIDTH) {
+              newGrid[y][x] = tailwindConfig.theme.extend.colors.ROOM;
+            }
+          }
+        }
+        rooms.push({ x: roomX, y: roomY, width: roomWidth, height: 
+roomHeight });
+      }
+    }
+
+    for (let i = 0; i < rooms.length - 1; i++) {
+      const startRoom = rooms[i];
+      const endRoom = rooms[i + 1];
+
+      let startX = Math.floor(startRoom.x + startRoom.width / 2);
+      let startY = Math.floor(startRoom.y + startRoom.height / 2);
+      let endX = Math.floor(endRoom.x + endRoom.width / 2);
+      let endY = Math.floor(endRoom.y + endRoom.height / 2);
+
+      while (startX !== endX) {
+        if (startY >= 0 && startY < GRID_HEIGHT &&
+ startX >= 0 && startX < GRID_WIDTH) {
+          newGrid[startY][startX] = 
+tailwindConfig.theme.extend.colors.CORRIDOR;
+        }
+        startX += (startX < endX) ? 1 : -1;
+      }
+      while (startY !== endY) {
+        if (startY >= 0 && startY < GRID_HEIGHT &&
+ startX >= 0 && startX < GRID_WIDTH) {
+          newGrid[startY][startX] = 
+tailwindConfig.theme.extend.colors.CORRIDOR;
+        }
+        startY += (startY < endY) ? 1 : -1;
+      }
+    }
+    return { newGrid, rooms };
+  }, [GRID_WIDTH, GRID_HEIGHT]);
+
+  const startGame = useCallback((startLevel = 1) => {
+    const { newGrid: generatedGrid, rooms } = 
+generateDungeon(startLevel);
+    
+    const startTile = getRandomWalkableTile();
+    const initialPlayer = { x: startTile.x, y: startTile.y, size: 
+TILE_SIZE, keysFound: 0 };
+    
+    const numEnemies = Math.floor(Math.random() * (startLevel + 1)) + 2;
+    const initialEnemies = [];
+    for (let i = 0; i < numEnemies; i++) {
+      const enemyTile = getRandomWalkableTile();
+      initialEnemies.push({ x: enemyTile.x, y: enemyTile.y, size: 
+TILE_SIZE });
+    }
+    
+    const requiredKeys = Math.floor(startLevel / 2) + 1;
+    const initialCollectibles = [];
+    for (let i = 0; i < requiredKeys; i++) {
+      initialCollectibles.push(getRandomWalkableTile());
+    }
+    
+    const exitTile = getRandomWalkableTile();
+    if (exitTile.y < generatedGrid.length && exitTile.x < 
+generatedGrid[0].length) {
+      generatedGrid[exitTile.y][exitTile.x] = 
+tailwindConfig.theme.extend.colors.EXIT;
+    }
+
+    dispatch({
+      type: 'START_GAME',
+      payload: {
+        level: startLevel,
+        numKeysRequired: requiredKeys,
+        initialPlayer,
+        initialEnemies,
+        initialCollectibles,
+        exit: exitTile,
+        grid: generatedGrid,
+        GRID_WIDTH,
+        GRID_HEIGHT,
+      },
+    });
+  }, [generateDungeon, getRandomWalkableTile, GRID_WIDTH, GRID_HEIGHT]);
+
+  const handlePlayerMove = useCallback((dx, dy) => {
+    if (gameStatus !== ‘playing’) return;
+
+    const now = Date.now();
+    if (now – lastMoveTimeRef.current < moveInterval) return;
+
+    const newPlayerX = player.x + dx;
+    const newPlayerY = player.y + dy;
+
+    if (isWalkable(newPlayerX, newPlayerY)) {
+      const newPlayer = { ...player, x: newPlayerX, y: newPlayerY };
+      
+      // Enemy movement logic
+      const newEnemies = enemies.map(enemy => {
+        const directions = [{ x: 0, y: 1 }, { x: 0, y: -1 }, { x: 1, y: 0
+ }, { x: -1, y: 0 }];
+        const newDirection = directions[Math.floor(Math.random() * 
+directions.length)];
+        const newEnemyX = enemy.x + newDirection.x;
+        const newEnemyY = enemy.y + newDirection.y;
+        
+        if (isWalkable(newEnemyX, newEnemyY)) {
+          return { …enemy, x: newEnemyX, y: newEnemyY };
+        }
+        return enemy;
+      });
+
+      // Collectible logic
+      const newCollectibles = collectibles.filter(
+        (key) => key.x !== newPlayer.x || key.y !== newPlayer.y
+      );
+
+      // Dispatch one comprehensive state update
+      dispatch({
+        type: ‘UPDATE_GAME_STATE’,
+        payload: {
+          newPlayer: {
+              …newPlayer,
+              keysFound: newCollectibles.length < collectibles.length
+ ? newPlayer.keysFound + 1 : newPlayer.keysFound
+          },
+          newEnemies,
+          newCollectibles,
+        }
+      });
+    }
+
+    lastMoveTimeRef.current = now;
+  }, [gameStatus, player, enemies, collectibles, isWalkable, 
+moveInterval]);
+
+  const drawGrid = useCallback(() => {
+      const ctx = canvasRef.current.getContext(‘2d’);
+      ctx.clearRect(0, 0, canvasRef.current.width, 
+canvasRef.current.height);
+      for (let y = 0; y < grid.length; y++) {
+          for (let x = 0; x < grid[y].length; x++) {
+              ctx.fillStyle = grid[y][x];
+              ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, 
+TILE_SIZE);
+          }
+      }
+  }, [grid]);
+
+
+  // Main game loop for rendering
+  const gameLoop = useCallback(() => {
+    const ctx = canvasRef.current.getContext(‘2d’);
+    
+    // Draw Grid
+    drawGrid();
+
+    // Draw Collectibles
+    collectibles.forEach(item => {
+      ctx.fillStyle = tailwindConfig.theme.extend.colors.keyColor;
+      ctx.fillRect(item.x * TILE_SIZE, item.y * TILE_SIZE, TILE_SIZE, 
+TILE_SIZE);
+    });
+
+    // Draw Player
+    ctx.fillStyle = tailwindConfig.theme.extend.colors.playerColor;
+    ctx.fillRect(player.x * TILE_SIZE, player.y * TILE_SIZE, 
+player.size, player.size);
+
+    // Draw Enemies
+    enemies.forEach(enemy => {
+      ctx.fillStyle = tailwindConfig.theme.extend.colors.enemyColor;
+      ctx.fillRect(enemy.x * TILE_SIZE, enemy.y * TILE_SIZE, enemy.size,
+ enemy.size);
+    });
+
+    if (gameStatus === ‘playing’ || gameStatus === ‘levelComplete’) {
+      animationFrameId.current = requestAnimationFrame(gameLoop);
+    }
+  }, [drawGrid, collectibles, player, enemies, gameStatus]);
+  
+  // Handle level completion
+  useEffect(() => {
+    if (gameStatus === ‘levelComplete’) {
+      setTimeout(() => {
+        startGame(level + 1);
+      }, 2000);
+    }
+  }, [gameStatus, level, startGame]);
+
+  // Start the main loop
+  useEffect(() => {
+      if (gameStatus === ‘playing’) {
+          gameLoop();
+      }
+      return () => {
+          if (animationFrameId.current) {
+              cancelAnimationFrame(animationFrameId.current);
+          }
+      };
+  }, [gameStatus, gameLoop]);
+
+  // Set up event listeners for keyboard and gamepad
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      keysRef.current[e.key.toLowerCase()] = true;
+      let dx = 0;
+      let dy = 0;
+      if (e.key.toLowerCase() === ‘w’ || e.key === ‘ArrowUp’) dy = -1;
+      if (e.key.toLowerCase() === ‘s’ || e.key === ‘ArrowDown’) dy = 1;
+      if (e.key.toLowerCase() === ‘a’ || e.key === ‘ArrowLeft’) dx = -1;
+      if (e.key.toLowerCase() === ‘d’ || e.key === ‘ArrowRight’) dx = 1;
+      if (dx !== 0 || dy !== 0) {
+        handlePlayerMove(dx, dy);
+      }
+    };
+    const handleKeyUp = (e) => {
+      keysRef.current[e.key.toLowerCase()] = false;
+    };
+    const handleGamepadConnected = (e) => {
+      gamepadIndexRef.current = e.gamepad.index;
+    };
+    const handleGamepadDisconnected = (e) => {
+      if (gamepadIndexRef.current === e.gamepad.index) {
+        gamepadIndexRef.current = null;
+      }
+    };
+
+    document.addEventListener(‘keydown’, handleKeyDown);
+    document.addEventListener(‘keyup’, handleKeyUp);
+    window.addEventListener(‘gamepadconnected’, handleGamepadConnected);
+    window.addEventListener(‘gamepaddisconnected’, 
+handleGamepadDisconnected);
+
+    // Initial canvas resize and game start
+    const resizeObserver = new ResizeObserver(() => {
+      if (canvasRef.current && canvasRef.current.parentElement) {
+        canvasRef.current.width = 
+canvasRef.current.parentElement.clientWidth;
+        canvasRef.current.height = 
+canvasRef.current.parentElement.clientHeight;
+        const newGRID_WIDTH = Math.floor(canvasRef.current.width / 
+TILE_SIZE);
+        const newGRID_HEIGHT = Math.floor(canvasRef.current.height / 
+TILE_SIZE);
+        dispatch({ type: ‘START_GAME’, payload: { …state, GRID_WIDTH: 
+newGRID_WIDTH, GRID_HEIGHT: newGRID_HEIGHT, level: 1 } });
+      }
+    });
+
+    if (canvasRef.current) {
+        resizeObserver.observe(canvasRef.current.parentElement);
+    }
+
+    return () => {
+      document.removeEventListener(‘keydown’, handleKeyDown);
+      document.removeEventListener(‘keyup’, handleKeyUp);
+      window.removeEventListener(‘gamepadconnected’, 
+handleGamepadConnected);
+      window.removeEventListener(‘gamepaddisconnected’, 
+handleGamepadDisconnected);
+      if (canvasRef.current && canvasRef.current.parentElement) {
+          resizeObserver.unobserve(canvasRef.current.parentElement);
+      }
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+  }, [handlePlayerMove, state]);
+
+  return (
+    <div classname="antialiased flex flex-col items-center p-4">
+<div classname="container mx-auto max-w-5xl px-6 pt-12 pb-16 flex flex-col items-center text-center">
+<div classname="card p-4 sm:p-8 rounded-lg shadow-lg w-full max-w-2xl">
+<h1 classname="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-4">
+<span classname="text-gradient">Dungeon</span> Crawler
+          </h1>
+<p classname="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto text-center mb-8">
+            Navigate the dungeon and avoid the enemies.
+          </p>
+<div id="game-container">
+<div classname="absolute top-4 left-4 right-4 text-sm md:text-base font-semibold" id="info-bar">
+<span id="level-display">Level: {level}</span>
+<span>Keys: <span classname="{player.keysFound" id="keys-found-status">= numKeysRequired ? ‘text-green-500’ : ‘text-red-500’}&gt;{player.keysFound}</span>/<span id="keys-required-status">{numKeysRequired}</span></span>
+</div>
+<canvas classname="w-full h-96 bg-gray-900 border border-gray-700 rounded-md" id="dungeonCanvas" ref="{canvasRef}"></canvas>
+            {isMessageBoxVisible &amp;&amp; (
+              <div id="message-box">
+<h2 classname="text-3xl font-bold mb-4">{messageTitle}</h2>
+<p classname="text-lg mb-4">{message}</p>
+                {gameStatus === ‘gameOver’ &amp;&amp; (
+                  <button =="" onclick="{()"> startGame(1)} className=”btn-primary”&gt;Restart</button>
+                )}
+              </div>
+            )}
+          </div>
+<div classname="flex flex-wrap justify-center gap-4 mt-8">
+<button =="" onclick="{()"> startGame(1)} className=”btn-primary”&gt;Generate New Dungeon</button>
+</div>
+</div>
+<a classname="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600 transition-colors mt-8" href="javascript:history.back()">
+          ← Back
+        </a>
+</div>
+</div>
+  );
+};
+
+export default App;
+
+
+  </section>
+</main>
+
+<script>
+(() => {
+  const admin = document.getElementById('wpadminbar');
+  if (admin) admin.remove();
+})();
+</script>
+<script>
+( function() {
+		var skipLinkTarget = document.querySelector( 'main' ),
+			sibling,
+			skipLinkTargetID,
+			skipLink;
+
+		// Early exit if a skip-link target can't be located.
+		if ( ! skipLinkTarget ) {
+			return;
+		}
+
+		/*
+		 * Get the site wrapper.
+		 * The skip-link will be injected in the beginning of it.
+		 */
+		sibling = document.querySelector( '.wp-site-blocks' );
+
+		// Early exit if the root element was not found.
+		if ( ! sibling ) {
+			return;
+		}
+
+		// Get the skip-link target's ID, and generate one if it doesn't exist.
+		skipLinkTargetID = skipLinkTarget.id;
+		if ( ! skipLinkTargetID ) {
+			skipLinkTargetID = 'wp--skip-link--target';
+			skipLinkTarget.id = skipLinkTargetID;
+		}
+
+		// Create the skip link.
+		skipLink = document.createElement( 'a' );
+		skipLink.classList.add( 'skip-link', 'screen-reader-text' );
+		skipLink.id = 'wp-skip-link';
+		skipLink.href = '#' + skipLinkTargetID;
+		skipLink.innerText = 'Skip to content';
+
+		// Inject the skip link.
+		sibling.parentElement.insertBefore( skipLink, sibling );
+	}() );
+	
+//# sourceURL=wp-block-template-skip-link-js-after
+
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"http://localhost/Bowencactus.com/wp-includes/js/wp-emoji-release.min.js?ver=6.9"}}
+</script>
+</body>
+</html>

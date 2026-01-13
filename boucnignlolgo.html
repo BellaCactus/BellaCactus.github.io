@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>bella cactus | boucnignlolgo</title>
+  <link rel="icon" type="image/png" href="twi looking.png" />
+<meta name="color-scheme" content="dark" />
+<style>
+:root{
+  --bg:#070707;
+  --bg2:#0b0b0b;
+  --panel: rgba(255,255,255,0.055);
+  --panel2: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.10);
+
+  --text:#f7f7f7;
+  --muted:#b9b9c2;
+
+  --pink:#ff78c8;
+  --pink2:#ffb3e6;
+  --pink3:#ff4db8;
+
+  --shadow: 0 20px 70px rgba(0,0,0,0.55);
+  --radius:16px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 700px at 70% 10%, rgba(255,79,216,0.15), transparent 55%),
+              radial-gradient(900px 600px at 20% 80%, rgba(0,255,210,0.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  line-height: 1.5;
+}
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(7,7,11,0.62);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.brand .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,79,216,0.2);
+}
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: none;
+  color: var(--text);
+}
+.btn:hover { background: rgba(255,255,255,0.07); }
+.container {
+  max-width: 1100px;
+  margin: 22px auto 80px;
+  padding: 0 16px;
+}
+.card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 18px;
+  overflow: hidden;
+}
+img, video, canvas { max-width: 100%; height: auto; }
+pre, code { font-family: var(--mono); }
+pre {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.25);
+  overflow: auto;
+}
+img:hover { opacity: 0.12; transition: opacity 120ms linear; }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:300 900;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/inter/Inter-VariableFont_slnt,wght.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:Cardo;font-style:normal;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:italic;font-weight:400;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_italic_400.woff2') format('woff2');}
+@font-face{font-family:Cardo;font-style:normal;font-weight:700;font-display:fallback;src:url('http://localhost/Bowencactus.com/wp-content/themes/twentytwentyfour/assets/fonts/cardo/cardo_normal_700.woff2') format('woff2');}
+
+*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.my-6{margin-top:1.5rem;margin-bottom:1.5rem}.flex{display:flex}.w-full{width:100%}.items-center{align-items:center}.justify-center{justify-content:center}.gap-8{gap:2rem}.border-b{border-bottom-width:1px}.border-gray-800{--tw-border-opacity:1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1))}.bg-transparent{background-color:transparent}.py-4{padding-top:1rem;padding-bottom:1rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.font-semibold{font-weight:600}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}
+
+/* Custom styles for the navigation menu to add an animated underline */
+    .main-nav a {
+        position: relative;
+        text-decoration: none;
+        padding-bottom: 8px; /* Add space for the underline */
+    }
+    .main-nav a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        /* This gradient matches the theme of your main page */
+        background-image: linear-gradient(to right, #f97316, #facc15);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+    }
+    .main-nav a:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        /* Scoped styles for the component */
+        #bouncing-logo-container {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 400px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        #bouncingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #controls {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(30, 30, 40, 0.8);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            max-width: 90%;
+            width: 400px;
+            z-index: 10;
+            color: #e0e0e9;
+            font-size: 0.9rem;
+        }
+
+        #controls h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #f0f0f5;
+        }
+
+        .control-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            color: #c0c0d0;
+        }
+
+        .control-group input[type="range"],
+        .control-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #4a4a5a;
+            background-color: #2a2a3a;
+            color: #f0f0f5;
+        }
+
+        .control-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .action-button {
+            padding: 0.6rem 1.2rem;
+            background-color: #4a4a58;
+            color: #e0e0e9;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid #5a5a6a;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            background-color: #5a5a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #resetButton {
+            background-color: #d97706;
+            border-color: #f59e0b;
+        }
+
+        #resetButton:hover {
+            background-color: #f59e0b;
+        }
+
+        #applyButton {
+            background-color: #10b981;
+            border-color: #34d399;
+        }
+
+        #applyButton:hover {
+            background-color: #34d399;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        #upload-message {
+            color: #e0e0e9;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+</style>
+</head>
+<body>
+    <div style="position:fixed;top:14px;left:14px;z-index:50">
+      <a class="btn" href="index.html" style="backdrop-filter: blur(6px);"><span class="k">cd</span> home</a>
+    </div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <div style="min-width:0">
+        <div class="brand-title">BowenCactus.com</div>
+        <div class="brand-sub">staticized for github pages</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="btn" href="./index.html">↩ home</a>
+      <a class="btn" href="javascript:history.back()">← back</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card" id="app">
+
+
+
+<title>Customizable Bouncing Logo</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        /* Scoped styles for the component */
+        #bouncing-logo-container {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 400px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        #bouncingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #controls {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(30, 30, 40, 0.8);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            max-width: 90%;
+            width: 400px;
+            z-index: 10;
+            color: #e0e0e9;
+            font-size: 0.9rem;
+        }
+
+        #controls h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #f0f0f5;
+        }
+
+        .control-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            color: #c0c0d0;
+        }
+
+        .control-group input[type="range"],
+        .control-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #4a4a5a;
+            background-color: #2a2a3a;
+            color: #f0f0f5;
+        }
+
+        .control-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .action-button {
+            padding: 0.6rem 1.2rem;
+            background-color: #4a4a58;
+            color: #e0e0e9;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid #5a5a6a;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-button:hover {
+            background-color: #5a5a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #resetButton {
+            background-color: #d97706;
+            border-color: #f59e0b;
+        }
+
+        #resetButton:hover {
+            background-color: #f59e0b;
+        }
+
+        #applyButton {
+            background-color: #10b981;
+            border-color: #34d399;
+        }
+
+        #applyButton:hover {
+            background-color: #34d399;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        #upload-message {
+            color: #e0e0e9;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+/* theme override */
+body{
+  margin:0;
+  background:
+    radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+    radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+    radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family: var(--sans);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+
+a{color:var(--pink);text-decoration:none;}a:hover{text-decoration:underline;}
+
+</style>
+<div id="bouncing-logo-container">
+<canvas id="bouncingCanvas"></canvas>
+<div id="controls">
+<h1>Customizable Bouncing Logo</h1>
+<div class="control-group">
+<label for="imageUploadInput">Upload Image:</label>
+<input accept="image/*" id="imageUploadInput" type="file"/>
+</div>
+<div class="control-group">
+<label for="speedRange">Speed: <span id="speedValue">3</span></label>
+<input id="speedRange" max="10" min="1" type="range" value="3"/>
+</div>
+<div class="control-group">
+<label for="sizeRange">Width (px): <span id="sizeValue">150</span></label>
+<input id="sizeRange" max="300" min="50" type="range" value="150"/>
+</div>
+<div class="control-group">
+<input checked="checked" id="trailEffectCheckbox" type="checkbox"/>
+<label for="trailEffectCheckbox">Enable Trail Effect</label>
+</div>
+<div class="control-group">
+<label>Color Mode:</label>
+<div class="radio-group">
+<label>
+<input checked="checked" id="rainbowMode" name="colorMode" type="radio" value="rainbow"/> Rainbow
+                    </label>
+<label>
+<input id="originalMode" name="colorMode" type="radio" value="original"/> Original Colors
+                    </label>
+</div>
+</div>
+<div class="button-group">
+<button class="action-button" id="resetButton">Reset to Default</button>
+<button class="action-button" id="applyButton">Apply Changes</button>
+</div>
+</div>
+<div id="upload-message">Please upload an image to begin.</div>
+</div>
+<script>
+        // This is the most reliable way to run scripts in WordPress to avoid timing issues.
+        window.addEventListener('load', () => {
+            const container = document.getElementById('bouncing-logo-container');
+            const canvas = document.getElementById('bouncingCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const uploadMessage = document.getElementById('upload-message');
+
+            const imageUploadInput = document.getElementById('imageUploadInput');
+            const speedRange = document.getElementById('speedRange');
+            const speedValue = document.getElementById('speedValue');
+            const sizeRange = document.getElementById('sizeRange');
+            const sizeValue = document.getElementById('sizeValue');
+            const trailEffectCheckbox = document.getElementById('trailEffectCheckbox');
+            const rainbowModeRadio = document.getElementById('rainbowMode');
+            const originalModeRadio = document.getElementById('originalMode');
+            const resetButton = document.getElementById('resetButton');
+            const applyButton = document.getElementById('applyButton');
+
+            let x, y, dx, dy;
+            let logoWidth, logoHeight;
+            let currentSpeed = parseInt(speedRange.value);
+            let aspectRatio = 1;
+            const colorHistory = [];
+            const maxColorHistory = 10;
+            let currentColor = 'white';
+            let animationFrameId = null;
+            let isAnimating = false;
+            let logoImageElement = new Image();
+
+            const applySettings = () => {
+                currentSpeed = parseInt(speedRange.value);
+                setupCanvas();
+                if (!isAnimating) {
+                    isAnimating = true;
+                    animate();
+                }
+            };
+
+            const setupCanvas = () => {
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+                logoWidth = parseInt(sizeRange.value);
+                logoHeight = logoWidth / aspectRatio;
+                x = Math.random() * (canvas.width - logoWidth);
+                y = Math.random() * (canvas.height - logoHeight);
+                dx = (Math.random() > 0.5 ? 1 : -1) * currentSpeed;
+                dy = (Math.random() > 0.5 ? 1 : -1) * currentSpeed;
+                colorHistory.length = 0;
+                currentColor = getRandomColor();
+            };
+
+            const getRandomColor = () => {
+                if (originalModeRadio.checked) {
+                    return 'white';
+                }
+                let newColor;
+                let isUnique;
+                do {
+                    newColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                    isUnique = colorHistory.every(color => color !== newColor);
+                } while (!isUnique);
+                colorHistory.push(newColor);
+                if (colorHistory.length > maxColorHistory) {
+                    colorHistory.shift();
+                }
+                return newColor;
+            };
+
+            const animate = () => {
+                if (!isAnimating) return;
+
+                if (trailEffectCheckbox.checked) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+
+                x += dx;
+                y += dy;
+
+                let bounced = false;
+                if (x + logoWidth > canvas.width || x < 0) {
+                    dx *= -1;
+                    bounced = true;
+                }
+                if (y + logoHeight > canvas.height || y < 0) {
+                    dy *= -1;
+                    bounced = true;
+                }
+
+                if (bounced &#038;&#038; rainbowModeRadio.checked) {
+                    currentColor = getRandomColor();
+                }
+
+                if (originalModeRadio.checked) {
+                    ctx.drawImage(logoImageElement, x, y, logoWidth, logoHeight);
+                } else {
+                    ctx.save();
+                    ctx.fillStyle = currentColor;
+                    ctx.fillRect(x, y, logoWidth, logoHeight);
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.drawImage(logoImageElement, x, y, logoWidth, logoHeight);
+                    ctx.restore();
+                }
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            // --- Event Listeners for Controls ---
+            speedRange.addEventListener('input', () => {
+                speedValue.textContent = speedRange.value;
+            });
+
+            sizeRange.addEventListener('input', () => {
+                sizeValue.textContent = sizeRange.value;
+            });
+
+            imageUploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        logoImageElement.src = e.target.result;
+                        logoImageElement.onload = () => {
+                            uploadMessage.style.display = 'none';
+                            aspectRatio = logoImageElement.width / logoImageElement.height;
+                            applySettings();
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            resetButton.addEventListener('click', () => {
+                speedRange.value = 3;
+                speedValue.textContent = 3;
+                sizeRange.value = 150;
+                sizeValue.textContent = 150;
+                trailEffectCheckbox.checked = true;
+                rainbowModeRadio.checked = true;
+                originalModeRadio.checked = false;
+                imageUploadInput.value = '';
+
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                isAnimating = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                uploadMessage.style.display = 'block';
+            });
+
+            applyButton.addEventListener('click', () => {
+                if (logoImageElement.src) {
+                    applySettings();
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                setupCanvas();
+            });
+
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        });
+    </script>
+<p></p>
+
+  </section>
+</main>
+
+<script>
+(() => {
+  const admin = document.getElementById('wpadminbar');
+  if (admin) admin.remove();
+})();
+</script>
+<script>
+// This is the most reliable way to run scripts in WordPress to avoid timing issues.
+        window.addEventListener('load', () => {
+            const container = document.getElementById('bouncing-logo-container');
+            const canvas = document.getElementById('bouncingCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const uploadMessage = document.getElementById('upload-message');
+
+            const imageUploadInput = document.getElementById('imageUploadInput');
+            const speedRange = document.getElementById('speedRange');
+            const speedValue = document.getElementById('speedValue');
+            const sizeRange = document.getElementById('sizeRange');
+            const sizeValue = document.getElementById('sizeValue');
+            const trailEffectCheckbox = document.getElementById('trailEffectCheckbox');
+            const rainbowModeRadio = document.getElementById('rainbowMode');
+            const originalModeRadio = document.getElementById('originalMode');
+            const resetButton = document.getElementById('resetButton');
+            const applyButton = document.getElementById('applyButton');
+
+            let x, y, dx, dy;
+            let logoWidth, logoHeight;
+            let currentSpeed = parseInt(speedRange.value);
+            let aspectRatio = 1;
+            const colorHistory = [];
+            const maxColorHistory = 10;
+            let currentColor = 'white';
+            let animationFrameId = null;
+            let isAnimating = false;
+            let logoImageElement = new Image();
+
+            const applySettings = () => {
+                currentSpeed = parseInt(speedRange.value);
+                setupCanvas();
+                if (!isAnimating) {
+                    isAnimating = true;
+                    animate();
+                }
+            };
+
+            const setupCanvas = () => {
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+                logoWidth = parseInt(sizeRange.value);
+                logoHeight = logoWidth / aspectRatio;
+                x = Math.random() * (canvas.width - logoWidth);
+                y = Math.random() * (canvas.height - logoHeight);
+                dx = (Math.random() > 0.5 ? 1 : -1) * currentSpeed;
+                dy = (Math.random() > 0.5 ? 1 : -1) * currentSpeed;
+                colorHistory.length = 0;
+                currentColor = getRandomColor();
+            };
+
+            const getRandomColor = () => {
+                if (originalModeRadio.checked) {
+                    return 'white';
+                }
+                let newColor;
+                let isUnique;
+                do {
+                    newColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                    isUnique = colorHistory.every(color => color !== newColor);
+                } while (!isUnique);
+                colorHistory.push(newColor);
+                if (colorHistory.length > maxColorHistory) {
+                    colorHistory.shift();
+                }
+                return newColor;
+            };
+
+            const animate = () => {
+                if (!isAnimating) return;
+
+                if (trailEffectCheckbox.checked) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+
+                x += dx;
+                y += dy;
+
+                let bounced = false;
+                if (x + logoWidth > canvas.width || x < 0) {
+                    dx *= -1;
+                    bounced = true;
+                }
+                if (y + logoHeight > canvas.height || y < 0) {
+                    dy *= -1;
+                    bounced = true;
+                }
+
+                if (bounced &#038;&#038; rainbowModeRadio.checked) {
+                    currentColor = getRandomColor();
+                }
+
+                if (originalModeRadio.checked) {
+                    ctx.drawImage(logoImageElement, x, y, logoWidth, logoHeight);
+                } else {
+                    ctx.save();
+                    ctx.fillStyle = currentColor;
+                    ctx.fillRect(x, y, logoWidth, logoHeight);
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.drawImage(logoImageElement, x, y, logoWidth, logoHeight);
+                    ctx.restore();
+                }
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            // --- Event Listeners for Controls ---
+            speedRange.addEventListener('input', () => {
+                speedValue.textContent = speedRange.value;
+            });
+
+            sizeRange.addEventListener('input', () => {
+                sizeValue.textContent = sizeRange.value;
+            });
+
+            imageUploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        logoImageElement.src = e.target.result;
+                        logoImageElement.onload = () => {
+                            uploadMessage.style.display = 'none';
+                            aspectRatio = logoImageElement.width / logoImageElement.height;
+                            applySettings();
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            resetButton.addEventListener('click', () => {
+                speedRange.value = 3;
+                speedValue.textContent = 3;
+                sizeRange.value = 150;
+                sizeValue.textContent = 150;
+                trailEffectCheckbox.checked = true;
+                rainbowModeRadio.checked = true;
+                originalModeRadio.checked = false;
+                imageUploadInput.value = '';
+
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                isAnimating = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                uploadMessage.style.display = 'block';
+            });
+
+            applyButton.addEventListener('click', () => {
+                if (logoImageElement.src) {
+                    applySettings();
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                setupCanvas();
+            });
+
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        });
+
+( function() {
+		var skipLinkTarget = document.querySelector( 'main' ),
+			sibling,
+			skipLinkTargetID,
+			skipLink;
+
+		// Early exit if a skip-link target can't be located.
+		if ( ! skipLinkTarget ) {
+			return;
+		}
+
+		/*
+		 * Get the site wrapper.
+		 * The skip-link will be injected in the beginning of it.
+		 */
+		sibling = document.querySelector( '.wp-site-blocks' );
+
+		// Early exit if the root element was not found.
+		if ( ! sibling ) {
+			return;
+		}
+
+		// Get the skip-link target's ID, and generate one if it doesn't exist.
+		skipLinkTargetID = skipLinkTarget.id;
+		if ( ! skipLinkTargetID ) {
+			skipLinkTargetID = 'wp--skip-link--target';
+			skipLinkTarget.id = skipLinkTargetID;
+		}
+
+		// Create the skip link.
+		skipLink = document.createElement( 'a' );
+		skipLink.classList.add( 'skip-link', 'screen-reader-text' );
+		skipLink.id = 'wp-skip-link';
+		skipLink.href = '#' + skipLinkTargetID;
+		skipLink.innerText = 'Skip to content';
+
+		// Inject the skip link.
+		sibling.parentElement.insertBefore( skipLink, sibling );
+	}() );
+	
+//# sourceURL=wp-block-template-skip-link-js-after
+
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"http://localhost/Bowencactus.com/wp-includes/js/wp-emoji-release.min.js?ver=6.9"}}
+</script>
+</body>
+</html>
