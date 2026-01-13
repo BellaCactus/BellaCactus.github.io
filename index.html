@@ -2,113 +2,157 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>bella</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>bella cactus</title>
+  <meta name="color-scheme" content="dark" />
 
   <style>
     :root{
-      --bg:#070707;
-      --bg2:#0b0b0b;
-      --panel:#0f0f10;
-      --panel2:#131315;
-      --border:#26262a;
+      --bg:#050507;
+      --bg2:#0a0a0f;
+      --panel:rgba(255,255,255,0.05);
+      --panel2:rgba(0,0,0,0.35);
+      --border:rgba(255,255,255,0.10);
 
-      --text:#f7f7f7;
-      --muted:#b9b9c2;
+      --text:#f7f7ff;
+      --muted:rgba(247,247,255,0.72);
 
       --pink:#ff78c8;
-      --pink2:#ffb3e6;
-      --pink3:#ff4db8;
+      --pink2:#ffd0ee;
+      --hot:#ff3db8;
 
-      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --shadow: 0 22px 80px rgba(0,0,0,0.65);
+      --radius:18px;
 
-      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    *{box-sizing:border-box;}
-    html,body{height:100%;}
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      background:
-        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
-        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
-        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
+      font-family:var(--sans);
       color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      line-height:1.55;
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(255,120,200,0.16), transparent 60%),
+        radial-gradient(900px 650px at 85% 25%, rgba(255,208,238,0.10), transparent 60%),
+        radial-gradient(1100px 700px at 45% 100%, rgba(255,61,184,0.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       overflow-x:hidden;
     }
 
-    a{color:var(--pink); text-decoration:none;}
-    a:hover{text-decoration:underline;}
+    /* subtle animated grain */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+      opacity:.20;
+      pointer-events:none;
+      animation: grain 6s steps(10) infinite;
+    }
+    @keyframes grain{
+      0%{transform:translate(0,0)}
+      10%{transform:translate(-2%, -1%)}
+      20%{transform:translate(-3%, 1%)}
+      30%{transform:translate(2%, -2%)}
+      40%{transform:translate(3%, 2%)}
+      50%{transform:translate(-1%, 3%)}
+      60%{transform:translate(-2%, 0)}
+      70%{transform:translate(2%, 1%)}
+      80%{transform:translate(-1%, -2%)}
+      90%{transform:translate(1%, 2%)}
+      100%{transform:translate(0,0)}
+    }
+
+    a{color:var(--pink); text-decoration:none}
+    a:hover{text-decoration:underline}
+    img{max-width:100%; display:block}
 
     .wrap{
-      max-width:980px;
+      max-width:1040px;
       margin:0 auto;
-      padding:44px 16px 110px;
+      padding:44px 16px 120px;
+      position:relative;
+      z-index:1;
     }
 
+    /* animated pink/white text */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+      text-shadow: 0 0 18px rgba(255,120,200,0.10);
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      body::before{animation:none}
+      .pulseText{animation:none; color:var(--text); background:none; -webkit-background-clip:initial; background-clip:initial}
+      .floaty{animation:none}
+      .scanline{animation:none}
+    }
+
+    /* top */
     .top{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:14px;
-      margin-bottom:18px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
     }
-
     .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
+      display:flex; gap:14px; align-items:center;
       min-width:0;
     }
-
     .badge{
-      width:56px;
-      height:56px;
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      width:58px; height:58px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.24), rgba(255,120,200,0.06));
       border:1px solid rgba(255,120,200,0.25);
-      display:grid;
-      place-items:center;
       box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
+      display:grid; place-items:center;
+      position:relative; overflow:hidden;
     }
-
     .badge::after{
       content:"";
-      position:absolute;
-      inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%);
-      transform: rotate(25deg);
-      opacity:0.8;
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.20), transparent 45%);
+      transform:rotate(25deg);
+      opacity:0.85;
       pointer-events:none;
     }
-
     .badge span{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-weight:700;
+      font-family:var(--mono);
+      font-weight:800;
       letter-spacing:0.5px;
       color:var(--pink2);
-      text-shadow:0 0 12px rgba(255,120,200,0.35);
+      text-shadow:0 0 14px rgba(255,120,200,0.35);
     }
-
-    .titlebox{min-width:0;}
     h1{
       margin:0;
-      font-size:2rem;
-      letter-spacing:0.5px;
+      font-size:2.1rem;
+      letter-spacing:.4px;
+      line-height:1.1;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      max-width:min(680px, 80vw);
     }
-
     .sub{
-      margin:4px 0 0;
+      margin:6px 0 0;
       color:var(--muted);
       font-size:0.98rem;
+      max-width:720px;
     }
 
     .chips{
@@ -116,8 +160,8 @@
       gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
+      margin-top:6px;
     }
-
     .chip{
       font-size:0.82rem;
       padding:6px 10px;
@@ -127,141 +171,156 @@
       color:var(--muted);
       backdrop-filter: blur(6px);
     }
-
-    .chip strong{color:var(--text); font-weight:600;}
-    .chip .dot{
+    .chip strong{color:var(--text); font-weight:600}
+    .dot{
       display:inline-block;
-      width:6px;height:6px;
+      width:6px; height:6px;
       border-radius:999px;
       margin-right:6px;
       background:var(--pink);
-      box-shadow:0 0 12px rgba(255,120,200,0.6);
+      box-shadow:0 0 14px rgba(255,120,200,0.65);
     }
 
-    /* animated gradient text (white <-> pink) */
-    .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
-      background-size: 260% 100%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation: shimmer 4.8s ease-in-out infinite;
+    /* nav */
+    .nav{
+      margin-top:14px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform .08s ease, border .2s ease, background .2s ease;
+      user-select:none;
+    }
+    .pill:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.34);
+      background: rgba(255,120,200,0.10);
+      text-decoration:none;
+    }
+    .pill .k{
+      font-family:var(--mono);
+      font-size:.82rem;
+      color:var(--pink2);
     }
 
-    @keyframes shimmer{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
-    }
-
+    /* panels */
     .grid{
       display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap:14px;
       margin-top:14px;
     }
-    @media (max-width: 860px){
-      .grid{grid-template-columns:1fr;}
-      .chips{justify-content:flex-start;}
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .chips{justify-content:flex-start}
     }
 
     .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
+      position:relative;
     }
-
-    .panelInner{
-      padding:16px 16px;
-    }
-
     .panelTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:14px 16px;
       border-bottom:1px solid rgba(255,255,255,0.06);
       background: rgba(0,0,0,0.18);
     }
-
     .panelTitle h2{
       margin:0;
       font-size:1.05rem;
       color:var(--pink2);
       letter-spacing:0.3px;
     }
-
-    .small{
-      font-size:0.86rem;
-      color:var(--muted);
-    }
+    .small{font-size:.86rem; color:var(--muted)}
+    .panelInner{padding:16px}
 
     /* terminal */
-    .terminal{
-      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
-                  rgba(0,0,0,0.35);
-      border-top:1px solid rgba(255,255,255,0.05);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      padding:14px 16px;
-      min-height:190px;
+    .terminalWrap{
+      background:
+        radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.16), transparent 55%),
+        rgba(0,0,0,0.38);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow:hidden;
+      position:relative;
     }
 
+    .scanline{
+      position:absolute; left:0; right:0;
+      top:-20%;
+      height:18%;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.06), transparent);
+      opacity:0.65;
+      pointer-events:none;
+      animation: scan 5.5s linear infinite;
+      mix-blend-mode:screen;
+    }
+    @keyframes scan{
+      0%{transform:translateY(0)}
+      100%{transform:translateY(720px)}
+    }
+
+    .terminal{
+      font-family:var(--mono);
+      padding:14px 14px 12px;
+      min-height:210px;
+    }
     .termLine{
       display:flex;
       gap:8px;
-      margin:6px 0;
       align-items:flex-start;
+      margin:6px 0;
       white-space:pre-wrap;
       word-break:break-word;
     }
-
-    .prompt{color:var(--pink2);}
-    .cmd{color:var(--text);}
-    .out{color:rgba(255,255,255,0.82);}
+    .prompt{color:var(--pink2)}
+    .cmd{color:rgba(255,255,255,0.92)}
     .cursor{
       display:inline-block;
       width:9px;
       height:1.1em;
       background: var(--pink);
       margin-left:2px;
-      animation: blink 1s steps(1) infinite;
       vertical-align:-2px;
-      box-shadow:0 0 12px rgba(255,120,200,0.55);
+      animation: blink 1s steps(1) infinite;
+      box-shadow:0 0 14px rgba(255,120,200,0.55);
     }
-    @keyframes blink{50%{opacity:0;}}
+    @keyframes blink{50%{opacity:0}}
 
     .asciiBox{
-      border:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.35);
-      border-radius:14px;
-      padding:12px 12px;
-      margin-top:12px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.40);
+      padding:12px 14px 14px;
     }
-    .ascii{
-      white-space:pre;
+    pre.ascii{
+      margin:0;
+      font-family:var(--mono);
       font-size:12px;
       line-height:1.15;
-      margin:0;
-      color:rgba(255,255,255,0.92);
+      white-space:pre;
+      color:rgba(255,255,255,0.90);
     }
-    .ascii .pink{
+    .asciiPink{
       color:var(--pink2);
-      text-shadow:0 0 10px rgba(255,120,200,0.35);
+      text-shadow: 0 0 10px rgba(255,120,200,0.25);
     }
 
-    ul.clean{
-      list-style:none;
-      padding:0;
-      margin:0;
-    }
+    /* lists + tags */
+    ul.clean{list-style:none; margin:0; padding:0}
     ul.clean li{
       padding:10px 0;
       border-bottom:1px dashed rgba(255,255,255,0.10);
     }
-    ul.clean li:last-child{border-bottom:none;}
+    ul.clean li:last-child{border-bottom:none}
     .tag{
       display:inline-block;
       font-size:0.72rem;
@@ -273,54 +332,155 @@
       border:1px solid rgba(255,255,255,0.08);
     }
 
-    .btnRow{
-      display:flex;
+    /* gallery */
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
     }
-    .btn{
-      display:inline-flex;
+    @media (max-width: 880px){ .gallery{grid-template-columns: repeat(2, minmax(0,1fr));} }
+    @media (max-width: 520px){ .gallery{grid-template-columns: 1fr;} }
+
+    .card{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.30);
+      overflow:hidden;
+      position:relative;
+      cursor:pointer;
+      transition: transform .12s ease, border .2s ease, background .2s ease;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.35);
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,120,200,0.30);
+      background: rgba(255,120,200,0.06);
+    }
+    .thumb{
+      aspect-ratio: 16 / 10;
+      width:100%;
+      object-fit:cover;
+      filter: saturate(1.05) contrast(1.02);
+    }
+    .cap{
+      padding:10px 10px 12px;
+      font-size:0.9rem;
+      color:rgba(255,255,255,0.88);
+    }
+    .cap .muted{color:var(--muted); font-size:0.82rem; margin-top:4px}
+
+    /* lightbox */
+    .lightbox{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.75);
+      display:none;
       align-items:center;
-      gap:8px;
-      padding:10px 12px;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .lightbox.open{display:flex}
+    .lbPanel{
+      max-width:min(1020px, 96vw);
+      max-height: 90vh;
+      width:100%;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(10,10,14,0.78);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    .lbTop{
+      padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+    .lbTitle{font-family:var(--mono); color:rgba(255,255,255,0.92); font-size:.92rem}
+    .xbtn{
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+    .xbtn:hover{border-color: rgba(255,120,200,0.34); background: rgba(255,120,200,0.10)}
+    .lbBody{
+      display:grid;
+      place-items:center;
+      padding:12px;
+      background: rgba(0,0,0,0.35);
+    }
+    .lbBody img{
+      max-width:100%;
+      max-height: 64vh;
+      object-fit:contain;
       border-radius:12px;
       border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color:var(--text);
-      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
-      text-decoration:none;
+      background: rgba(0,0,0,0.35);
     }
-    .btn:hover{
-      text-decoration:none;
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.35);
-      background: rgba(255,120,200,0.10);
+    .lbFoot{
+      padding:12px 14px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:var(--muted);
+      font-size:.9rem;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
     }
-    .btn .k{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:0.8rem;
-      color:var(--pink2);
+    .lbFoot .hint{font-family:var(--mono); font-size:.82rem}
+
+    /* media section */
+    .mediaGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){ .mediaGrid{grid-template-columns:1fr} }
+
+    .mediaBox{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.32);
+      overflow:hidden;
+      padding:12px;
+    }
+    video, audio{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
     }
 
+    /* oneko corner */
     .oneko{
       position:fixed;
-      bottom:12px;
       right:12px;
-      pointer-events:none;
-      opacity:0.95;
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
-      transform: translateZ(0);
-      animation: floaty 3.6s ease-in-out infinite;
-    }
-    @keyframes floaty{
-      0%{transform: translateY(0);}
-      50%{transform: translateY(-6px);}
-      100%{transform: translateY(0);}
+      bottom:12px;
+      width:66px;
+      height:66px;
+      z-index:60;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      display:grid;
+      place-items:center;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      user-select:none;
+      cursor:pointer;
     }
     .oneko img{
       width:52px;
       image-rendering:pixelated;
+      pointer-events:none;
+      filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55));
+    }
+    .floaty{animation: floaty 3.6s ease-in-out infinite}
+    @keyframes floaty{
+      0%{transform: translateY(0)}
+      50%{transform: translateY(-6px)}
+      100%{transform: translateY(0)}
     }
 
     .footer{
@@ -334,65 +494,89 @@
 
 <body>
   <div class="wrap">
-    <div class="top">
+    <header class="top">
       <div class="brand">
         <div class="badge" aria-hidden="true"><span>bc</span></div>
-        <div class="titlebox">
+        <div style="min-width:0">
           <h1 class="pulseText">bella cactus</h1>
-          <div class="sub">coding, reverse engineering, servers, and whatever i’m obsessed with this week</div>
+          <div class="sub">
+            reverse engineering + coding + servers + technical minecraft + whatever brain buff i rolled this week :3
+          </div>
+          <nav class="nav" aria-label="site">
+            <a class="pill" href="#links"><span class="k">cd</span> links</a>
+            <a class="pill" href="#projects"><span class="k">ls</span> projects</a>
+            <a class="pill" href="#gallery"><span class="k">cat</span> gallery</a>
+            <a class="pill" href="#media"><span class="k">play</span> media</a>
+          </nav>
         </div>
       </div>
 
       <div class="chips">
         <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
         <div class="chip">timezone: <strong>nz</strong></div>
-        <div class="chip">mode: <strong>building</strong></div>
+        <div class="chip">last update: <strong id="date"></strong></div>
       </div>
-    </div>
+    </header>
 
-    <div class="grid">
+    <main class="grid" id="links">
+      <!-- left -->
       <section class="panel">
         <div class="panelTitle">
-          <h2>links</h2>
-          <div class="small">last update: <span id="date"></span></div>
+          <h2>terminal</h2>
+          <div class="small">press <span class="pulseText">esc</span> to close popups</div>
         </div>
+
         <div class="panelInner">
-          <div class="btnRow">
-            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
-              <span class="k">git</span> bella-limiter
-            </a>
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
-              <span class="k">yt</span> @BellaCactusYT
-            </a>
-          </div>
-
-          <div class="terminal" aria-label="terminal">
-            <div class="termLine">
-              <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
-              <span class="cmd" id="typed"></span><span class="cursor"></span>
+          <div class="terminalWrap" role="region" aria-label="terminal panel">
+            <div class="scanline"></div>
+            <div class="terminal">
+              <div class="termLine">
+                <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+                <span class="cmd" id="typed"></span><span class="cursor" aria-hidden="true"></span>
+              </div>
+              <div id="termOut"></div>
             </div>
-
-            <div id="termOut"></div>
 
             <div class="asciiBox">
               <pre class="ascii" id="ascii"></pre>
             </div>
           </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="pill" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+              <span class="k">git</span> bella-limiter
+            </a>
+            <a class="pill" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> @BellaCactusYT
+            </a>
+            <a class="pill" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> videos
+            </a>
+            <a class="pill" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> shorts
+            </a>
+          </div>
         </div>
       </section>
 
+      <!-- right -->
       <aside class="panel">
         <div class="panelTitle">
-          <h2>about me</h2>
+          <h2>about</h2>
           <div class="small pulseText">hi :3</div>
         </div>
         <div class="panelInner">
-          <p>
-            i’m <span class="pulseText">bella</span>. i like making stuff that’s useful, weird, or both.
-            i’m into <span class="pulseText">reverse engineering</span>, coding, software/hardware, and server stuff.
+          <p style="margin-top:0">
+            i’m <span class="pulseText">bella</span>. i like building stuff that feels “illegal” (in a cool way) but is actually just
+            <span class="pulseText">tools + code</span>.
           </p>
 
           <ul class="clean">
+            <li>
+              <strong class="pulseText">studying</strong>
+              <span class="tag">level 6</span>
+              <span class="tag">computing</span>
+            </li>
             <li>
               <strong class="pulseText">games</strong>
               <span class="tag">destiny 2</span>
@@ -400,31 +584,26 @@
               <span class="tag">minecraft (technical)</span>
             </li>
             <li>
-              <strong class="pulseText">studying</strong>
-              <span class="tag">level 6</span>
-              <span class="tag">computing</span>
-            </li>
-            <li>
               <strong class="pulseText">passions</strong>
-              <span class="tag">reverse eng</span>
-              <span class="tag">tools</span>
-              <span class="tag">automation</span>
+              <span class="tag">reverse engineering</span>
+              <span class="tag">software</span>
+              <span class="tag">hardware</span>
               <span class="tag">servers</span>
+              <span class="tag">automation</span>
             </li>
           </ul>
 
-          <div class="btnRow" style="margin-top:14px;">
-            <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
-            <a class="btn" href="#videos"><span class="k">cat</span> videos</a>
-          </div>
+          <p style="margin:12px 0 0; color:var(--muted)">
+            this page is the “better-than-nothing” front page until the wordpress site lands again.
+          </p>
         </div>
       </aside>
-    </div>
+    </main>
 
-    <section class="panel" id="projects" style="margin-top:14px;">
+    <section class="panel" id="projects" style="margin-top:14px">
       <div class="panelTitle">
         <h2>projects</h2>
-        <div class="small">stuff i’m working on / polishing</div>
+        <div class="small">stuff i’m shipping / polishing</div>
       </div>
       <div class="panelInner">
         <ul class="clean">
@@ -432,60 +611,102 @@
             <strong class="pulseText">bella limiter</strong>
             <span class="tag">wpf overlay</span>
             <span class="tag">network-y</span>
-            <div class="small" style="margin-top:6px;">
+            <div class="small" style="margin-top:6px">
               repo:
-              <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
+              <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+                github.com/BellaCactus/bella-limiter-
+              </a>
             </div>
           </li>
 
           <li>
-            <strong class="pulseText">website</strong>
-            <span class="tag">github pages</span>
-            <span class="tag">cute terminal</span>
-            <div class="small" style="margin-top:6px;">
-              this page is the placeholder. it’ll get replaced later with the full site.
+            <strong class="pulseText">youtube clips</strong>
+            <span class="tag">experiments</span>
+            <span class="tag">gaming</span>
+            <div class="small" style="margin-top:6px">
+              channel:
+              <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+                youtube.com/@BellaCactusYT
+              </a>
             </div>
           </li>
 
           <li>
-            <strong class="pulseText">future ideas</strong>
-            <span class="tag">tools</span>
+            <strong class="pulseText">future: writeups</strong>
             <span class="tag">reverse eng notes</span>
             <span class="tag">server docs</span>
-            <div class="small" style="margin-top:6px;">
-              maybe a writeups section when i feel like it.
+            <div class="small" style="margin-top:6px">
+              maybe a section with clean notes + cursed discoveries when i feel like it :P
             </div>
           </li>
         </ul>
       </div>
     </section>
 
-    <section class="panel" id="videos" style="margin-top:14px;">
+    <section class="panel" id="gallery" style="margin-top:14px">
       <div class="panelTitle">
-        <h2>youtube</h2>
-        <div class="small">where i post clips / random stuff</div>
+        <h2>gallery</h2>
+        <div class="small">your uploaded chaos items (click to zoom)</div>
       </div>
       <div class="panelInner">
-        <p>
-          i upload on
-          <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="pulseText">@BellaCactusYT</span></a>.
-          mostly gaming, experiments, and whatever i’m messing with.
-        </p>
+        <div class="gallery" id="galleryGrid"></div>
+        <div class="small" style="margin-top:10px">
+          if a thumbnail looks broken, the filename probably doesn’t match exactly (spaces/case). rename files to simple names later if you want.
+        </div>
+      </div>
+    </section>
 
-        <div class="btnRow">
-          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer"><span class="k">yt</span> videos</a>
-          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer"><span class="k">yt</span> shorts</a>
+    <section class="panel" id="media" style="margin-top:14px">
+      <div class="panelTitle">
+        <h2>media</h2>
+        <div class="small">mp3 / mp4 you dropped in the repo</div>
+      </div>
+      <div class="panelInner">
+        <div class="mediaGrid">
+          <div class="mediaBox">
+            <div class="small" style="margin-bottom:8px"><span class="pulseText">audio</span> lil jon yeah</div>
+            <audio controls preload="metadata">
+              <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+              (your browser doesn’t like this audio tag)
+            </audio>
+          </div>
+
+          <div class="mediaBox">
+            <div class="small" style="margin-bottom:8px"><span class="pulseText">video</span> hello everypony mlp dexter</div>
+            <video controls preload="metadata">
+              <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4" />
+              (your browser doesn’t like this video tag)
+            </video>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="footer">
-      © <span class="pulseText">bella cactus</span> • made with html
+      © <span class="pulseText">bella cactus</span> • built with html + caffeine debuffs
     </div>
   </div>
 
-  <div class="oneko" aria-hidden="true">
-    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+  <!-- oneko corner -->
+  <div class="oneko floaty" id="onekoBtn" title="click to swap oneko" aria-label="swap oneko sprite">
+    <img id="onekoImg" alt="oneko" />
+  </div>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lbPanel" role="dialog" aria-modal="true" aria-label="image viewer">
+      <div class="lbTop">
+        <div class="lbTitle" id="lbTitle">viewer</div>
+        <button class="xbtn" id="lbClose" type="button">close</button>
+      </div>
+      <div class="lbBody">
+        <img id="lbImg" alt="preview" />
+      </div>
+      <div class="lbFoot">
+        <div id="lbCaption">...</div>
+        <div class="hint">keys: <span class="pulseText">esc</span> close • click outside close</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -494,16 +715,37 @@
     document.getElementById("date").textContent =
       d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
-    // oneko fallback: if oneko.gif doesn't exist, try "onekogif"
-    const oneko = document.getElementById("onekoImg");
-    oneko.addEventListener("error", () => {
-      if (!oneko.dataset.tried) {
-        oneko.dataset.tried = "1";
-        oneko.src = "onekogif"; // your uploaded filename
-      }
-    });
+    // -----------------------------
+    // oneko sprite cycling (supports your weird filenames)
+    // -----------------------------
+    const onekoFiles = [
+      "oneko.gif",
+      "oneko%20-%20Copy.gif",
+      "onekoss.png",
+      "onekosss.png",
+      "onekossssurpised.png",
+      "onekossssthibnk.png",
+      "oneko%20-%20Copyd.png"
+    ];
 
-    // terminal typewriter
+    let onekoIndex = 0;
+    const onekoImg = document.getElementById("onekoImg");
+    const onekoBtn = document.getElementById("onekoBtn");
+
+    function setOneko(i){
+      onekoIndex = (i + onekoFiles.length) % onekoFiles.length;
+      onekoImg.src = onekoFiles[onekoIndex];
+    }
+    setOneko(0);
+
+    onekoBtn.addEventListener("click", () => setOneko(onekoIndex + 1));
+
+    // if a file is missing, auto-advance to the next one
+    onekoImg.addEventListener("error", () => setOneko(onekoIndex + 1));
+
+    // -----------------------------
+    // terminal typewriter + outputs
+    // -----------------------------
     const typedEl = document.getElementById("typed");
     const outEl = document.getElementById("termOut");
 
@@ -515,70 +757,169 @@
       { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" }
     ];
 
-    const asciiFrames = [
-`  (\\_/)
-  ( o.o)   < meow
-  (> < )`,
-`  (\\_/)
-  ( o.o)   < meow~
-  ( > <)`,
-`  (\\_/)
-  ( o.o)   < meow!!
-  (>  <)`
-    ];
-
     let lineIndex = 0;
     let charIndex = 0;
-    let current = scriptLines[0].cmd;
-    let typing = true;
 
     function pushOutput(text){
       const div = document.createElement("div");
       div.className = "termLine";
-      div.innerHTML = `<span class="prompt">></span> <span class="out">${escapeHtml(text)}</span>`;
+      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
-      outEl.scrollTop = outEl.scrollHeight;
     }
 
     function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+      return s.replace(/[&<>"']/g, m => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;"
+      }[m]));
     }
 
-    function tick(){
-      if (typing){
-        typedEl.textContent = current.slice(0, charIndex++);
-        if (charIndex > current.length){
-          typing = false;
-          setTimeout(() => {
-            pushOutput(scriptLines[lineIndex].out);
-            lineIndex = (lineIndex + 1) % scriptLines.length;
-            current = scriptLines[lineIndex].cmd;
-            charIndex = 0;
-            typing = true;
-          }, 420);
-        }
+    function typeLoop(){
+      const current = scriptLines[lineIndex].cmd;
+      typedEl.textContent = current.slice(0, charIndex);
+
+      if (charIndex < current.length){
+        charIndex++;
+        setTimeout(typeLoop, 34);
+      } else {
+        // "enter"
+        setTimeout(() => {
+          pushOutput(scriptLines[lineIndex].out);
+          lineIndex = (lineIndex + 1) % scriptLines.length;
+          charIndex = 0;
+          typedEl.textContent = "";
+          // small pause
+          setTimeout(typeLoop, 520);
+        }, 420);
       }
-      requestAnimationFrame(() => {});
-      setTimeout(tick, 35);
     }
-    tick();
+    typeLoop();
 
-    // ascii animation
+    // -----------------------------
+    // ascii “screens” animation
+    // -----------------------------
     const asciiEl = document.getElementById("ascii");
-    let af = 0;
-    setInterval(() => {
-      const frame = asciiFrames[af % asciiFrames.length]
-        .replace("meow", `<span class="pink">meow</span>`);
-      // can't set innerHTML on <pre> safely with spans unless we do it manually:
-      // easiest: keep it plain, but still vibe. (pink handled by pulseText elsewhere)
-      asciiEl.textContent = asciiFrames[af % asciiFrames.length];
-      af++;
-    }, 650);
+
+    const frames = [
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: building  │
+  ├───────────────────────────────┤
+  │ hp: ██████████░░  buff: pink   │
+  │ dbg: watching packets          │
+  │ srv: online-ish                │
+  │ mood: ✦ terminal goblin ✦      │
+  └───────────────────────────────┘`,
+
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: shipping  │
+  ├───────────────────────────────┤
+  │ hp: ███████████░  buff: focus  │
+  │ re: peeking inside binaries    │
+  │ code: compiling little demons  │
+  │ note: click oneko for swap     │
+  └───────────────────────────────┘`,
+
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: vibing    │
+  ├───────────────────────────────┤
+  │ hp: ████████░░░░  debuff: sleep│
+  │ gd: practicing clicks          │
+  │ d2: chasing numbers            │
+  │ mc: technical crimes (legal)   │
+  └───────────────────────────────┘`
+    ];
+
+    let frame = 0;
+    function drawAscii(){
+      asciiEl.innerHTML = frames[frame];
+      frame = (frame + 1) % frames.length;
+    }
+    drawAscii();
+    setInterval(drawAscii, 1800);
+
+    // -----------------------------
+    // gallery + lightbox
+    // -----------------------------
+    const galleryItems = [
+      { file: "ponies%20in%20bed.jpg", title: "ponies in bed", note: "peak energy" },
+      { file: "twi%20and%20trixy.jpg", title: "twi and trixy", note: "lol" },
+      { file: "twi%20looking.png", title: "twi looking", note: "stare debuff" },
+      { file: "yuri%20meme.png", title: "yuri meme", note: "internet artifact" }
+    ];
+
+    // also show the oneko stills if you want them visible in gallery too
+    const extraOneko = [
+      { file: "onekoss.png", title: "oneko", note: "sprite" },
+      { file: "onekosss.png", title: "oneko", note: "sprite" },
+      { file: "onekossssurpised.png", title: "oneko", note: "surprised" },
+      { file: "onekossssthibnk.png", title: "oneko", note: "thinking" }
+    ];
+
+    const allGallery = [...galleryItems, ...extraOneko];
+
+    const grid = document.getElementById("galleryGrid");
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbTitle = document.getElementById("lbTitle");
+    const lbCaption = document.getElementById("lbCaption");
+    const lbClose = document.getElementById("lbClose");
+
+    function openLightbox(item){
+      lb.classList.add("open");
+      lb.setAttribute("aria-hidden","false");
+      lbTitle.textContent = item.title || "viewer";
+      lbCaption.textContent = item.note || "";
+      lbImg.src = item.file;
+    }
+    function closeLightbox(){
+      lb.classList.remove("open");
+      lb.setAttribute("aria-hidden","true");
+      lbImg.src = "";
+    }
+
+    function makeCard(item){
+      const card = document.createElement("div");
+      card.className = "card";
+      card.tabIndex = 0;
+      card.setAttribute("role","button");
+      card.setAttribute("aria-label", `open ${item.title}`);
+
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.alt = item.title || "image";
+      img.src = item.file;
+
+      // if missing, fade the card instead of screaming
+      img.addEventListener("error", () => {
+        img.style.opacity = "0.25";
+        img.style.filter = "grayscale(1)";
+      });
+
+      const cap = document.createElement("div");
+      cap.className = "cap";
+      cap.innerHTML = `<div class="pulseText" style="font-weight:650">${escapeHtml(item.title || "item")}</div>
+                       <div class="muted">${escapeHtml(item.note || "")}</div>`;
+
+      card.appendChild(img);
+      card.appendChild(cap);
+
+      card.addEventListener("click", () => openLightbox(item));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") openLightbox(item);
+      });
+
+      return card;
+    }
+
+    allGallery.forEach(item => grid.appendChild(makeCard(item)));
+
+    lbClose.addEventListener("click", closeLightbox);
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeLightbox();
+    });
   </script>
 </body>
 </html>
