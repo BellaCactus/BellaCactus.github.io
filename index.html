@@ -219,6 +219,18 @@
       color:var(--pink2);
     }
 
+    /* divider label for button rows */
+    .dividerLabel{
+      width:100%;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed rgba(255,255,255,0.10);
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+    }
+
     /* terminal */
     .terminal{
       background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
@@ -608,13 +620,20 @@
             <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
               <span class="k">git</span> bella-limiter
             </a>
+
             <a class="btn" href="limiter.html"><span class="k">open</span> limiter</a>
             <a class="btn" href="os.html"><span class="k">open</span> os</a>
             <a class="btn" href="ascii.html"><span class="k">open</span> ascii zoo</a>
 
+            <!-- NEW PAGES -->
+            <a class="btn" href="idle.html"><span class="k">open</span> idle</a>
+            <a class="btn" href="glitch.html"><span class="k">open</span> glitch</a>
+            <a class="btn" href="dreams.html"><span class="k">open</span> dreams</a>
+
             <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
               <span class="k">yt</span> @BellaCactusYT
             </a>
+
             <button class="btn" id="reroll" type="button">
               <span class="k">rng</span> reroll wall + track
             </button>
@@ -731,6 +750,12 @@
       </div>
       <div class="panelInner">
         <div class="btnRow">
+          <!-- NEW STUFF (added) -->
+          <a class="btn" href="idle.html"><span class="k">idle</span> screensaver</a>
+          <a class="btn" href="glitch.html"><span class="k">fx</span> glitch gallery</a>
+          <a class="btn" href="dreams.html"><span class="k">log</span> dream log</a>
+
+          <!-- existing -->
           <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
           <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
           <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
@@ -856,7 +881,7 @@
       clearInterval(introInterval);
       introGate.classList.add("hidden");
       main.style.visibility = "visible";
-      // spawn stickers + start terminal + pick track
+      // spawn stickers + start terminal + pick track + intel
       rerollAll();
       startTerminal();
       refreshIntelBase();
@@ -910,7 +935,6 @@
       const wrapEl = document.querySelector(".wrap");
       if (wrapEl){
         const r = wrapEl.getBoundingClientRect();
-        // pad this area a bit, so stickers stay away
         safe.push({
           x: r.left - 30,
           y: r.top - 40,
@@ -918,40 +942,29 @@
           h: r.height + 80
         });
       } else {
-        // fallback safe zone (top center area)
         safe.push({ x: w*0.10, y: 0, w: w*0.80, h: 520 });
       }
 
       const placed = [];
-      let created = 0;
 
-      // try to place each sticker with retries
       for (let i = 0; i < countTarget; i++){
         const file = stickerFiles[i % stickerFiles.length];
-
-        // random size, with a slightly tighter cap to reduce collisions
         const size = rand(120, window.innerWidth < 900 ? 220 : 260);
         const box = { x:0, y:0, w:size, h:size };
 
         let ok = false;
-
-        // more retries = fewer overlaps, but keep it sane
         const tries = 120;
         for (let t = 0; t < tries; t++){
           const x = rand(10, Math.max(20, w - size - 10));
           const y = rand(10, Math.max(20, h - size - 10));
+          box.x = x; box.y = y;
 
-          box.x = x;
-          box.y = y;
-
-          // avoid safe zones
           let inSafe = false;
           for (const s of safe){
             if (rectsOverlap(box, s, 0)){ inSafe = true; break; }
           }
           if (inSafe) continue;
 
-          // avoid overlapping other stickers
           let hit = false;
           for (const p of placed){
             if (rectsOverlap(box, p, 18)){ hit = true; break; }
@@ -961,12 +974,9 @@
           ok = true;
           break;
         }
-
-        // if we fail to find a spot, just skip this sticker
         if (!ok) continue;
 
         placed.push({ ...box });
-        created++;
 
         const div = document.createElement("div");
         div.className = "sticker";
@@ -982,7 +992,6 @@
         const rot = rand(-22, 22);
         div.style.transform = `rotate(${rot}deg)`;
 
-        // click opens image in new tab
         div.style.pointerEvents = "auto";
         div.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -992,9 +1001,6 @@
         div.appendChild(img);
         wall.appendChild(div);
       }
-
-      // if screen is tiny / safe zone is huge, we might place fewer. that's fine.
-      // console.log("stickers created:", created, "target:", countTarget);
     }
 
     window.addEventListener("resize", () => {
@@ -1129,10 +1135,14 @@
     const typedEl = $("typed");
     const outEl = $("termOut");
 
+    // updated: includes your new pages too
     const terminalScript = [
       { cmd: "whoami", out: "bella (aka BellaCactus)" },
       { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
-      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
+      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams" },
+      { cmd: "open glitch", out: "glitch.html" },
+      { cmd: "open dreams", out: "dreams.html" },
+      { cmd: "open idle", out: "idle.html" },
       { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
       { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
       { cmd: "run apps", out: "apps panel loaded (scroll a bit)  ->  /#apps" },
@@ -1348,10 +1358,7 @@
         webgl: intel.webgl
       };
 
-      // raw json
       intelOut.textContent = fmt(out);
-
-      // pretty view
       intelPretty.innerHTML = "";
 
       const base = intel.base || {};
@@ -1376,7 +1383,6 @@
         { k:"do not track", v: String(br.doNotTrack ?? "n/a") }
       ]));
 
-      // userAgent is huge, keep it wrapped
       intelPretty.appendChild(cardWrap("user agent", "", br.userAgent || "n/a"));
 
       intelPretty.appendChild(card("screen", "", [
@@ -1404,28 +1410,14 @@
         { k:"notifications", v: perms.notifications ?? "n/a" }
       ]));
 
-      // extras appear only if available, so it feels “alive”
-      if (intel.ip){
-        intelPretty.appendChild(card("public ip", "(click fetched)", kvRows(intel.ip)));
-      }
-      if (intel.geo){
-        intelPretty.appendChild(card("geolocation", "(permission)", kvRows(intel.geo)));
-      }
-      if (intel.notify){
-        intelPretty.appendChild(card("notifications", "(permission)", kvRows(intel.notify)));
-      }
-      if (intel.clipboard){
-        intelPretty.appendChild(card("clipboard", "(permission)", kvRows(intel.clipboard)));
-      }
-      if (intel.media){
-        intelPretty.appendChild(card("mic/cam", "(permission)", kvRows(intel.media)));
-      }
+      if (intel.ip) intelPretty.appendChild(card("public ip", "(click fetched)", kvRows(intel.ip)));
+      if (intel.geo) intelPretty.appendChild(card("geolocation", "(permission)", kvRows(intel.geo)));
+      if (intel.notify) intelPretty.appendChild(card("notifications", "(permission)", kvRows(intel.notify)));
+      if (intel.clipboard) intelPretty.appendChild(card("clipboard", "(permission)", kvRows(intel.clipboard)));
+      if (intel.media) intelPretty.appendChild(card("mic/cam", "(permission)", kvRows(intel.media)));
       if (intel.devices){
         const d = intel.devices;
-        const summary = {
-          count: d.count ?? null,
-          kinds: d.kinds ?? null
-        };
+        const summary = { count: d.count ?? null, kinds: d.kinds ?? null };
         intelPretty.appendChild(card("devices summary", "(permission helps labels)", kvRows(summary)));
       }
       if (intel.storage){
@@ -1435,14 +1427,9 @@
           { k:"usage", v: toHumanBytes(s.usageBytes) }
         ]));
       }
-      if (intel.battery){
-        intelPretty.appendChild(card("battery", "", kvRows(intel.battery)));
-      }
-      if (intel.webgl){
-        intelPretty.appendChild(card("webgl", "", kvRows(intel.webgl)));
-      }
+      if (intel.battery) intelPretty.appendChild(card("battery", "", kvRows(intel.battery)));
+      if (intel.webgl) intelPretty.appendChild(card("webgl", "", kvRows(intel.webgl)));
 
-      // show correct mode
       if (intelMode === "pretty"){
         intelPretty.style.display = "";
         intelOut.style.display = "none";
@@ -1582,7 +1569,7 @@
       renderIntel();
     });
 
-    // Clipboard read (permission prompt, must be https and user gesture)
+    // Clipboard read
     $("btnClipboard").addEventListener("click", async () => {
       try{
         if (!navigator.clipboard || !navigator.clipboard.readText){
@@ -1739,3 +1726,5 @@
     // --------- start
     // show site will be triggered by video end or skip
   </script>
+</body>
+</html>
