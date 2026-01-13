@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>dreams • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 15% 12%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:44px 16px 110px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+    .badge{
+      width:56px;height:56px;border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .badge img{ width:100%; height:100%; object-fit:cover; }
+    h1{
+      margin:0;
+      font-size:2rem;
+      letter-spacing:0.4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{ margin:4px 0 0; color:var(--muted); font-size:0.98rem; }
+
+    .chips{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--muted);
+      backdrop-filter: blur(6px);
+      font-family: var(--mono);
+    }
+    .chip .dot{
+      display:inline-block;width:6px;height:6px;border-radius:999px;margin-right:6px;
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h2{ margin:0; font-size:1.05rem; color:var(--pink2); letter-spacing:0.3px; }
+    .small{ font-size:0.86rem; color:var(--muted); }
+    .panelInner{ padding:16px 16px; }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } .chips{justify-content:flex-start;} }
+
+    /* dream viewer */
+    .dreamBox{
+      position:relative;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+    }
+
+    .dream{
+      padding:14px 14px 18px;
+      min-height: 240px;
+      font-family: var(--sans);
+      position:relative;
+    }
+    .dream h3{
+      margin:0;
+      font-size:1.02rem;
+      letter-spacing:0.2px;
+    }
+    .meta{
+      margin-top:4px;
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color:var(--muted);
+    }
+    .body{
+      margin-top:10px;
+      white-space:pre-wrap;
+      word-break:break-word;
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* glitch transition layer */
+    .glitchCover{
+      pointer-events:none;
+      position:absolute;
+      inset:0;
+      opacity:0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.06) 0px,
+          rgba(255,255,255,0.06) 1px,
+          rgba(0,0,0,0) 3px,
+          rgba(0,0,0,0) 7px
+        );
+      mix-blend-mode: screen;
+      transform: translateY(0);
+    }
+    .glitching .glitchCover{
+      opacity:0.30;
+      animation: coverJitter 0.24s steps(2) infinite;
+    }
+    @keyframes coverJitter{
+      0%{ transform: translateY(0); }
+      50%{ transform: translateY(6px); }
+      100%{ transform: translateY(0); }
+    }
+
+    .ghostText{
+      position:absolute;
+      inset:0;
+      padding:14px;
+      font-family: var(--mono);
+      font-size:12px;
+      line-height:1.25;
+      color: rgba(255,179,230,0.55);
+      opacity:0;
+      white-space:pre-wrap;
+      mix-blend-mode: screen;
+      pointer-events:none;
+    }
+    .glitching .ghostText{
+      opacity:1;
+      animation: ghost 0.22s steps(2) infinite;
+    }
+    @keyframes ghost{
+      0%{ transform: translate(0,0); filter:none; }
+      50%{ transform: translate(10px,-2px); filter: blur(0.6px); }
+      100%{ transform: translate(-6px,3px); filter:none; }
+    }
+
+    textarea, input[type="text"]{
+      width:100%;
+      background: rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      padding:10px 12px;
+      color:var(--text);
+      font-family: var(--mono);
+      outline:none;
+    }
+    textarea{ min-height: 180px; resize: vertical; }
+    textarea:focus, input[type="text"]:focus{
+      border-color: rgba(255,120,200,0.35);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+
+    .note{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+      margin-top:10px;
+    }
+
+    .oneko{
+      position:fixed;
+      bottom:12px;
+      right:12px;
+      z-index:5;
+      opacity:0.95;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      animation: floaty 3.6s ease-in-out infinite;
+      cursor:pointer;
+      user-select:none;
+    }
+    @keyframes floaty{
+      0%{transform: translateY(0);}
+      50%{transform: translateY(-6px);}
+      100%{transform: translateY(0);}
+    }
+    .oneko img{ width:52px; image-rendering:pixelated; display:block; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <img src="twi looking.png" alt="badge" />
+        </div>
+        <div class="titlebox">
+          <h1 class="pulseText">dream log</h1>
+          <div class="sub">surreal entries • timestamps • gentle corruption transitions</div>
+        </div>
+      </div>
+
+      <div class="chips">
+        <div class="chip"><span class="dot"></span> <span class="pulseText">black/white/pink</span></div>
+        <div class="chip" id="count">entries: 0</div>
+        <div class="chip" id="saved">saved: yes</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>viewer</h2>
+          <div class="small">press <span class="pulseText">n</span> next • <span class="pulseText">p</span> prev • <span class="pulseText">g</span> glitch</div>
+        </div>
+        <div class="panelInner">
+          <div class="btnRow">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <button class="btn" id="btnPrev" type="button"><span class="k">&lt;</span> prev</button>
+            <button class="btn" id="btnNext" type="button"><span class="k">&gt;</span> next</button>
+            <button class="btn" id="btnGlitch" type="button"><span class="k">fx</span> glitch</button>
+            <button class="btn" id="btnRandom" type="button"><span class="k">rng</span> random</button>
+          </div>
+
+          <div class="dreamBox" id="dreamBox" style="margin-top:12px;">
+            <div class="dream" id="dream">
+              <h3 class="pulseText" id="dreamTitle">loading…</h3>
+              <div class="meta" id="dreamMeta"></div>
+              <div class="body" id="dreamBody"></div>
+              <div class="glitchCover"></div>
+              <div class="ghostText" id="ghostText"></div>
+            </div>
+          </div>
+
+          <div class="note">
+            notes: this saves to <span class="pulseText">your browser only</span> (localStorage). github pages stays static.
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>add entry</h2>
+          <div class="small pulseText">write the weird</div>
+        </div>
+        <div class="panelInner">
+          <div class="small">title</div>
+          <input id="inTitle" type="text" placeholder="e.g. the hallway that loops forever" />
+
+          <div class="small" style="margin-top:10px;">dream</div>
+          <textarea id="inBody" placeholder="type it raw. no judgement. (:3)"></textarea>
+
+          <div class="btnRow">
+            <button class="btn" id="btnAdd" type="button"><span class="k">+</span> add</button>
+            <button class="btn" id="btnExport" type="button"><span class="k">out</span> export</button>
+            <label class="btn" style="cursor:pointer;">
+              <span class="k">in</span> import
+              <input id="fileImport" type="file" accept="application/json" style="display:none;">
+            </label>
+          </div>
+
+          <div class="small" style="margin-top:10px;">export/import is just a json file you can keep anywhere.</div>
+
+          <div class="btnRow" style="margin-top:10px;">
+            <button class="btn" id="btnWipe" type="button" title="careful"><span class="k">rm</span> wipe local</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="oneko" id="oneko" title="click me">
+    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+  </div>
+
+  <audio id="yeah" preload="auto">
+    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    // oneko fallback + click
+    const onekoImg = $("onekoImg");
+    onekoImg.addEventListener("error", () => {
+      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="onekogif"; }
+    });
+    $("oneko").addEventListener("click", () => {
+      const y = $("yeah");
+      y.currentTime = 0;
+      y.play().catch(()=>{});
+    });
+
+    const KEY = "bella.dreamlog.v1";
+
+    function nowISO(){
+      return new Date().toISOString();
+    }
+
+    const seeded = [
+      {
+        id: crypto.randomUUID?.() || String(Math.random()),
+        title: "the train platform that never arrives",
+        ts: nowISO(),
+        body:
+`i waited with a ticket made of pink light.
+the screen said: "delayed: forever".
+everyone else was calm. i was the only one glitching.
+
+then a cat made of ascii walked past and typed my name into the air.`
+      },
+      {
+        id: crypto.randomUUID?.() || String(Math.random()),
+        title: "settings menu for the sky",
+        ts: nowISO(),
+        body:
+`the clouds had dropdowns.
+"lighting: moody"
+"wind: low"
+"ambient: synth hum"
+
+i tried to change "difficulty" and the button laughed at me.`
+      },
+      {
+        id: crypto.randomUUID?.() || String(Math.random()),
+        title: "hallway loop (soft mode)",
+        ts: nowISO(),
+        body:
+`every door was the same room, but each time:
+the pink was a different shade.
+the clock read 04:00 and refused to tick.
+i woke up with my hands still typing.`
+      }
+    ];
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return null;
+        return parsed;
+      }catch(e){
+        return null;
+      }
+    }
+
+    function save(list){
+      localStorage.setItem(KEY, JSON.stringify(list));
+      $("saved").textContent = "saved: yes";
+    }
+
+    let dreams = load();
+    if (!dreams || dreams.length === 0){
+      dreams = seeded;
+      save(dreams);
+    }
+
+    let idx = 0;
+
+    function fmtTime(iso){
+      try{
+        const d = new Date(iso);
+        return d.toLocaleString(undefined, { year:"numeric", month:"short", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+      }catch(e){
+        return iso;
+      }
+    }
+
+    function updateCount(){
+      $("count").textContent = `entries: ${dreams.length}`;
+    }
+
+    function glitchTransition(cb){
+      const box = $("dreamBox");
+      const ghost = $("ghostText");
+      const currentText = `${$("dreamTitle").textContent}\n${$("dreamMeta").textContent}\n\n${$("dreamBody").textContent}`;
+      ghost.textContent = currentText;
+
+      box.classList.add("glitching");
+      const dur = 420 + Math.floor(Math.random()*260);
+      setTimeout(() => {
+        cb();
+        setTimeout(() => box.classList.remove("glitching"), 220);
+      }, dur);
+    }
+
+    function render(){
+      idx = clamp(idx, 0, dreams.length - 1);
+      const d = dreams[idx];
+
+      $("dreamTitle").textContent = d.title || "(untitled)";
+      $("dreamMeta").textContent = `${fmtTime(d.ts)}  •  entry ${idx+1}/${dreams.length}`;
+      $("dreamBody").textContent = d.body || "";
+      updateCount();
+    }
+
+    function next(){
+      glitchTransition(() => {
+        idx = (idx + 1) % dreams.length;
+        render();
+      });
+    }
+
+    function prev(){
+      glitchTransition(() => {
+        idx = (idx - 1 + dreams.length) % dreams.length;
+        render();
+      });
+    }
+
+    $("btnNext").addEventListener("click", next);
+    $("btnPrev").addEventListener("click", prev);
+    $("btnGlitch").addEventListener("click", () => glitchTransition(() => render()));
+    $("btnRandom").addEventListener("click", () => {
+      glitchTransition(() => {
+        idx = Math.floor(Math.random() * dreams.length);
+        render();
+      });
+    });
+
+    $("btnAdd").addEventListener("click", () => {
+      const title = $("inTitle").value.trim() || "untitled dream";
+      const body = $("inBody").value.trim();
+      if (!body){
+        $("saved").textContent = "saved: write something first";
+        return;
+      }
+      const entry = {
+        id: crypto.randomUUID?.() || String(Math.random()),
+        title,
+        ts: nowISO(),
+        body
+      };
+      dreams.unshift(entry);
+      save(dreams);
+      $("inTitle").value = "";
+      $("inBody").value = "";
+      idx = 0;
+      glitchTransition(() => render());
+    });
+
+    $("btnWipe").addEventListener("click", () => {
+      const ok = confirm("wipe local dream log? this only affects this browser.");
+      if (!ok) return;
+      dreams = [];
+      save(dreams);
+      dreams = seeded;
+      save(dreams);
+      idx = 0;
+      glitchTransition(() => render());
+    });
+
+    // export json
+    $("btnExport").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(dreams, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bella-dreamlog.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 800);
+    });
+
+    // import json
+    $("fileImport").addEventListener("change", async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      try{
+        const txt = await f.text();
+        const parsed = JSON.parse(txt);
+        if (!Array.isArray(parsed)) throw new Error("json must be an array");
+        dreams = parsed
+          .filter(x => x && typeof x === "object")
+          .map(x => ({
+            id: x.id || (crypto.randomUUID?.() || String(Math.random())),
+            title: String(x.title ?? "untitled dream"),
+            ts: String(x.ts ?? nowISO()),
+            body: String(x.body ?? "")
+          }))
+          .filter(x => x.body.trim().length > 0);
+
+        if (dreams.length === 0) throw new Error("no valid entries found");
+        save(dreams);
+        idx = 0;
+        glitchTransition(() => render());
+      }catch(err){
+        $("saved").textContent = "saved: import failed";
+        alert("import failed: " + (err?.message || String(err)));
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    // keyboard
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k === "n") next();
+      if (k === "p") prev();
+      if (k === "g") $("btnGlitch").click();
+      if (k === "escape") location.href = "index.html";
+    });
+
+    // start
+    $("saved").textContent = "saved: yes";
+    render();
+  </script>
+</body>
+</html>
