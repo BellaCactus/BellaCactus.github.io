@@ -7,51 +7,102 @@
 
   <style>
     :root{
-      --bg:#0b0b0b;
-      --panel:#111;
-      --text:#f5f5f5;
-      --muted:#b8b8b8;
-      --pink:#ff8fd8;
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel:#0f0f10;
+      --panel2:#131315;
+      --border:#26262a;
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
       --pink2:#ffb3e6;
-      --border:#2a2a2a;
+      --pink3:#ff4db8;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+
+      --radius:16px;
     }
 
     *{box-sizing:border-box;}
+    html,body{height:100%;}
     body{
       margin:0;
-      background:var(--bg);
+      background:
+        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       color:var(--text);
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       line-height:1.55;
+      overflow-x:hidden;
     }
 
     a{color:var(--pink); text-decoration:none;}
     a:hover{text-decoration:underline;}
 
-    .container{
-      max-width:900px;
+    .wrap{
+      max-width:980px;
       margin:0 auto;
-      padding:44px 18px 90px;
+      padding:44px 16px 110px;
     }
 
-    header{
+    .top{
       display:flex;
       align-items:center;
-      gap:16px;
-      margin-bottom:28px;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
     }
 
-    header img{
-      width:58px;
-      height:58px;
-      image-rendering:pixelated;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
     }
 
+    .badge{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;
+      place-items:center;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .badge::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 45%);
+      transform: rotate(25deg);
+      opacity:0.8;
+      pointer-events:none;
+    }
+
+    .badge span{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-weight:700;
+      letter-spacing:0.5px;
+      color:var(--pink2);
+      text-shadow:0 0 12px rgba(255,120,200,0.35);
+    }
+
+    .titlebox{min-width:0;}
     h1{
       margin:0;
       font-size:2rem;
-      color:var(--pink);
       letter-spacing:0.5px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .sub{
@@ -60,150 +111,474 @@
       font-size:0.98rem;
     }
 
-    .panel{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:18px 18px;
-      margin:14px 0;
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
-    .panel h2{
-      margin:0 0 10px;
-      font-size:1.15rem;
-      color:var(--pink2);
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--muted);
+      backdrop-filter: blur(6px);
+    }
+
+    .chip strong{color:var(--text); font-weight:600;}
+    .chip .dot{
+      display:inline-block;
+      width:6px;height:6px;
+      border-radius:999px;
+      margin-right:6px;
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
+    }
+
+    /* animated gradient text (white <-> pink) */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
     }
 
     .grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns: 1.2fr 0.8fr;
       gap:14px;
+      margin-top:14px;
     }
-
-    @media (max-width:740px){
+    @media (max-width: 860px){
       .grid{grid-template-columns:1fr;}
+      .chips{justify-content:flex-start;}
     }
 
-    .projects ul{
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .panelInner{
+      padding:16px 16px;
+    }
+
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .panelTitle h2{
+      margin:0;
+      font-size:1.05rem;
+      color:var(--pink2);
+      letter-spacing:0.3px;
+    }
+
+    .small{
+      font-size:0.86rem;
+      color:var(--muted);
+    }
+
+    /* terminal */
+    .terminal{
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
+                  rgba(0,0,0,0.35);
+      border-top:1px solid rgba(255,255,255,0.05);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      padding:14px 16px;
+      min-height:190px;
+    }
+
+    .termLine{
+      display:flex;
+      gap:8px;
+      margin:6px 0;
+      align-items:flex-start;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .prompt{color:var(--pink2);}
+    .cmd{color:var(--text);}
+    .out{color:rgba(255,255,255,0.82);}
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.1em;
+      background: var(--pink);
+      margin-left:2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align:-2px;
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+    @keyframes blink{50%{opacity:0;}}
+
+    .asciiBox{
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      border-radius:14px;
+      padding:12px 12px;
+      margin-top:12px;
+    }
+    .ascii{
+      white-space:pre;
+      font-size:12px;
+      line-height:1.15;
+      margin:0;
+      color:rgba(255,255,255,0.92);
+    }
+    .ascii .pink{
+      color:var(--pink2);
+      text-shadow:0 0 10px rgba(255,120,200,0.35);
+    }
+
+    ul.clean{
       list-style:none;
       padding:0;
       margin:0;
     }
-
-    .projects li{
+    ul.clean li{
       padding:10px 0;
-      border-bottom:1px dashed var(--border);
+      border-bottom:1px dashed rgba(255,255,255,0.10);
     }
-
-    .projects li:last-child{border-bottom:none;}
-
+    ul.clean li:last-child{border-bottom:none;}
     .tag{
       display:inline-block;
       font-size:0.72rem;
       padding:2px 8px;
       border-radius:999px;
-      background:#1a1a1a;
+      background: rgba(255,255,255,0.05);
       color:var(--pink2);
-      margin-left:8px;
-      border:1px solid #232323;
+      margin-left:6px;
+      border:1px solid rgba(255,255,255,0.08);
     }
 
-    .mono{
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      font-size:0.95rem;
-      color:#eaeaea;
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
-
-    .footer{
-      text-align:center;
-      color:var(--muted);
-      font-size:0.85rem;
-      margin-top:34px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease;
+      text-decoration:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn .k{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:0.8rem;
+      color:var(--pink2);
     }
 
     .oneko{
       position:fixed;
       bottom:12px;
       right:12px;
-      opacity:0.9;
       pointer-events:none;
+      opacity:0.95;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      transform: translateZ(0);
+      animation: floaty 3.6s ease-in-out infinite;
+    }
+    @keyframes floaty{
+      0%{transform: translateY(0);}
+      50%{transform: translateY(-6px);}
+      100%{transform: translateY(0);}
+    }
+    .oneko img{
+      width:52px;
+      image-rendering:pixelated;
     }
 
-    .oneko img{
-      width:48px;
-      image-rendering:pixelated;
-      filter:drop-shadow(0 6px 18px rgba(0,0,0,0.55));
+    .footer{
+      margin-top:22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:0.86rem;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <header>
-      <!-- change this to oneko.gif if you rename the file -->
-      <img src="onekogif" alt="oneko" />
-      <div>
-        <h1>bella</h1>
-        <p class="sub">projects + links</p>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true"><span>bc</span></div>
+        <div class="titlebox">
+          <h1 class="pulseText">bella cactus</h1>
+          <div class="sub">coding, reverse engineering, servers, and whatever i’m obsessed with this week</div>
+        </div>
       </div>
-    </header>
+
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
+        <div class="chip">timezone: <strong>nz</strong></div>
+        <div class="chip">mode: <strong>building</strong></div>
+      </div>
+    </div>
 
     <div class="grid">
-      <div class="panel">
-        <h2>about</h2>
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>links</h2>
+          <div class="small">last update: <span id="date"></span></div>
+        </div>
+        <div class="panelInner">
+          <div class="btnRow">
+            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+              <span class="k">git</span> bella-limiter
+            </a>
+            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> @BellaCactusYT
+            </a>
+          </div>
+
+          <div class="terminal" aria-label="terminal">
+            <div class="termLine">
+              <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+              <span class="cmd" id="typed"></span><span class="cursor"></span>
+            </div>
+
+            <div id="termOut"></div>
+
+            <div class="asciiBox">
+              <pre class="ascii" id="ascii"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>about me</h2>
+          <div class="small pulseText">hi :3</div>
+        </div>
+        <div class="panelInner">
+          <p>
+            i’m <span class="pulseText">bella</span>. i like making stuff that’s useful, weird, or both.
+            i’m into <span class="pulseText">reverse engineering</span>, coding, software/hardware, and server stuff.
+          </p>
+
+          <ul class="clean">
+            <li>
+              <strong class="pulseText">games</strong>
+              <span class="tag">destiny 2</span>
+              <span class="tag">geometry dash</span>
+              <span class="tag">minecraft (technical)</span>
+            </li>
+            <li>
+              <strong class="pulseText">studying</strong>
+              <span class="tag">level 6</span>
+              <span class="tag">computing</span>
+            </li>
+            <li>
+              <strong class="pulseText">passions</strong>
+              <span class="tag">reverse eng</span>
+              <span class="tag">tools</span>
+              <span class="tag">automation</span>
+              <span class="tag">servers</span>
+            </li>
+          </ul>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
+            <a class="btn" href="#videos"><span class="k">cat</span> videos</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="panel" id="projects" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>projects</h2>
+        <div class="small">stuff i’m working on / polishing</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">bella limiter</strong>
+            <span class="tag">wpf overlay</span>
+            <span class="tag">network-y</span>
+            <div class="small" style="margin-top:6px;">
+              repo:
+              <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">website</strong>
+            <span class="tag">github pages</span>
+            <span class="tag">cute terminal</span>
+            <div class="small" style="margin-top:6px;">
+              this page is the placeholder. it’ll get replaced later with the full site.
+            </div>
+          </li>
+
+          <li>
+            <strong class="pulseText">future ideas</strong>
+            <span class="tag">tools</span>
+            <span class="tag">reverse eng notes</span>
+            <span class="tag">server docs</span>
+            <div class="small" style="margin-top:6px;">
+              maybe a writeups section when i feel like it.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="videos" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>youtube</h2>
+        <div class="small">where i post clips / random stuff</div>
+      </div>
+      <div class="panelInner">
         <p>
-          i build random stuff. this page is just a placeholder for now.
+          i upload on
+          <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="pulseText">@BellaCactusYT</span></a>.
+          mostly gaming, experiments, and whatever i’m messing with.
         </p>
+
+        <div class="btnRow">
+          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/videos" target="_blank" rel="noreferrer"><span class="k">yt</span> videos</a>
+          <a class="btn" href="https://www.youtube.com/@BellaCactusYT/shorts" target="_blank" rel="noreferrer"><span class="k">yt</span> shorts</a>
+        </div>
       </div>
-
-      <div class="panel">
-        <h2>status</h2>
-        <p class="mono">
-          last update: <span id="date"></span><br/>
-          vibe: black / white / pink
-        </p>
-      </div>
-    </div>
-
-    <div class="panel projects">
-      <h2>projects</h2>
-      <ul>
-        <li>
-          <strong>bella limiter</strong>
-          <span class="tag">wpf</span>
-          <span class="tag">overlay</span><br/>
-          repo soon.
-        </li>
-        <li>
-          <strong>site</strong>
-          <span class="tag">html</span><br/>
-          this page.
-        </li>
-      </ul>
-    </div>
-
-    <div class="panel">
-      <h2>links</h2>
-      <p>
-        github: <a href="https://github.com/yourusername">BellaCactus</a><br/>
-        contact: <a href="mailto:you@example.com">BellaCactus@gmail.com</a>
-      </p>
-    </div>
+    </section>
 
     <div class="footer">
-      © bella
+      © <span class="pulseText">bella cactus</span> • made with html
     </div>
   </div>
 
-  <div class="oneko">
-    <!-- change this to oneko.gif if you rename the file -->
-    <img src="onekogif" alt="oneko" />
+  <div class="oneko" aria-hidden="true">
+    <img id="onekoImg" src="oneko.gif" alt="oneko" />
   </div>
 
   <script>
+    // date
     const d = new Date();
     document.getElementById("date").textContent =
       d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
+
+    // oneko fallback: if oneko.gif doesn't exist, try "onekogif"
+    const oneko = document.getElementById("onekoImg");
+    oneko.addEventListener("error", () => {
+      if (!oneko.dataset.tried) {
+        oneko.dataset.tried = "1";
+        oneko.src = "onekogif"; // your uploaded filename
+      }
+    });
+
+    // terminal typewriter
+    const typedEl = document.getElementById("typed");
+    const outEl = document.getElementById("termOut");
+
+    const scriptLines = [
+      { cmd: "whoami", out: "bella (aka BellaCactus)" },
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
+      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
+      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" }
+    ];
+
+    const asciiFrames = [
+`  (\\_/)
+  ( o.o)   < meow
+  (> < )`,
+`  (\\_/)
+  ( o.o)   < meow~
+  ( > <)`,
+`  (\\_/)
+  ( o.o)   < meow!!
+  (>  <)`
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let current = scriptLines[0].cmd;
+    let typing = true;
+
+    function pushOutput(text){
+      const div = document.createElement("div");
+      div.className = "termLine";
+      div.innerHTML = `<span class="prompt">></span> <span class="out">${escapeHtml(text)}</span>`;
+      outEl.appendChild(div);
+      outEl.scrollTop = outEl.scrollHeight;
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function tick(){
+      if (typing){
+        typedEl.textContent = current.slice(0, charIndex++);
+        if (charIndex > current.length){
+          typing = false;
+          setTimeout(() => {
+            pushOutput(scriptLines[lineIndex].out);
+            lineIndex = (lineIndex + 1) % scriptLines.length;
+            current = scriptLines[lineIndex].cmd;
+            charIndex = 0;
+            typing = true;
+          }, 420);
+        }
+      }
+      requestAnimationFrame(() => {});
+      setTimeout(tick, 35);
+    }
+    tick();
+
+    // ascii animation
+    const asciiEl = document.getElementById("ascii");
+    let af = 0;
+    setInterval(() => {
+      const frame = asciiFrames[af % asciiFrames.length]
+        .replace("meow", `<span class="pink">meow</span>`);
+      // can't set innerHTML on <pre> safely with spans unless we do it manually:
+      // easiest: keep it plain, but still vibe. (pink handled by pulseText elsewhere)
+      asciiEl.textContent = asciiFrames[af % asciiFrames.length];
+      af++;
+    }, 650);
   </script>
 </body>
 </html>
