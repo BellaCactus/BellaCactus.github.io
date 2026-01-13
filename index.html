@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>bella cactus</title>
   <meta name="color-scheme" content="dark" />
-
   <style>
     :root{
       --bg:#050507;
       --bg2:#0a0a0f;
       --panel:rgba(255,255,255,0.05);
-      --panel2:rgba(0,0,0,0.35);
       --border:rgba(255,255,255,0.10);
 
       --text:#f7f7ff;
@@ -42,41 +40,9 @@
       overflow-x:hidden;
     }
 
-    /* subtle animated grain */
-    body::before{
-      content:"";
-      position:fixed; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-      opacity:.20;
-      pointer-events:none;
-      animation: grain 6s steps(10) infinite;
-    }
-    @keyframes grain{
-      0%{transform:translate(0,0)}
-      10%{transform:translate(-2%, -1%)}
-      20%{transform:translate(-3%, 1%)}
-      30%{transform:translate(2%, -2%)}
-      40%{transform:translate(3%, 2%)}
-      50%{transform:translate(-1%, 3%)}
-      60%{transform:translate(-2%, 0)}
-      70%{transform:translate(2%, 1%)}
-      80%{transform:translate(-1%, -2%)}
-      90%{transform:translate(1%, 2%)}
-      100%{transform:translate(0,0)}
-    }
-
     a{color:var(--pink); text-decoration:none}
     a:hover{text-decoration:underline}
     img{max-width:100%; display:block}
-
-    .wrap{
-      max-width:1040px;
-      margin:0 auto;
-      padding:44px 16px 120px;
-      position:relative;
-      z-index:1;
-    }
 
     /* animated pink/white text */
     .pulseText{
@@ -95,11 +61,22 @@
     }
 
     @media (prefers-reduced-motion: reduce){
-      body::before{animation:none}
       .pulseText{animation:none; color:var(--text); background:none; -webkit-background-clip:initial; background-clip:initial}
       .floaty{animation:none}
       .scanline{animation:none}
+      .introAscii{animation:none}
+      .introBlink{animation:none}
     }
+
+    .wrap{
+      max-width:1040px;
+      margin:0 auto;
+      padding:44px 16px 120px;
+      position:relative;
+      z-index:1;
+      display:none; /* hidden until intro finishes */
+    }
+    .wrap.ready{display:block}
 
     /* top */
     .top{
@@ -114,30 +91,29 @@
       display:flex; gap:14px; align-items:center;
       min-width:0;
     }
+
+    /* badge = twi looking image */
     .badge{
       width:58px; height:58px;
       border-radius:16px;
-      background: linear-gradient(180deg, rgba(255,120,200,0.24), rgba(255,120,200,0.06));
       border:1px solid rgba(255,120,200,0.25);
       box-shadow: var(--shadow);
-      display:grid; place-items:center;
-      position:relative; overflow:hidden;
+      overflow:hidden;
+      background: rgba(0,0,0,0.25);
+      cursor:pointer;
+      flex: 0 0 auto;
     }
-    .badge::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.20), transparent 45%);
-      transform:rotate(25deg);
-      opacity:0.85;
-      pointer-events:none;
+    .badge img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform: scale(1.02);
+      filter: saturate(1.05) contrast(1.05);
     }
-    .badge span{
-      font-family:var(--mono);
-      font-weight:800;
-      letter-spacing:0.5px;
-      color:var(--pink2);
-      text-shadow:0 0 14px rgba(255,120,200,0.35);
+    .badge:hover{
+      border-color: rgba(255,120,200,0.45);
     }
+
     h1{
       margin:0;
       font-size:2.1rem;
@@ -195,6 +171,7 @@
       color:var(--text);
       transition: transform .08s ease, border .2s ease, background .2s ease;
       user-select:none;
+      cursor:pointer;
     }
     .pill:hover{
       transform: translateY(-1px);
@@ -253,7 +230,6 @@
       overflow:hidden;
       position:relative;
     }
-
     .scanline{
       position:absolute; left:0; right:0;
       top:-20%;
@@ -332,42 +308,41 @@
       border:1px solid rgba(255,255,255,0.08);
     }
 
-    /* gallery */
-    .gallery{
+    /* tasteful image cards */
+    .mediaRow{
       display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:10px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
     }
-    @media (max-width: 880px){ .gallery{grid-template-columns: repeat(2, minmax(0,1fr));} }
-    @media (max-width: 520px){ .gallery{grid-template-columns: 1fr;} }
+    @media (max-width: 900px){ .mediaRow{grid-template-columns:1fr} }
 
-    .card{
+    .imgCard{
       border-radius:16px;
       border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.30);
+      background: rgba(0,0,0,0.32);
       overflow:hidden;
-      position:relative;
       cursor:pointer;
       transition: transform .12s ease, border .2s ease, background .2s ease;
       box-shadow: 0 10px 34px rgba(0,0,0,0.35);
+      position:relative;
     }
-    .card:hover{
+    .imgCard:hover{
       transform: translateY(-2px);
       border-color: rgba(255,120,200,0.30);
       background: rgba(255,120,200,0.06);
     }
-    .thumb{
-      aspect-ratio: 16 / 10;
+    .imgCard img{
       width:100%;
+      aspect-ratio: 16 / 10;
       object-fit:cover;
       filter: saturate(1.05) contrast(1.02);
     }
-    .cap{
+    .imgCap{
       padding:10px 10px 12px;
-      font-size:0.9rem;
+      font-size:0.92rem;
       color:rgba(255,255,255,0.88);
     }
-    .cap .muted{color:var(--muted); font-size:0.82rem; margin-top:4px}
+    .imgCap .muted{color:var(--muted); font-size:0.82rem; margin-top:4px}
 
     /* lightbox */
     .lightbox{
@@ -377,7 +352,7 @@
       align-items:center;
       justify-content:center;
       padding:18px;
-      z-index:50;
+      z-index:80;
     }
     .lightbox.open{display:flex}
     .lbPanel{
@@ -430,28 +405,6 @@
     }
     .lbFoot .hint{font-family:var(--mono); font-size:.82rem}
 
-    /* media section */
-    .mediaGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 900px){ .mediaGrid{grid-template-columns:1fr} }
-
-    .mediaBox{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.32);
-      overflow:hidden;
-      padding:12px;
-    }
-    video, audio{
-      width:100%;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.35);
-    }
-
     /* oneko corner */
     .oneko{
       position:fixed;
@@ -459,7 +412,7 @@
       bottom:12px;
       width:66px;
       height:66px;
-      z-index:60;
+      z-index:90;
       border-radius:16px;
       border:1px solid rgba(255,255,255,0.10);
       background: rgba(0,0,0,0.35);
@@ -489,24 +442,225 @@
       color:var(--muted);
       font-size:0.86rem;
     }
+
+    /* ---------- INTRO (startup animation) ---------- */
+    .intro{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(255,120,200,0.16), transparent 60%),
+        radial-gradient(900px 650px at 85% 25%, rgba(255,208,238,0.10), transparent 60%),
+        linear-gradient(180deg, #050507, #0a0a0f);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:120;
+      padding:18px;
+    }
+    .intro.hidden{display:none}
+
+    .introPanel{
+      width:min(980px, 96vw);
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.45);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .introTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      font-family:var(--mono);
+      font-size:0.9rem;
+      color:rgba(255,255,255,0.88);
+    }
+    .introBtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .introBtn{
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-family:var(--mono);
+      font-size:0.85rem;
+    }
+    .introBtn:hover{border-color: rgba(255,120,200,0.34); background: rgba(255,120,200,0.10)}
+
+    .introBody{
+      position:relative;
+      background: rgba(0,0,0,0.40);
+      padding:12px;
+      display:grid;
+      grid-template-columns: 1.4fr 0.6fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){
+      .introBody{grid-template-columns:1fr}
+    }
+
+    .introVideoBox{
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      position:relative;
+    }
+    .introVideoBox video{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .introAsciiBox{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      overflow:hidden;
+      position:relative;
+    }
+    .introAsciiHead{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-family:var(--mono);
+      color:rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.25);
+    }
+    .introAscii{
+      padding:12px;
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.2;
+      white-space:pre;
+      color:rgba(255,255,255,0.90);
+      min-height: 190px;
+    }
+    .introBlink{
+      display:inline-block;
+      width:8px;
+      height:1em;
+      background: var(--pink);
+      vertical-align:-2px;
+      margin-left:3px;
+      animation: blink 1s steps(1) infinite;
+      box-shadow:0 0 14px rgba(255,120,200,0.55);
+    }
+
+    .introFoot{
+      padding:12px 14px;
+      border-top:1px solid rgba(255,255,255,0.10);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:0.9rem;
+    }
+
+    /* mini audio HUD */
+    .hud{
+      position:fixed;
+      left:12px;
+      bottom:12px;
+      z-index:95;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+      font-family:var(--mono);
+      font-size:0.82rem;
+      color:rgba(255,255,255,0.85);
+      user-select:none;
+    }
+    .hud button{
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color:var(--text);
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-family:var(--mono);
+      font-size:0.82rem;
+    }
+    .hud button:hover{border-color: rgba(255,120,200,0.34); background: rgba(255,120,200,0.10)}
+    .hud .now{color:rgba(255,255,255,0.9)}
+    .hud .tagPink{color:var(--pink2)}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <!-- INTRO STARTUP ANIMATION -->
+  <section class="intro" id="intro">
+    <div class="introPanel">
+      <div class="introTop">
+        <div><span class="pulseText">startup</span> :: hello everypony</div>
+        <div class="introBtns">
+          <button class="introBtn" id="introPlay">play</button>
+          <button class="introBtn" id="introSkip">skip</button>
+        </div>
+      </div>
+
+      <div class="introBody">
+        <div class="introVideoBox">
+          <video id="introVid" preload="metadata" playsinline>
+            <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div class="introAsciiBox">
+          <div class="introAsciiHead">boot log</div>
+          <div class="introAscii" id="introAscii"></div>
+        </div>
+      </div>
+
+      <div class="introFoot">
+        <div>tip: soundtrack needs one click because browsers are annoying</div>
+        <div class="small">keys: <span class="pulseText">esc</span> skip</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIO HUD -->
+  <div class="hud" id="hud">
+    <span>soundtrack: <span class="now" id="songName">not started</span></span>
+    <button id="musicBtn">start</button>
+    <button id="musicNext">reroll</button>
+  </div>
+
+  <div class="wrap" id="site">
     <header class="top">
       <div class="brand">
-        <div class="badge" aria-hidden="true"><span>bc</span></div>
+        <a class="badge" href="#twi" title="twi looking" aria-label="twi looking">
+          <img src="twi%20looking.png" alt="twi looking" />
+        </a>
+
         <div style="min-width:0">
           <h1 class="pulseText">bella cactus</h1>
           <div class="sub">
             reverse engineering + coding + servers + technical minecraft + whatever brain buff i rolled this week :3
           </div>
+
           <nav class="nav" aria-label="site">
             <a class="pill" href="#links"><span class="k">cd</span> links</a>
             <a class="pill" href="#projects"><span class="k">ls</span> projects</a>
-            <a class="pill" href="#gallery"><span class="k">cat</span> gallery</a>
-            <a class="pill" href="#media"><span class="k">play</span> media</a>
+            <a class="pill" href="#twi"><span class="k">cat</span> vibes</a>
           </nav>
         </div>
       </div>
@@ -567,8 +721,7 @@
         </div>
         <div class="panelInner">
           <p style="margin-top:0">
-            i’m <span class="pulseText">bella</span>. i like building stuff that feels “illegal” (in a cool way) but is actually just
-            <span class="pulseText">tools + code</span>.
+            i’m <span class="pulseText">bella</span>. i make tools, overlays, and weird little projects.
           </p>
 
           <ul class="clean">
@@ -594,7 +747,7 @@
           </ul>
 
           <p style="margin:12px 0 0; color:var(--muted)">
-            this page is the “better-than-nothing” front page until the wordpress site lands again.
+            this is the temp front page until wordpress comes back online.
           </p>
         </div>
       </aside>
@@ -620,9 +773,9 @@
           </li>
 
           <li>
-            <strong class="pulseText">youtube clips</strong>
-            <span class="tag">experiments</span>
+            <strong class="pulseText">youtube</strong>
             <span class="tag">gaming</span>
+            <span class="tag">experiments</span>
             <div class="small" style="margin-top:6px">
               channel:
               <a href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
@@ -630,65 +783,28 @@
               </a>
             </div>
           </li>
-
-          <li>
-            <strong class="pulseText">future: writeups</strong>
-            <span class="tag">reverse eng notes</span>
-            <span class="tag">server docs</span>
-            <div class="small" style="margin-top:6px">
-              maybe a section with clean notes + cursed discoveries when i feel like it :P
-            </div>
-          </li>
         </ul>
       </div>
     </section>
 
-    <section class="panel" id="gallery" style="margin-top:14px">
+    <!-- tasteful images (not a gallery section) -->
+    <section class="panel" id="twi" style="margin-top:14px">
       <div class="panelTitle">
-        <h2>gallery</h2>
-        <div class="small">your uploaded chaos items (click to zoom)</div>
+        <h2>vibes</h2>
+        <div class="small">click to zoom</div>
       </div>
       <div class="panelInner">
-        <div class="gallery" id="galleryGrid"></div>
-        <div class="small" style="margin-top:10px">
-          if a thumbnail looks broken, the filename probably doesn’t match exactly (spaces/case). rename files to simple names later if you want.
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="media" style="margin-top:14px">
-      <div class="panelTitle">
-        <h2>media</h2>
-        <div class="small">mp3 / mp4 you dropped in the repo</div>
-      </div>
-      <div class="panelInner">
-        <div class="mediaGrid">
-          <div class="mediaBox">
-            <div class="small" style="margin-bottom:8px"><span class="pulseText">audio</span> lil jon yeah</div>
-            <audio controls preload="metadata">
-              <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
-              (your browser doesn’t like this audio tag)
-            </audio>
-          </div>
-
-          <div class="mediaBox">
-            <div class="small" style="margin-bottom:8px"><span class="pulseText">video</span> hello everypony mlp dexter</div>
-            <video controls preload="metadata">
-              <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4" />
-              (your browser doesn’t like this video tag)
-            </video>
-          </div>
-        </div>
+        <div class="mediaRow" id="imgRow"></div>
       </div>
     </section>
 
     <div class="footer">
-      © <span class="pulseText">bella cactus</span> • built with html + caffeine debuffs
+      © <span class="pulseText">bella cactus</span>
     </div>
   </div>
 
-  <!-- oneko corner -->
-  <div class="oneko floaty" id="onekoBtn" title="click to swap oneko" aria-label="swap oneko sprite">
+  <!-- oneko easter egg -->
+  <div class="oneko floaty" id="onekoBtn" title="click me >:3" aria-label="oneko easter egg">
     <img id="onekoImg" alt="oneko" />
   </div>
 
@@ -704,10 +820,16 @@
       </div>
       <div class="lbFoot">
         <div id="lbCaption">...</div>
-        <div class="hint">keys: <span class="pulseText">esc</span> close • click outside close</div>
+        <div class="hint">esc closes</div>
       </div>
     </div>
   </div>
+
+  <!-- audio elements (created by JS too, but keeping explicit is nice) -->
+  <audio id="bgMusic" preload="metadata" loop></audio>
+  <audio id="easterMusic" preload="metadata" loop>
+    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+  </audio>
 
   <script>
     // date
@@ -715,8 +837,70 @@
     document.getElementById("date").textContent =
       d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, m => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;"
+      }[m]));
+    }
+
     // -----------------------------
-    // oneko sprite cycling (supports your weird filenames)
+    // INTRO: video startup + ascii boot log
+    // -----------------------------
+    const intro = document.getElementById("intro");
+    const site = document.getElementById("site");
+    const introVid = document.getElementById("introVid");
+    const introPlay = document.getElementById("introPlay");
+    const introSkip = document.getElementById("introSkip");
+    const introAscii = document.getElementById("introAscii");
+
+    const bootLines = [
+      "[boot] allocating braincells... ok",
+      "[boot] loading pink shader... ok",
+      "[boot] mounting /home/bella... ok",
+      "[boot] starting video sequence...",
+      "[boot] after video: reveal site UI",
+      "[hint] click HUD 'start' for music",
+      "[hint] click oneko for secret audio"
+    ];
+
+    let bootIndex = 0;
+    function bootTick(){
+      const shown = bootLines.slice(0, bootIndex + 1).join("\n");
+      introAscii.textContent = shown + "\n> " + "_";
+      bootIndex = Math.min(bootIndex + 1, bootLines.length - 1);
+    }
+    bootTick();
+    const bootTimer = setInterval(bootTick, 480);
+
+    function finishIntro(){
+      clearInterval(bootTimer);
+      intro.classList.add("hidden");
+      site.classList.add("ready");
+      try { introVid.pause(); } catch {}
+    }
+
+    introSkip.addEventListener("click", finishIntro);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape"){
+        // close intro OR lightbox
+        if (!intro.classList.contains("hidden")) finishIntro();
+        closeLightbox();
+      }
+    });
+
+    introPlay.addEventListener("click", async () => {
+      try { await introVid.play(); } catch {}
+    });
+
+    introVid.addEventListener("ended", finishIntro);
+
+    // auto-attempt play (may fail due to browser)
+    (async () => {
+      try { await introVid.play(); } catch {}
+    })();
+
+    // -----------------------------
+    // oneko sprite cycling
     // -----------------------------
     const onekoFiles = [
       "oneko.gif",
@@ -727,7 +911,6 @@
       "onekossssthibnk.png",
       "oneko%20-%20Copyd.png"
     ];
-
     let onekoIndex = 0;
     const onekoImg = document.getElementById("onekoImg");
     const onekoBtn = document.getElementById("onekoBtn");
@@ -737,126 +920,52 @@
       onekoImg.src = onekoFiles[onekoIndex];
     }
     setOneko(0);
-
-    onekoBtn.addEventListener("click", () => setOneko(onekoIndex + 1));
-
-    // if a file is missing, auto-advance to the next one
     onekoImg.addEventListener("error", () => setOneko(onekoIndex + 1));
 
     // -----------------------------
-    // terminal typewriter + outputs
+    // tasteful images row (click-to-zoom)
     // -----------------------------
-    const typedEl = document.getElementById("typed");
-    const outEl = document.getElementById("termOut");
-
-    const scriptLines = [
-      { cmd: "whoami", out: "bella (aka BellaCactus)" },
-      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
-      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
-      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
-      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" }
+    const images = [
+      { file: "ponies%20in%20bed.jpg", title: "ponies in bed", note: "sleep debuff zone" },
+      { file: "twi%20and%20trixy.jpg", title: "twi and trixy", note: "chaos duo" },
+      { file: "yuri%20meme.png", title: "yuri meme", note: "artifact" },
+      { file: "twi%20looking.png", title: "twi looking", note: "stare damage" }
     ];
 
-    let lineIndex = 0;
-    let charIndex = 0;
+    const imgRow = document.getElementById("imgRow");
+    function makeImgCard(item){
+      const card = document.createElement("div");
+      card.className = "imgCard";
+      card.tabIndex = 0;
 
-    function pushOutput(text){
-      const div = document.createElement("div");
-      div.className = "termLine";
-      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
-      outEl.appendChild(div);
+      const img = document.createElement("img");
+      img.src = item.file;
+      img.alt = item.title || "image";
+      img.addEventListener("error", () => {
+        img.style.opacity = "0.25";
+        img.style.filter = "grayscale(1)";
+      });
+
+      const cap = document.createElement("div");
+      cap.className = "imgCap";
+      cap.innerHTML = `<div class="pulseText" style="font-weight:650">${escapeHtml(item.title||"")}</div>
+                       <div class="muted">${escapeHtml(item.note||"")}</div>`;
+
+      card.appendChild(img);
+      card.appendChild(cap);
+
+      card.addEventListener("click", () => openLightbox(item));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") openLightbox(item);
+      });
+
+      return card;
     }
-
-    function escapeHtml(s){
-      return s.replace(/[&<>"']/g, m => ({
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;"
-      }[m]));
-    }
-
-    function typeLoop(){
-      const current = scriptLines[lineIndex].cmd;
-      typedEl.textContent = current.slice(0, charIndex);
-
-      if (charIndex < current.length){
-        charIndex++;
-        setTimeout(typeLoop, 34);
-      } else {
-        // "enter"
-        setTimeout(() => {
-          pushOutput(scriptLines[lineIndex].out);
-          lineIndex = (lineIndex + 1) % scriptLines.length;
-          charIndex = 0;
-          typedEl.textContent = "";
-          // small pause
-          setTimeout(typeLoop, 520);
-        }, 420);
-      }
-    }
-    typeLoop();
+    images.forEach(i => imgRow.appendChild(makeImgCard(i)));
 
     // -----------------------------
-    // ascii “screens” animation
+    // lightbox
     // -----------------------------
-    const asciiEl = document.getElementById("ascii");
-
-    const frames = [
-`  ┌───────────────────────────────┐
-  │  <span class="asciiPink">bella cactus</span>  // status: building  │
-  ├───────────────────────────────┤
-  │ hp: ██████████░░  buff: pink   │
-  │ dbg: watching packets          │
-  │ srv: online-ish                │
-  │ mood: ✦ terminal goblin ✦      │
-  └───────────────────────────────┘`,
-
-`  ┌───────────────────────────────┐
-  │  <span class="asciiPink">bella cactus</span>  // status: shipping  │
-  ├───────────────────────────────┤
-  │ hp: ███████████░  buff: focus  │
-  │ re: peeking inside binaries    │
-  │ code: compiling little demons  │
-  │ note: click oneko for swap     │
-  └───────────────────────────────┘`,
-
-`  ┌───────────────────────────────┐
-  │  <span class="asciiPink">bella cactus</span>  // status: vibing    │
-  ├───────────────────────────────┤
-  │ hp: ████████░░░░  debuff: sleep│
-  │ gd: practicing clicks          │
-  │ d2: chasing numbers            │
-  │ mc: technical crimes (legal)   │
-  └───────────────────────────────┘`
-    ];
-
-    let frame = 0;
-    function drawAscii(){
-      asciiEl.innerHTML = frames[frame];
-      frame = (frame + 1) % frames.length;
-    }
-    drawAscii();
-    setInterval(drawAscii, 1800);
-
-    // -----------------------------
-    // gallery + lightbox
-    // -----------------------------
-    const galleryItems = [
-      { file: "ponies%20in%20bed.jpg", title: "ponies in bed", note: "peak energy" },
-      { file: "twi%20and%20trixy.jpg", title: "twi and trixy", note: "lol" },
-      { file: "twi%20looking.png", title: "twi looking", note: "stare debuff" },
-      { file: "yuri%20meme.png", title: "yuri meme", note: "internet artifact" }
-    ];
-
-    // also show the oneko stills if you want them visible in gallery too
-    const extraOneko = [
-      { file: "onekoss.png", title: "oneko", note: "sprite" },
-      { file: "onekosss.png", title: "oneko", note: "sprite" },
-      { file: "onekossssurpised.png", title: "oneko", note: "surprised" },
-      { file: "onekossssthibnk.png", title: "oneko", note: "thinking" }
-    ];
-
-    const allGallery = [...galleryItems, ...extraOneko];
-
-    const grid = document.getElementById("galleryGrid");
     const lb = document.getElementById("lightbox");
     const lbImg = document.getElementById("lbImg");
     const lbTitle = document.getElementById("lbTitle");
@@ -871,54 +980,170 @@
       lbImg.src = item.file;
     }
     function closeLightbox(){
+      if (!lb.classList.contains("open")) return;
       lb.classList.remove("open");
       lb.setAttribute("aria-hidden","true");
       lbImg.src = "";
     }
+    lbClose.addEventListener("click", closeLightbox);
+    lb.addEventListener("click", (e) => { if (e.target === lb) closeLightbox(); });
 
-    function makeCard(item){
-      const card = document.createElement("div");
-      card.className = "card";
-      card.tabIndex = 0;
-      card.setAttribute("role","button");
-      card.setAttribute("aria-label", `open ${item.title}`);
+    // -----------------------------
+    // terminal typing + ascii frames
+    // -----------------------------
+    const typedEl = document.getElementById("typed");
+    const outEl = document.getElementById("termOut");
 
-      const img = document.createElement("img");
-      img.className = "thumb";
-      img.alt = item.title || "image";
-      img.src = item.file;
+    const scriptLines = [
+      { cmd: "whoami", out: "bella (aka BellaCactus)" },
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
+      { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
+      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" }
+    ];
 
-      // if missing, fade the card instead of screaming
-      img.addEventListener("error", () => {
-        img.style.opacity = "0.25";
-        img.style.filter = "grayscale(1)";
-      });
+    let lineIndex = 0, charIndex = 0;
 
-      const cap = document.createElement("div");
-      cap.className = "cap";
-      cap.innerHTML = `<div class="pulseText" style="font-weight:650">${escapeHtml(item.title || "item")}</div>
-                       <div class="muted">${escapeHtml(item.note || "")}</div>`;
-
-      card.appendChild(img);
-      card.appendChild(cap);
-
-      card.addEventListener("click", () => openLightbox(item));
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") openLightbox(item);
-      });
-
-      return card;
+    function pushOutput(text){
+      const div = document.createElement("div");
+      div.className = "termLine";
+      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
+      outEl.appendChild(div);
     }
 
-    allGallery.forEach(item => grid.appendChild(makeCard(item)));
+    function typeLoop(){
+      const current = scriptLines[lineIndex].cmd;
+      typedEl.textContent = current.slice(0, charIndex);
 
-    lbClose.addEventListener("click", closeLightbox);
-    lb.addEventListener("click", (e) => {
-      if (e.target === lb) closeLightbox();
+      if (charIndex < current.length){
+        charIndex++;
+        setTimeout(typeLoop, 34);
+      } else {
+        setTimeout(() => {
+          pushOutput(scriptLines[lineIndex].out);
+          lineIndex = (lineIndex + 1) % scriptLines.length;
+          charIndex = 0;
+          typedEl.textContent = "";
+          setTimeout(typeLoop, 520);
+        }, 420);
+      }
+    }
+    typeLoop();
+
+    const asciiEl = document.getElementById("ascii");
+    const frames = [
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: building  │
+  ├───────────────────────────────┤
+  │ hp: ██████████░░  buff: pink   │
+  │ dbg: watching packets          │
+  │ srv: online-ish                │
+  │ mood: ✦ terminal goblin ✦      │
+  └───────────────────────────────┘`,
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: shipping  │
+  ├───────────────────────────────┤
+  │ hp: ███████████░  buff: focus  │
+  │ re: peeking inside binaries    │
+  │ code: compiling little demons  │
+  │ note: oneko = secret audio     │
+  └───────────────────────────────┘`,
+`  ┌───────────────────────────────┐
+  │  <span class="asciiPink">bella cactus</span>  // status: vibing    │
+  ├───────────────────────────────┤
+  │ hp: ████████░░░░  debuff: sleep│
+  │ gd: practicing clicks          │
+  │ d2: chasing numbers            │
+  │ mc: technical crimes (legal)   │
+  └───────────────────────────────┘`
+    ];
+    let frame = 0;
+    function drawAscii(){
+      asciiEl.innerHTML = frames[frame];
+      frame = (frame + 1) % frames.length;
+    }
+    drawAscii();
+    setInterval(drawAscii, 1800);
+
+    // -----------------------------
+    // soundtrack (random pick of 4) + HUD
+    // -----------------------------
+    const bgMusic = document.getElementById("bgMusic");
+    const songNameEl = document.getElementById("songName");
+    const musicBtn = document.getElementById("musicBtn");
+    const musicNext = document.getElementById("musicNext");
+
+    const songs = [
+      { file: "530%200.mp3", name: "530 0 (kanye)" },
+      { file: "bipolar.mp3", name: "bipolar (wifiskeleton)" },
+      { file: "Tay-K%20-%20I%20Love%20My%20Choppa%20%5BOfficial%20Audio%5D%204.mp3", name: "tay-k - i love my choppa" },
+      { file: "Who%20I%20Smoke%20(Official%20Music%20Video).mp3", name: "who i smoke" }
+    ];
+
+    function pickRandomSong(){
+      const s = songs[Math.floor(Math.random() * songs.length)];
+      bgMusic.src = s.file;
+      songNameEl.textContent = s.name;
+    }
+    pickRandomSong();
+
+    async function startMusic(){
+      bgMusic.volume = 0.22;
+      try {
+        await bgMusic.play();
+        musicBtn.textContent = "pause";
+      } catch {
+        // if play fails, leave button as start
+      }
+    }
+
+    musicBtn.addEventListener("click", async () => {
+      if (bgMusic.paused){
+        await startMusic();
+      } else {
+        bgMusic.pause();
+        musicBtn.textContent = "start";
+      }
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeLightbox();
+    musicNext.addEventListener("click", async () => {
+      pickRandomSong();
+      if (!bgMusic.paused) {
+        await startMusic();
+      }
+    });
+
+    // if a track errors (bad filename), reroll
+    bgMusic.addEventListener("error", () => {
+      pickRandomSong();
+    });
+
+    // -----------------------------
+    // oneko easter egg: click = swap sprite + toggle lil jon yeah
+    // -----------------------------
+    const easterMusic = document.getElementById("easterMusic");
+    let easterOn = false;
+
+    onekoBtn.addEventListener("click", async () => {
+      setOneko(onekoIndex + 1);
+
+      // toggle lil jon
+      if (!easterOn){
+        easterMusic.volume = 0.30;
+        try { await easterMusic.play(); easterOn = true; }
+        catch { easterOn = false; }
+      } else {
+        easterMusic.pause();
+        easterOn = false;
+      }
+    });
+
+    // -----------------------------
+    // badge click = open lightbox on twi looking
+    // -----------------------------
+    document.querySelector(".badge").addEventListener("click", (e) => {
+      e.preventDefault();
+      openLightbox({ file:"twi%20looking.png", title:"twi looking", note:"bc icon energy" });
     });
   </script>
 </body>
