@@ -389,7 +389,7 @@
       position:absolute;
       pointer-events:auto;
       transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
-      opacity:0.55;
+      opacity:0.50;
       filter: drop-shadow(0 16px 32px rgba(0,0,0,0.45));
       user-select:none;
     }
@@ -453,7 +453,83 @@
       position:relative;
     }
 
-    /* hacker output */
+    /* intel pretty view */
+    .intelGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 900px){
+      .intelGrid{grid-template-columns:1fr;}
+    }
+    .intelCard{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.25);
+      overflow:hidden;
+    }
+    .intelCardHead{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .intelCardHead .h{
+      font-family: var(--mono);
+      font-size:0.86rem;
+      color:var(--pink2);
+      letter-spacing:0.2px;
+    }
+    .intelCardBody{
+      padding:10px 12px;
+    }
+    .kvRow{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:6px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size:0.84rem;
+    }
+    .kvRow:last-child{border-bottom:none;}
+    .kvKey{color: rgba(255,255,255,0.72);}
+    .kvVal{
+      color: rgba(255,255,255,0.95);
+      text-align:right;
+      max-width:62%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .kvVal.monoWrap{
+      white-space:pre-wrap;
+      word-break:break-word;
+      text-align:left;
+      max-width:100%;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-family: var(--mono);
+      font-size:0.78rem;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+    }
+    .pill .dot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+
+    /* raw json */
     .kv{
       font-family: var(--mono);
       font-size: 0.86rem;
@@ -461,6 +537,10 @@
       white-space:pre-wrap;
       word-break:break-word;
       margin:0;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      border-radius:14px;
+      padding:10px 12px;
     }
     .warn{
       font-family: var(--mono);
@@ -605,6 +685,7 @@
 
           <div class="btnRow" style="margin-top:14px;">
             <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
+            <a class="btn" href="#apps"><span class="k">run</span> apps</a>
             <a class="btn" href="#intel"><span class="k">scan</span> intel</a>
           </div>
         </div>
@@ -638,14 +719,47 @@
       </div>
     </section>
 
+    <!-- apps/tools -->
+    <section class="panel" id="apps" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>apps / tools</h2>
+        <div class="small">local pages (static)</div>
+      </div>
+      <div class="panelInner">
+        <div class="btnRow">
+          <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
+          <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
+          <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
+          <a class="btn" href="snkaegame.html"><span class="k">🐍</span> snake</a>
+          <a class="btn" href="dungeoncrawler.html"><span class="k">dg</span> dungeon</a>
+          <a class="btn" href="shitty-ass-gamez-3d.html"><span class="k">3d</span> gamez</a>
+          <a class="btn" href="controllar-test.html"><span class="k">pad</span> controller test</a>
+          <a class="btn" href="boucnignlolgo.html"><span class="k">dvd</span> bouncin logo</a>
+          <a class="btn" href="sigmaness-basiclaly-epic.html"><span class="k">??</span> sigmaness</a>
+          <a class="btn" href="legacy-home.html"><span class="k">old</span> legacy home</a>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          if any filename here doesn’t match your repo, just rename either the file or the link label. ez.
+        </div>
+      </div>
+    </section>
+
     <!-- spicy intel panel (consent / permission based) -->
     <section class="panel" id="intel" style="margin-top:14px;">
       <div class="panelTitle">
         <h2>intel (local)</h2>
-        <div class="small">shows what the browser exposes on this device</div>
+        <div class="small">readable view + raw json toggle</div>
       </div>
+
       <div class="panelInner">
-        <pre class="kv" id="intelOut">loading…</pre>
+        <div class="btnRow" style="margin-top:0;">
+          <button class="btn" id="intelPrettyBtn" type="button"><span class="k">ui</span> pretty</button>
+          <button class="btn" id="intelJsonBtn" type="button"><span class="k">{}</span> raw json</button>
+          <span class="pill" id="intelStatus"><span class="dot"></span> ready</span>
+        </div>
+
+        <div id="intelPretty" class="intelGrid" aria-live="polite"></div>
+        <pre class="kv" id="intelOut" style="display:none;">loading…</pre>
 
         <div class="btnRow">
           <button class="btn" id="btnIP" type="button"><span class="k">net</span> reveal public ip</button>
@@ -756,7 +870,7 @@
       introVideo.play().catch(()=>{});
     });
 
-    // --------- STICKERS (random wall images, hover fades)
+    // --------- STICKERS (random wall images, NO OVERLAP)
     const wall = $("wall");
 
     // EDIT THIS LIST to match your actual filenames
@@ -771,40 +885,100 @@
       while(wall.firstChild) wall.removeChild(wall.firstChild);
     }
 
+    function rectsOverlap(a, b, pad=10){
+      return !(
+        a.x + a.w + pad < b.x ||
+        a.x > b.x + b.w + pad ||
+        a.y + a.h + pad < b.y ||
+        a.y > b.y + b.h + pad
+      );
+    }
+
     function spawnStickers(){
       clearWall();
 
-      const count = window.innerWidth < 700 ? 7 : 12;
+      const countTarget = window.innerWidth < 700 ? 7 : 12;
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      for (let i = 0; i < count; i++){
+      // "safe zones" where stickers shouldn't spawn (avoid covering your readable content)
+      const safe = [];
+      const wrapEl = document.querySelector(".wrap");
+      if (wrapEl){
+        const r = wrapEl.getBoundingClientRect();
+        // pad this area a bit, so stickers stay away
+        safe.push({
+          x: r.left - 30,
+          y: r.top - 40,
+          w: r.width + 60,
+          h: r.height + 80
+        });
+      } else {
+        // fallback safe zone (top center area)
+        safe.push({ x: w*0.10, y: 0, w: w*0.80, h: 520 });
+      }
+
+      const placed = [];
+      let created = 0;
+
+      // try to place each sticker with retries
+      for (let i = 0; i < countTarget; i++){
+        const file = stickerFiles[i % stickerFiles.length];
+
+        // random size, with a slightly tighter cap to reduce collisions
+        const size = rand(120, window.innerWidth < 900 ? 220 : 260);
+        const box = { x:0, y:0, w:size, h:size };
+
+        let ok = false;
+
+        // more retries = fewer overlaps, but keep it sane
+        const tries = 120;
+        for (let t = 0; t < tries; t++){
+          const x = rand(10, Math.max(20, w - size - 10));
+          const y = rand(10, Math.max(20, h - size - 10));
+
+          box.x = x;
+          box.y = y;
+
+          // avoid safe zones
+          let inSafe = false;
+          for (const s of safe){
+            if (rectsOverlap(box, s, 0)){ inSafe = true; break; }
+          }
+          if (inSafe) continue;
+
+          // avoid overlapping other stickers
+          let hit = false;
+          for (const p of placed){
+            if (rectsOverlap(box, p, 18)){ hit = true; break; }
+          }
+          if (hit) continue;
+
+          ok = true;
+          break;
+        }
+
+        // if we fail to find a spot, just skip this sticker
+        if (!ok) continue;
+
+        placed.push({ ...box });
+        created++;
+
         const div = document.createElement("div");
         div.className = "sticker";
 
         const img = document.createElement("img");
-        img.src = stickerFiles[i % stickerFiles.length];
+        img.src = file;
 
-        // random size
-        const size = rand(120, 260);
         div.style.width = `${size}px`;
         div.style.height = `${size}px`;
+        div.style.left = `${box.x}px`;
+        div.style.top = `${box.y}px`;
 
-        // random position (avoid top center where header is)
-        let x = rand(-20, w - size + 20);
-        let y = rand(-20, h - size + 20);
-
-        // keep a safer zone around top content
-        if (y < 180 && x > (w*0.15) && x < (w*0.85)) y = rand(220, h - size);
-
-        div.style.left = `${x}px`;
-        div.style.top = `${y}px`;
-
-        // random rotation
         const rot = rand(-22, 22);
         div.style.transform = `rotate(${rot}deg)`;
 
-        // click opens image in new tab (you asked to keep click)
+        // click opens image in new tab
         div.style.pointerEvents = "auto";
         div.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -814,15 +988,16 @@
         div.appendChild(img);
         wall.appendChild(div);
       }
+
+      // if screen is tiny / safe zone is huge, we might place fewer. that's fine.
+      // console.log("stickers created:", created, "target:", countTarget);
     }
 
     window.addEventListener("resize", () => {
-      // reroll positions on resize so it stays nice
       spawnStickers();
     });
 
     // --------- MUSIC (random soundtrack + waveform)
-    // EDIT THESE to match exact filenames in repo root
     const tracks = [
       { file: "530 0.mp3", label: "530 (kanye)" },
       { file: "bipolar.mp3", label: "bipolar (wifiskeleton)" },
@@ -839,7 +1014,6 @@
     let muted = false;
 
     async function yepResumeAudio(){
-      // resume audio context if needed (waveform uses it)
       if (audioCtx && audioCtx.state === "suspended") {
         await audioCtx.resume();
       }
@@ -907,7 +1081,6 @@
       requestAnimationFrame(drawWave);
       if (!analyser) return;
 
-      // fit canvas to display size
       const rect = waveformCanvas.getBoundingClientRect();
       const cw = Math.floor(rect.width * devicePixelRatio);
       const ch = Math.floor(rect.height * devicePixelRatio);
@@ -920,7 +1093,6 @@
 
       wf.clearRect(0,0,cw,ch);
 
-      // line
       wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
       wf.strokeStyle = "#ff78c8";
       wf.shadowColor = "#ff78c8";
@@ -935,7 +1107,6 @@
       }
       wf.stroke();
 
-      // tiny center line
       wf.shadowBlur = 0;
       wf.globalAlpha = 0.22;
       wf.beginPath();
@@ -946,11 +1117,8 @@
       wf.globalAlpha = 1;
     }
 
-    // set initial track
     loadTrack(trackIndex);
     musicBar.classList.add("paused");
-
-    // start waveform when user interacts (browser rules)
     document.addEventListener("click", () => setupWaveform(), { once:true });
 
     // --------- TERMINAL (types script, stops growing, then idles)
@@ -963,6 +1131,7 @@
       { cmd: "ls games/", out: "destiny2  geometry-dash  minecraft-tech" },
       { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
       { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
+      { cmd: "run apps", out: "apps panel loaded (scroll a bit)  ->  /#apps" },
       { cmd: "scan --local", out: "intel panel loaded (scroll a bit)  ->  /#intel" }
     ];
 
@@ -971,23 +1140,22 @@
     let typing = false;
     let idle = false;
 
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
     function pushOutputLine(text){
       const div = document.createElement("div");
       div.className = "termLine";
       div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
 
-      // keep it from extending forever: keep only last N lines
       const maxLines = 6;
       while(outEl.children.length > maxLines){
         outEl.removeChild(outEl.firstChild);
       }
-    }
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, (m) => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
     }
 
     function startTerminal(){
@@ -997,7 +1165,6 @@
       lineIndex = 0;
       charIndex = 0;
       typedEl.textContent = "";
-
       tickType();
     }
 
@@ -1005,7 +1172,6 @@
       if (!typing) return;
 
       if (lineIndex >= terminalScript.length){
-        // finished script: idle typing effect without output
         typing = false;
         idle = true;
         idleType();
@@ -1014,15 +1180,12 @@
 
       const current = terminalScript[lineIndex].cmd;
       typedEl.textContent = current.slice(0, charIndex);
-
       charIndex++;
 
       if (charIndex > current.length){
-        // commit line
         pushOutputLine(`$ ${terminalScript[lineIndex].cmd}`);
         pushOutputLine(terminalScript[lineIndex].out);
 
-        // next command after a beat
         lineIndex++;
         charIndex = 0;
         typedEl.textContent = "";
@@ -1034,7 +1197,6 @@
 
     function idleType(){
       if (!idle) return;
-      // loop a little fake typing without adding output
       const pool = ["_", " ", ".", "..", "...", " ", "_"];
       let i = 0;
       const loop = () => {
@@ -1050,19 +1212,15 @@
 ` /\\_/\\
 ( o.o )
  > ^ <`,
-
 ` (\\_/)
  ( •_•)
  / >🍪`,
-
 `  /\\_/\\
  (=^.^=)
  (")(")`,
-
 `  /\\_/\\
  ( >.< )
   >🍓<`,
-
 `   /\\_/\\
   ( •ω• )
   /    \\`
@@ -1077,18 +1235,21 @@
 
     // --------- REROLL
     function rerollAll(){
-      // reroll stickers
       spawnStickers();
-      // reroll track
       loadTrack(Math.floor(Math.random() * tracks.length));
-      // reset paused status (doesn't force play)
       musicBar.classList.add("paused");
       $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
     }
     $("reroll").addEventListener("click", rerollAll);
 
-    // --------- INTEL PANEL (max info via safe APIs + permission buttons)
+    // --------- INTEL PANEL (pretty + raw)
     const intelOut = $("intelOut");
+    const intelPretty = $("intelPretty");
+    const intelPrettyBtn = $("intelPrettyBtn");
+    const intelJsonBtn = $("intelJsonBtn");
+    const intelStatus = $("intelStatus");
+
+    let intelMode = "pretty"; // pretty | json
 
     const intel = {
       base: {},
@@ -1105,6 +1266,186 @@
 
     function fmt(obj){
       return JSON.stringify(obj, null, 2);
+    }
+
+    function setIntelStatus(text){
+      intelStatus.innerHTML = `<span class="dot"></span> ${escapeHtml(text)}`;
+    }
+
+    function toHumanBytes(n){
+      if (typeof n !== "number" || !isFinite(n)) return "n/a";
+      const units = ["B","KB","MB","GB","TB"];
+      let i = 0, v = n;
+      while (v >= 1024 && i < units.length-1){ v /= 1024; i++; }
+      return `${v.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
+    }
+
+    function kvRows(obj){
+      const rows = [];
+      for (const [k,v] of Object.entries(obj || {})){
+        let val = v;
+        if (val === null || val === undefined) val = "null";
+        if (Array.isArray(val)) val = val.join(", ");
+        if (typeof val === "object") val = fmt(val);
+        rows.push({ k, v: String(val) });
+      }
+      return rows;
+    }
+
+    function card(title, rightText, rows){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody"></div>
+      `;
+      const body = div.querySelector(".intelCardBody");
+      for (const r of rows){
+        const row = document.createElement("div");
+        row.className = "kvRow";
+        row.innerHTML = `
+          <div class="kvKey">${escapeHtml(r.k)}</div>
+          <div class="kvVal">${escapeHtml(r.v)}</div>
+        `;
+        body.appendChild(row);
+      }
+      return div;
+    }
+
+    function cardWrap(title, rightText, text){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody">
+          <div class="kvVal monoWrap">${escapeHtml(text || "")}</div>
+        </div>
+      `;
+      return div;
+    }
+
+    function renderIntel(){
+      const out = {
+        base: intel.base,
+        ip: intel.ip,
+        geo: intel.geo,
+        notifications: intel.notify,
+        clipboard: intel.clipboard,
+        media: intel.media,
+        devices: intel.devices,
+        storage: intel.storage,
+        battery: intel.battery,
+        webgl: intel.webgl
+      };
+
+      // raw json
+      intelOut.textContent = fmt(out);
+
+      // pretty view
+      intelPretty.innerHTML = "";
+
+      const base = intel.base || {};
+      const loc = base.location || {};
+      const br = base.browser || {};
+      const scr = base.screen || {};
+      const hw = base.hardware || {};
+      const net = base.network || {};
+      const perms = base.permissions || {};
+
+      intelPretty.appendChild(card("time / locale", "", [
+        { k:"time", v: base.time || "n/a" },
+        { k:"timezone", v: loc.timezone || "n/a" },
+        { k:"locale", v: loc.locale || "n/a" },
+        { k:"languages", v: (loc.languages || []).join(", ") || "n/a" }
+      ]));
+
+      intelPretty.appendChild(card("browser", "", [
+        { k:"platform", v: br.platform || "n/a" },
+        { k:"vendor", v: br.vendor || "n/a" },
+        { k:"cookies", v: String(!!br.cookieEnabled) },
+        { k:"do not track", v: String(br.doNotTrack ?? "n/a") }
+      ]));
+
+      // userAgent is huge, keep it wrapped
+      intelPretty.appendChild(cardWrap("user agent", "", br.userAgent || "n/a"));
+
+      intelPretty.appendChild(card("screen", "", [
+        { k:"resolution", v: `${scr.width || "?"} × ${scr.height || "?"}` },
+        { k:"available", v: `${scr.availWidth || "?"} × ${scr.availHeight || "?"}` },
+        { k:"color depth", v: String(scr.colorDepth ?? "n/a") },
+        { k:"pixel ratio", v: String(scr.pixelRatio ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("hardware", "", [
+        { k:"cores", v: String(hw.cores ?? "n/a") },
+        { k:"memory", v: hw.memoryGB ? `${hw.memoryGB} GB` : "n/a" },
+        { k:"touch points", v: String(hw.touchPoints ?? "n/a") },
+        { k:"online", v: String(net.online ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("network", "", [
+        { k:"effectiveType", v: net.connection?.effectiveType ?? "n/a" },
+        { k:"downlink", v: net.connection?.downlink ?? "n/a" },
+        { k:"rtt", v: net.connection?.rtt ?? "n/a" },
+        { k:"saveData", v: String(net.connection?.saveData ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("permissions", "", [
+        { k:"notifications", v: perms.notifications ?? "n/a" }
+      ]));
+
+      // extras appear only if available, so it feels “alive”
+      if (intel.ip){
+        intelPretty.appendChild(card("public ip", "(click fetched)", kvRows(intel.ip)));
+      }
+      if (intel.geo){
+        intelPretty.appendChild(card("geolocation", "(permission)", kvRows(intel.geo)));
+      }
+      if (intel.notify){
+        intelPretty.appendChild(card("notifications", "(permission)", kvRows(intel.notify)));
+      }
+      if (intel.clipboard){
+        intelPretty.appendChild(card("clipboard", "(permission)", kvRows(intel.clipboard)));
+      }
+      if (intel.media){
+        intelPretty.appendChild(card("mic/cam", "(permission)", kvRows(intel.media)));
+      }
+      if (intel.devices){
+        const d = intel.devices;
+        const summary = {
+          count: d.count ?? null,
+          kinds: d.kinds ?? null
+        };
+        intelPretty.appendChild(card("devices summary", "(permission helps labels)", kvRows(summary)));
+      }
+      if (intel.storage){
+        const s = intel.storage || {};
+        intelPretty.appendChild(card("storage", "", [
+          { k:"quota", v: toHumanBytes(s.quotaBytes) },
+          { k:"usage", v: toHumanBytes(s.usageBytes) }
+        ]));
+      }
+      if (intel.battery){
+        intelPretty.appendChild(card("battery", "", kvRows(intel.battery)));
+      }
+      if (intel.webgl){
+        intelPretty.appendChild(card("webgl", "", kvRows(intel.webgl)));
+      }
+
+      // show correct mode
+      if (intelMode === "pretty"){
+        intelPretty.style.display = "";
+        intelOut.style.display = "none";
+      } else {
+        intelPretty.style.display = "none";
+        intelOut.style.display = "";
+      }
     }
 
     function refreshIntelBase(){
@@ -1151,35 +1492,35 @@
         }
       };
 
+      setIntelStatus("base refreshed");
       renderIntel();
     }
 
-    function renderIntel(){
-      const out = {
-        base: intel.base,
-        ip: intel.ip,
-        geo: intel.geo,
-        notifications: intel.notify,
-        clipboard: intel.clipboard,
-        media: intel.media,
-        devices: intel.devices,
-        storage: intel.storage,
-        battery: intel.battery,
-        webgl: intel.webgl
-      };
-      intelOut.textContent = fmt(out);
-    }
+    intelPrettyBtn.addEventListener("click", () => {
+      intelMode = "pretty";
+      setIntelStatus("pretty view");
+      renderIntel();
+    });
+
+    intelJsonBtn.addEventListener("click", () => {
+      intelMode = "json";
+      setIntelStatus("raw json");
+      renderIntel();
+    });
 
     // IP (explicit click)
     $("btnIP").addEventListener("click", async () => {
       try{
+        setIntelStatus("fetching ip…");
         intel.ip = { status: "fetching…" };
         renderIntel();
         const res = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
         const j = await res.json();
         intel.ip = { publicIP: j.ip };
+        setIntelStatus("ip loaded");
       }catch(e){
         intel.ip = { error: String(e) };
+        setIntelStatus("ip error");
       }
       renderIntel();
     });
@@ -1188,9 +1529,11 @@
     $("btnGeo").addEventListener("click", async () => {
       if (!navigator.geolocation){
         intel.geo = { error: "geolocation unsupported" };
+        setIntelStatus("geo unsupported");
         renderIntel();
         return;
       }
+      setIntelStatus("requesting geo…");
       intel.geo = { status: "requesting…" };
       renderIntel();
       navigator.geolocation.getCurrentPosition(
@@ -1203,10 +1546,12 @@
             speed: pos.coords.speed,
             timestamp: new Date(pos.timestamp).toString()
           };
+          setIntelStatus("geo loaded");
           renderIntel();
         },
         (err) => {
           intel.geo = { error: err.message || String(err) };
+          setIntelStatus("geo denied/error");
           renderIntel();
         },
         { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
@@ -1218,13 +1563,17 @@
       try{
         if (typeof Notification === "undefined"){
           intel.notify = { error: "notifications unsupported" };
+          setIntelStatus("notifications unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("requesting notifications…");
         const perm = await Notification.requestPermission();
         intel.notify = { permission: perm };
+        setIntelStatus(`notifications: ${perm}`);
       }catch(e){
         intel.notify = { error: String(e) };
+        setIntelStatus("notifications error");
       }
       renderIntel();
     });
@@ -1234,13 +1583,17 @@
       try{
         if (!navigator.clipboard || !navigator.clipboard.readText){
           intel.clipboard = { error: "clipboard API unsupported (or blocked)" };
+          setIntelStatus("clipboard unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("reading clipboard…");
         const txt = await navigator.clipboard.readText();
         intel.clipboard = { textPreview: txt.slice(0, 200), length: txt.length };
+        setIntelStatus("clipboard read");
       }catch(e){
         intel.clipboard = { error: String(e) };
+        setIntelStatus("clipboard denied/error");
       }
       renderIntel();
     });
@@ -1250,27 +1603,32 @@
       try{
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
           intel.media = { error: "mediaDevices unsupported" };
+          setIntelStatus("media unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("requesting mic/cam…");
         const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:true });
-        // stop immediately, we only needed permission
         stream.getTracks().forEach(t => t.stop());
         intel.media = { permission: "granted (stream opened then stopped)" };
+        setIntelStatus("mic/cam granted");
       }catch(e){
         intel.media = { error: String(e) };
+        setIntelStatus("mic/cam denied/error");
       }
       renderIntel();
     });
 
-    // Enumerate devices (works best after media permission)
+    // Enumerate devices
     $("btnDevices").addEventListener("click", async () => {
       try{
         if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){
           intel.devices = { error: "enumerateDevices unsupported" };
+          setIntelStatus("devices unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("enumerating devices…");
         const list = await navigator.mediaDevices.enumerateDevices();
         intel.devices = {
           count: list.length,
@@ -1285,8 +1643,10 @@
             groupId: d.groupId ? "(present)" : "(none)"
           }))
         };
+        setIntelStatus("devices loaded");
       }catch(e){
         intel.devices = { error: String(e) };
+        setIntelStatus("devices error");
       }
       renderIntel();
     });
@@ -1296,17 +1656,21 @@
       try{
         if (!navigator.storage || !navigator.storage.estimate){
           intel.storage = { error: "storage estimate unsupported" };
+          setIntelStatus("storage unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("estimating storage…");
         const est = await navigator.storage.estimate();
         intel.storage = {
           quotaBytes: est.quota ?? null,
           usageBytes: est.usage ?? null,
           usageDetails: est.usageDetails ?? null
         };
+        setIntelStatus("storage loaded");
       }catch(e){
         intel.storage = { error: String(e) };
+        setIntelStatus("storage error");
       }
       renderIntel();
     });
@@ -1316,9 +1680,11 @@
       try{
         if (!navigator.getBattery){
           intel.battery = { error: "battery API unsupported" };
+          setIntelStatus("battery unsupported");
           renderIntel();
           return;
         }
+        setIntelStatus("reading battery…");
         const b = await navigator.getBattery();
         intel.battery = {
           charging: b.charging,
@@ -1326,8 +1692,10 @@
           chargingTime: b.chargingTime,
           dischargingTime: b.dischargingTime
         };
+        setIntelStatus("battery loaded");
       }catch(e){
         intel.battery = { error: String(e) };
+        setIntelStatus("battery error");
       }
       renderIntel();
     });
@@ -1335,10 +1703,12 @@
     // WebGL renderer/vendor
     $("btnWebGL").addEventListener("click", async () => {
       try{
+        setIntelStatus("probing gpu…");
         const c = document.createElement("canvas");
         const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
         if (!gl){
           intel.webgl = { error: "webgl unavailable" };
+          setIntelStatus("webgl unavailable");
           renderIntel();
           return;
         }
@@ -1351,13 +1721,14 @@
           version: gl.getParameter(gl.VERSION),
           shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
         };
+        setIntelStatus("gpu loaded");
       }catch(e){
         intel.webgl = { error: String(e) };
+        setIntelStatus("gpu error");
       }
       renderIntel();
     });
 
-    // update base intel when online/offline changes
     window.addEventListener("online", refreshIntelBase);
     window.addEventListener("offline", refreshIntelBase);
 
