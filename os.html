@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>bella os</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:44px 16px 110px;
+      position:relative;
+      z-index:2;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h2{
+      margin:0;
+      font-size:1.05rem;
+      color:var(--pink2);
+      letter-spacing:0.3px;
+    }
+    .small{ font-size:0.86rem; color:var(--muted); }
+    .panelInner{ padding:16px; }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{
+      font-family: var(--mono);
+      font-size:0.8rem;
+      color:var(--pink2);
+    }
+
+    .term{
+      font-family: var(--mono);
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
+                  rgba(0,0,0,0.35);
+      border-top:1px solid rgba(255,255,255,0.05);
+      padding:14px 16px;
+      min-height: 420px;
+    }
+
+    .line{
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+      margin:6px 0;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .prompt{ color: var(--pink2); }
+    .cmd{ color: rgba(255,255,255,0.92); }
+
+    .inputRow{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-top:10px;
+      padding-top:10px;
+      border-top: 1px dashed rgba(255,255,255,0.10);
+    }
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.1em;
+      background: var(--pink);
+      margin-left:2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align:-2px;
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+    @keyframes blink{50%{opacity:0;}}
+
+    input.cli{
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.95);
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    input.cli:focus{
+      border-color: rgba(255,120,200,0.35);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+
+    .hintGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 860px){
+      .hintGrid{ grid-template-columns:1fr; }
+    }
+    .hintCard{
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.20);
+      border-radius:14px;
+      padding:12px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.86);
+    }
+    .hintCard b{ color: var(--pink2); font-weight:600; }
+
+    /* background stickers */
+    #wall{
+      position:fixed;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .sticker{
+      position:absolute;
+      pointer-events:auto;
+      transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+      opacity:0.42;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.45));
+      user-select:none;
+    }
+    .sticker:hover{ opacity:0.06; filter:none; }
+    .sticker img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      border-radius:10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wall" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="panel">
+      <div class="panelTitle">
+        <h2>bella os</h2>
+        <div class="small">fake cli • real vibes • zero backend</div>
+      </div>
+
+      <div class="panelInner">
+        <div class="btnRow">
+          <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+          <a class="btn" href="ascii.html"><span class="k">open</span> ascii</a>
+          <a class="btn" href="limiter.html"><span class="k">open</span> limiter</a>
+          <button class="btn" id="rerollStickers"><span class="k">rng</span> reroll wall</button>
+          <button class="btn" id="clear"><span class="k">cls</span> clear</button>
+        </div>
+
+        <div class="hintGrid">
+          <div class="hintCard">
+            try: <b>help</b>, <b>ls</b>, <b>open ascii</b>, <b>open limiter</b>, <b>cat about</b>, <b>theme white</b>, <b>stash</b>
+          </div>
+          <div class="hintCard">
+            secret-ish: <b>echo</b> text, <b>time</b>, <b>whoami</b>, <b>rm history</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="term" id="term" aria-label="terminal">
+        <div id="out"></div>
+
+        <div class="inputRow">
+          <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+          <input class="cli" id="cli" autocomplete="off" spellcheck="false" placeholder="type a command…" />
+          <span class="cursor" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:16px; text-align:center; color:var(--muted);">
+      © <span class="pulseText">bella cactus</span> • os.html
+    </div>
+  </div>
+
+  <script>
+    // ---------- helpers
+    const $ = (id) => document.getElementById(id);
+    const rand = (a,b)=> a + Math.random()*(b-a);
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    // ---------- stickers (grid placement so they don't stack badly)
+    const wall = $("wall");
+    const stickerFiles = ["twi looking.png","twi and trixy.jpg","ponies in bed.jpg","yuri meme.png"];
+
+    function spawnStickers(){
+      wall.innerHTML = "";
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const cols = w < 800 ? 3 : 4;
+      const rows = h < 700 ? 3 : 4;
+
+      const cells = [];
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          cells.push({r,c});
+        }
+      }
+      for (let i=cells.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [cells[i],cells[j]] = [cells[j],cells[i]];
+      }
+
+      const count = Math.min(w < 700 ? 6 : 10, cells.length);
+      for(let i=0;i<count;i++){
+        const cell = cells[i];
+        const div = document.createElement("div");
+        div.className = "sticker";
+
+        const img = document.createElement("img");
+        img.src = stickerFiles[i % stickerFiles.length];
+
+        const cellW = w / cols;
+        const cellH = h / rows;
+        const size = rand(120, 240);
+
+        div.style.width = `${size}px`;
+        div.style.height = `${size}px`;
+
+        const pad = 18;
+        const x0 = cell.c * cellW + pad;
+        const y0 = cell.r * cellH + pad;
+
+        // keep some space from the terminal area (center-ish)
+        let x = x0 + rand(0, Math.max(0, cellW - size - pad*2));
+        let y = y0 + rand(0, Math.max(0, cellH - size - pad*2));
+        if (x > w*0.20 && x < w*0.80 && y > h*0.18 && y < h*0.80){
+          y = Math.min(h - size - 8, y + rand(60, 140));
+        }
+
+        div.style.left = `${x}px`;
+        div.style.top = `${y}px`;
+        div.style.transform = `rotate(${rand(-18,18)}deg)`;
+
+        div.style.pointerEvents = "auto";
+        div.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          window.open(img.src, "_blank", "noopener");
+        });
+
+        div.appendChild(img);
+        wall.appendChild(div);
+      }
+    }
+    spawnStickers();
+    window.addEventListener("resize", spawnStickers);
+    $("rerollStickers").addEventListener("click", spawnStickers);
+
+    // ---------- fake OS terminal
+    const out = $("out");
+    const cli = $("cli");
+    const history = [];
+    let histIdx = -1;
+
+    const files = [
+      { name: "index.html", desc: "home" },
+      { name: "limiter.html", desc: "bella limiter page" },
+      { name: "ascii.html", desc: "ascii zoo + local stash" },
+      { name: "os.html", desc: "you are here" }
+    ];
+
+    function print(line, kind="cmd"){
+      const div = document.createElement("div");
+      div.className = "line";
+      div.innerHTML = `<span class="${kind}">${line}</span>`;
+      out.appendChild(div);
+
+      // keep terminal from growing forever
+      const MAX = 120;
+      while (out.children.length > MAX){
+        out.removeChild(out.firstChild);
+      }
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function printPrompt(cmd){
+      print(`<span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span> ${escapeHtml(cmd)}`);
+    }
+
+    function help(){
+      print(`<span class="pulseText">commands</span>: help, ls, open &lt;name&gt;, cat &lt;file&gt;, theme &lt;pink|white&gt;, time, whoami, echo &lt;text&gt;, clear, stash, rm history`);
+      print(`tips: open ascii | open limiter | cat about`);
+    }
+
+    async function stashCount(){
+      // same IndexedDB name as ascii.html
+      const DB_NAME = "bella_stash_db";
+      const STORE = "files";
+
+      function openDB(){
+        return new Promise((resolve, reject)=>{
+          const req = indexedDB.open(DB_NAME, 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(STORE)){
+              db.createObjectStore(STORE, { keyPath: "id" });
+            }
+          };
+          req.onsuccess = ()=> resolve(req.result);
+          req.onerror = ()=> reject(req.error);
+        });
+      }
+
+      try{
+        const db = await openDB();
+        const count = await new Promise((resolve, reject)=>{
+          const tx = db.transaction(STORE, "readonly");
+          const req = tx.objectStore(STORE).count();
+          req.onsuccess = ()=> resolve(req.result || 0);
+          req.onerror = ()=> reject(req.error);
+        });
+        print(`stash: ${count} item(s) saved locally. (open ascii to view/play)`);
+      } catch(e){
+        print(`stash error: ${escapeHtml(String(e))}`);
+      }
+    }
+
+    function doOpen(target){
+      const t = (target||"").toLowerCase().trim();
+
+      const map = {
+        "home":"index.html",
+        "index":"index.html",
+        "ascii":"ascii.html",
+        "zoo":"ascii.html",
+        "limiter":"limiter.html",
+        "os":"os.html"
+      };
+
+      if (map[t]){
+        window.location.href = map[t];
+        return;
+      }
+
+      // allow open filename
+      const found = files.find(f => f.name.toLowerCase() === t);
+      if (found){
+        window.location.href = found.name;
+        return;
+      }
+
+      print(`unknown target: ${escapeHtml(target)} (try: open ascii)`);
+    }
+
+    function doCat(name){
+      const n = (name||"").toLowerCase().trim();
+      if (n === "about" || n === "about.txt"){
+        print(`<span class="pulseText">about.txt</span>`);
+        print(`bella os: a fake cli that routes to real pages.`);
+        print(`no backend. no tracking. just vibes.`);
+        return;
+      }
+      if (n === "todo" || n === "todo.txt"){
+        print(`<span class="pulseText">todo.txt</span>`);
+        print(`- add more commands`);
+        print(`- add pseudo filesystem folders`);
+        print(`- add "pkg install" fake installer animation`);
+        return;
+      }
+      print(`cat: file not found (${escapeHtml(name)})`);
+    }
+
+    function setTheme(mode){
+      const m = (mode||"").toLowerCase().trim();
+      if (m === "white"){
+        document.body.style.setProperty("--pink", "#ffffff");
+        document.body.style.setProperty("--pink2", "#ffffff");
+        print(`theme set: white`);
+        return;
+      }
+      if (m === "pink" || m === ""){
+        document.body.style.setProperty("--pink", "#ff78c8");
+        document.body.style.setProperty("--pink2", "#ffb3e6");
+        print(`theme set: pink`);
+        return;
+      }
+      print(`theme: unknown mode (${escapeHtml(mode)})`);
+    }
+
+    function listFiles(){
+      print(`<span class="pulseText">ls</span>`);
+      for (const f of files){
+        print(`${escapeHtml(f.name)}  <span style="opacity:0.75;"># ${escapeHtml(f.desc)}</span>`);
+      }
+    }
+
+    function run(cmdRaw){
+      const cmd = (cmdRaw||"").trim();
+      if (!cmd) return;
+
+      printPrompt(cmd);
+
+      const parts = cmd.split(" ");
+      const base = parts[0].toLowerCase();
+      const rest = parts.slice(1).join(" ").trim();
+
+      if (base === "help"){ help(); return; }
+      if (base === "ls"){ listFiles(); return; }
+      if (base === "open"){ doOpen(rest); return; }
+      if (base === "cat"){ doCat(rest); return; }
+      if (base === "theme"){ setTheme(rest); return; }
+      if (base === "time"){ print(new Date().toString()); return; }
+      if (base === "whoami"){ print(`bella (aka BellaCactus)`); return; }
+      if (base === "echo"){ print(escapeHtml(rest)); return; }
+      if (base === "clear" || base === "cls"){ out.innerHTML = ""; return; }
+      if (base === "stash"){ stashCount(); return; }
+      if (base === "rm" && rest.toLowerCase() === "history"){ history.length = 0; histIdx = -1; print(`history wiped.`); return; }
+
+      print(`unknown command: ${escapeHtml(base)} (try: help)`);
+    }
+
+    // buttons
+    $("clear").addEventListener("click", ()=> { out.innerHTML = ""; print(`cleared.`); });
+
+    // boot text
+    print(`<span class="pulseText">[ boot ]</span> bella os online`);
+    print(`type "help" for commands. type "open ascii" for the zoo.`);
+
+    cli.focus();
+    document.addEventListener("click", ()=> cli.focus());
+
+    cli.addEventListener("keydown", (e)=>{
+      if (e.key === "Enter"){
+        const v = cli.value;
+        cli.value = "";
+        history.unshift(v);
+        histIdx = -1;
+        run(v);
+      } else if (e.key === "ArrowUp"){
+        e.preventDefault();
+        if (!history.length) return;
+        histIdx = Math.min(histIdx + 1, history.length - 1);
+        cli.value = history[histIdx] || "";
+      } else if (e.key === "ArrowDown"){
+        e.preventDefault();
+        if (!history.length) return;
+        histIdx = Math.max(histIdx - 1, -1);
+        cli.value = histIdx === -1 ? "" : (history[histIdx] || "");
+      } else if (e.key === "Tab"){
+        e.preventDefault();
+        // tiny autocomplete for open targets
+        const v = cli.value.trim();
+        if (!v.toLowerCase().startsWith("open ")) return;
+        const partial = v.slice(5).toLowerCase();
+        const opts = ["ascii","limiter","home","os"];
+        const match = opts.find(o => o.startsWith(partial));
+        if (match) cli.value = "open " + match;
+      }
+    });
+  </script>
+</body>
+</html>
