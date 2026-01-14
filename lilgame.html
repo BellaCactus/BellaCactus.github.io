@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -248,23 +248,6 @@
       box-shadow:0 0 12px rgba(255,120,200,0.55);
     }
 
-    .hint{
-      position:absolute;
-      left:10px;
-      bottom:10px;
-      z-index:4;
-      font-family: var(--mono);
-      font-size:12px;
-      color: rgba(255,255,255,0.74);
-      background: rgba(0,0,0,0.30);
-      border:1px solid rgba(255,255,255,0.10);
-      padding:8px 10px;
-      border-radius:12px;
-      backdrop-filter: blur(6px);
-      pointer-events:none;
-      max-width:min(560px, calc(100% - 20px));
-    }
-
     .field{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
     input[type="range"]{ accent-color: var(--pink); width:100%; }
     .tog{
@@ -348,7 +331,7 @@
       <section class="panel">
         <div class="panelTitle">
           <h2>playfield</h2>
-          <div class="small">move: <span class="pulseText">wasd</span>/<span class="pulseText">arrows</span> • jump: <span class="pulseText">space</span> • dash: <span class="pulseText">shift</span> • reset: <span class="pulseText">r</span></div>
+          <div class="small">move: <span class="pulseText">wasd</span>/<span class="pulseText">arrows</span> • jump: <span class="pulseText">space</span> (double) • dash: <span class="pulseText">shift</span> (tap) • reset: <span class="pulseText">r</span></div>
         </div>
         <div class="panelInner">
           <div class="btnRow">
@@ -367,10 +350,7 @@
               <div class="pill"><span class="dot"></span><span id="hudHp">hp: 6/6</span></div>
               <div class="pill"><span class="dot"></span><span id="hudWet">wet: 0%</span></div>
               <div class="pill"><span class="dot"></span><span id="hudWind">wind: 0.0</span></div>
-            </div>
-
-            <div class="hint" id="hint">
-              tip: shelter is the glowing rectangle. if the storm hits, get inside. (and yes this is fake rainworld energy, we’re just vibing) (:3)
+              <div class="pill"><span class="dot"></span><span id="hudAir">air: 1j 1d</span></div>
             </div>
           </div>
 
@@ -423,13 +403,11 @@
           </div>
 
           <div class="field">
-            <div class="small">lil creature lore (totally real)</div>
+            <div class="small">sprite (ascii)</div>
             <div class="codebox">
-<pre style="margin:0; white-space:pre-wrap;">   /\_/\
-  ( •.• )
-  /  ^  \   "i am small. i am damp.
-   \___/     i collect glow snacks."
-</pre>
+<pre style="margin:0; white-space:pre-wrap;"> /\__/\
+( o..o )  <- cat-lizard (definitely real)
+ /_^^_\</pre>
             </div>
           </div>
         </div>
@@ -463,7 +441,7 @@
     });
 
     // -------- settings (saved)
-    const SKEY = "bella.rainpage.v1";
+    const SKEY = "bella.rainpage.v2";
     const BEST_KEY = "bella.rainpage.best.v1";
 
     const ui = {
@@ -540,7 +518,6 @@
       if (on){
         setupHum();
         resumeAudio().catch(()=>{});
-        // slow fade in
         const t = audioCtx.currentTime;
         humGain.gain.cancelScheduledValues(t);
         humGain.gain.setValueAtTime(humGain.gain.value, t);
@@ -602,7 +579,7 @@
     // storm cycle
     let storm = {
       t: 0,
-      phase: "calm", // calm -> building -> storm -> calm
+      phase: "calm",
       nextLightning: 1.2,
       flash: 0,
       shake: 0
@@ -610,33 +587,6 @@
 
     function setChipState(txt){
       $("chipState").textContent = `state: ${txt}`;
-    }
-
-    function rollBiome(){
-      reseed();
-      // gentle variation in platforms
-      makePlatforms();
-      spawnSpores(true);
-      // storm timer reset
-      storm.t = 0;
-      storm.phase = "calm";
-      storm.nextLightning = 0.8 + sRand()*2.0;
-      storm.flash = 0;
-      storm.shake = 0;
-      setChipState("calm");
-      $("moodOut").textContent = "soft rain";
-      $("shelterOut").textContent = "stable";
-      wetness = 0;
-      hp = 6;
-      spores = 0;
-      updateChips();
-      // creature reset near left
-      player.x = 80;
-      player.y = H() - 120;
-      player.vx = 0;
-      player.vy = 0;
-      player.dashCd = 0;
-      player.inv = 0;
     }
 
     // platforms (procedural-ish but stable)
@@ -647,21 +597,17 @@
       const w = W(), h = H();
       plats = [];
 
-      // ground (slightly above bottom so rain splashes look nice)
       plats.push({ x: -200, y: h-52, w: w+400, h: 80, kind:"ground" });
 
-      // big pipes / ledges
       const baseY = h - 180 - sRand()*40;
       plats.push({ x: 80 + sRand()*40, y: baseY, w: 230 + sRand()*120, h: 18, kind:"ledge" });
       plats.push({ x: w*0.55 + sRand()*30, y: h - 220 - sRand()*60, w: 260 + sRand()*120, h: 18, kind:"ledge" });
       plats.push({ x: w*0.25 + sRand()*40, y: h - 320 - sRand()*80, w: 160 + sRand()*90, h: 16, kind:"thin" });
       plats.push({ x: w*0.65 + sRand()*40, y: h - 360 - sRand()*90, w: 170 + sRand()*110, h: 16, kind:"thin" });
 
-      // vertical junk pillars (for vibes + collision)
       plats.push({ x: w*0.44, y: h-260, w: 24, h: 208, kind:"pillar" });
       if (sRand() < 0.65) plats.push({ x: w*0.76, y: h-300, w: 20, h: 250, kind:"pillar" });
 
-      // shelter placement on right-ish
       shelter.w = 140;
       shelter.h = 84;
       shelter.x = Math.floor(w - shelter.w - 40 - sRand()*50);
@@ -669,22 +615,45 @@
     }
     makePlatforms();
 
-    // -------- creature
+    // -------- creature (physics + moveset)
     const player = {
       x: 80, y: 200,
       vx: 0, vy: 0,
-      w: 22, h: 16,
+      w: 28, h: 18,          // collision box (a bit bigger for ascii sprite)
       onGround: false,
-      face: 1,   // 1 right, -1 left
+      face: 1,              // 1 right, -1 left
       blink: 0,
       bob: 0,
-      dashCd: 0,
-      inv: 0
+      inv: 0,
+
+      // moveset
+      jumpsLeft: 1,          // for double jump (1 extra in air)
+      canDash: true,         // 1 dash between touching ground
+      dashTimer: 0,          // time left in dash
+      dashCd: 0              // tiny cooldown so it doesn't feel sticky
     };
 
     let hp = 6;
-    let wetness = 0; // 0..100
+    let wetness = 0;
     let spores = 0;
+
+    // tail physics (little chain)
+    const tail = {
+      segs: 7,
+      len: 8.5,
+      pts: [],
+      initialized: false
+    };
+
+    function initTail(){
+      tail.pts = [];
+      const bx = player.x + player.w/2;
+      const by = player.y + 10;
+      for (let i=0;i<tail.segs;i++){
+        tail.pts.push({ x: bx - i*tail.len, y: by + i*0.6, vx:0, vy:0 });
+      }
+      tail.initialized = true;
+    }
 
     function updateChips(){
       $("chipSpore").textContent = `spores: ${spores}`;
@@ -692,39 +661,52 @@
       $("hudHp").textContent = `hp: ${hp}/6`;
       $("hudWet").textContent = `wet: ${Math.round(wetness)}%`;
       $("hudWind").textContent = `wind: ${windNow.toFixed(1)}`;
+      $("hudAir").textContent = `air: ${player.jumpsLeft}j ${player.canDash?1:0}d`;
     }
 
     function inShelter(px,py){
-      // shelter is a rectangle with a doorway; count as inside if player center is inside inner box
       const cx = px + player.w/2;
       const cy = py + player.h/2;
       return (cx > shelter.x + 16 && cx < shelter.x + shelter.w - 16 &&
               cy > shelter.y + 18 && cy < shelter.y + shelter.h - 10);
     }
 
-    // input
-    const keys = new Set();
-    addEventListener("keydown", (e) => {
+    // -------- input (edge-triggered)
+    const held = new Set();
+    const pressed = new Set();
+
+    function normKey(e){
       const k = (e.key || "").toLowerCase();
-      if (["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s"," ","shift","r","escape","p"].includes(k)){
-        // avoid scrolling with space/arrows
-        if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault();
+      if (k === " ") return "space";
+      return k;
+    }
+
+    addEventListener("keydown", (e) => {
+      const k = normKey(e);
+
+      if (["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s","space","shift","r","escape","p"].includes(k)){
+        if (["arrowup","arrowdown","arrowleft","arrowright","space"].includes(k)) e.preventDefault();
       }
 
       if (k === "escape") location.href = "index.html";
-      if (k === "r") { rollBiome(); return; }
       if (k === "p") { togglePause(); return; }
+      if (k === "r") { rollBiome(); return; }
 
-      keys.add(k);
+      if (!e.repeat) pressed.add(k);
+      held.add(k);
     }, { passive:false });
 
     addEventListener("keyup", (e) => {
-      const k = (e.key || "").toLowerCase();
-      keys.delete(k);
+      const k = normKey(e);
+      held.delete(k);
     });
 
-    function kDown(...names){
-      for (const n of names) if (keys.has(n)) return true;
+    function anyHeld(...names){
+      for (const n of names) if (held.has(n)) return true;
+      return false;
+    }
+    function anyPressed(...names){
+      for (const n of names) if (pressed.has(n)) return true;
       return false;
     }
 
@@ -736,7 +718,6 @@
       const w = W(), h = H();
       const target = ui.soft.checked ? 8 : 14;
       while (sporeList.length < target){
-        // place above platforms and not inside shelter
         const x = 60 + sRand() * (w - 120);
         const y = 80 + sRand() * (h - 260);
         if (x > shelter.x && x < shelter.x + shelter.w && y > shelter.y && y < shelter.y + shelter.h) continue;
@@ -758,17 +739,15 @@
         if (!s.alive) continue;
         const dx = cx - s.x;
         const dy = cy - s.y;
-        if (dx*dx + dy*dy < (s.r + 10) * (s.r + 10)){
+        if (dx*dx + dy*dy < (s.r + 12) * (s.r + 12)){
           s.alive = false;
           spores++;
           const best = getBest();
           if (spores > best) setBest(spores);
           updateChips();
-          // tiny heal if soaked and safe
           if (wetness > 70 && hp < 6 && Math.random() < 0.35) hp++;
         }
       }
-      // respawn some
       if (sporeList.filter(s => s.alive).length < (ui.soft.checked ? 5 : 8)){
         spawnSpores(false);
       }
@@ -779,22 +758,22 @@
     function makeRain(){
       drops = [];
       const w = W(), h = H();
-      const baseCount = ui.soft.checked ? 260 : 520;
+      const baseCount = ui.soft.checked ? 240 : 500;
       const intensity = Number(ui.rain.value);
       const n = Math.floor(lerp(60, baseCount, intensity));
       for (let i=0;i<n;i++){
         drops.push({
           x: sRand() * w,
           y: sRand() * h,
-          z: sRand(),               // depth 0..1
-          spd: 380 + sRand()*520,   // px/sec
+          z: sRand(),
+          spd: 380 + sRand()*520,
           len: 8 + sRand()*16
         });
       }
     }
     makeRain();
 
-    // splashes (cheap)
+    // splashes
     let splashes = [];
     function addSplash(x,y,amt=1){
       const n = ui.soft.checked ? 2 : Math.floor(2 + amt*4);
@@ -814,62 +793,118 @@
       return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
     }
 
+    function doJump(isDouble=false){
+      const soft = ui.soft.checked;
+      const base = soft ? 322 : 372;
+      const v = isDouble ? base*0.92 : base;
+      player.vy = -v;
+      player.onGround = false;
+      addSplash(player.x + player.w/2, player.y + player.h + 2, isDouble ? 1.0 : 0.7);
+      // tail kick
+      tailKick(0.9 + Math.random()*0.25);
+    }
+
+    function startDash(){
+      const soft = ui.soft.checked;
+      player.dashTimer = soft ? 0.14 : 0.12;
+      player.dashCd = soft ? 0.12 : 0.08;
+      player.canDash = false;
+
+      const dashV = soft ? 420 : 520;
+      player.vx = player.face * dashV;
+      player.vy = 0; // feels snappy, also fixes "dash not really working"
+      storm.shake = Math.min(1, storm.shake + (soft ? 0.08 : 0.16));
+      tailKick(1.35);
+    }
+
+    function tailKick(str=1){
+      if (!tail.initialized) return;
+      // shove tail points opposite travel so it whips a lil
+      const fx = -player.face * (120 + Math.abs(player.vx)*0.15) * str;
+      const fy = (player.vy < 0 ? 90 : -40) * str;
+      for (let i=1;i<tail.pts.length;i++){
+        tail.pts[i].vx += fx * (0.004 + i*0.0008);
+        tail.pts[i].vy += fy * (0.004 + i*0.0008);
+      }
+    }
+
     function stepPlayer(dt){
       const w = W(), h = H();
       const soft = ui.soft.checked;
 
-      // friction / accel
-      const move = (kDown("a","arrowleft") ? -1 : 0) + (kDown("d","arrowright") ? 1 : 0);
+      // cooldowns
+      player.dashCd = Math.max(0, player.dashCd - dt);
+      player.dashTimer = Math.max(0, player.dashTimer - dt);
+
+      // movement input
+      const move = (anyHeld("a","arrowleft") ? -1 : 0) + (anyHeld("d","arrowright") ? 1 : 0);
       if (move !== 0) player.face = move;
 
-      const accel = soft ? 960 : 1200;
-      const maxSpd = soft ? 180 : 230;
+      const accel = soft ? 980 : 1320;
+      const maxSpd = soft ? 190 : 240;
 
-      if (move !== 0){
-        player.vx += move * accel * dt;
+      // dash overrides normal movement for its duration
+      const inDash = player.dashTimer > 0.0001;
+
+      if (!inDash){
+        if (move !== 0){
+          player.vx += move * accel * dt;
+        } else {
+          player.vx *= Math.pow(soft ? 0.0007 : 0.00035, dt);
+        }
+        player.vx = clamp(player.vx, -maxSpd, maxSpd);
       } else {
-        // friction
-        player.vx *= Math.pow(soft ? 0.0007 : 0.00035, dt);
-      }
-      player.vx = clamp(player.vx, -maxSpd, maxSpd);
-
-      // jump
-      if (kDown(" ","w","arrowup") && player.onGround){
-        player.vy = -(soft ? 310 : 360);
-        player.onGround = false;
-        addSplash(player.x + player.w/2, player.y + player.h + 2, 0.7);
+        // tiny air steering while dashing (optional)
+        player.vx += move * (soft ? 240 : 300) * dt;
+        player.vx = clamp(player.vx, - (soft ? 520 : 620), (soft ? 520 : 620));
       }
 
-      // dash (shift) gives a quick burst, cooldown based
-      player.dashCd = Math.max(0, player.dashCd - dt);
-      if (kDown("shift") && player.dashCd <= 0){
-        player.dashCd = soft ? 1.25 : 0.95;
-        player.vx += player.face * (soft ? 280 : 360);
-        player.vy -= soft ? 40 : 60;
-        storm.shake = Math.min(1, storm.shake + (soft ? 0.18 : 0.28));
+      // jump (edge)
+      const wantsJump = anyPressed("space","w","arrowup");
+      if (wantsJump){
+        if (player.onGround){
+          player.jumpsLeft = 1;
+          doJump(false);
+        } else if (player.jumpsLeft > 0){
+          player.jumpsLeft--;
+          doJump(true);
+        }
       }
 
-      // gravity
-      const g = soft ? 820 : 980;
-      player.vy += g * dt;
-      player.vy = clamp(player.vy, -999, 880);
+      // dash (edge, tap shift)
+      const wantsDash = anyPressed("shift");
+      if (wantsDash && player.canDash && player.dashCd <= 0){
+        startDash();
+      }
+
+      // gravity (disabled during dash so it feels clean)
+      if (!inDash){
+        const g = soft ? 840 : 1000;
+        player.vy += g * dt;
+      } else {
+        // tiny float so it doesn't feel like a brick
+        player.vy += (soft ? 120 : 140) * dt;
+      }
+      player.vy = clamp(player.vy, -999, 920);
 
       // apply
       let nx = player.x + player.vx * dt;
       let ny = player.y + player.vy * dt;
 
-      // bounds (world walls)
+      // bounds
       nx = clamp(nx, 10, w - player.w - 10);
-      if (ny > h + 200){
-        // fell out: reset a bit and take dmg
+      if (ny > h + 220){
         ny = 140;
         nx = 80;
         player.vy = 0;
         player.vx = 0;
         hp = Math.max(0, hp-1);
+        // reset air resources
+        player.jumpsLeft = 1;
+        player.canDash = true;
       }
 
-      // collision: vertical then horizontal for nicer behavior
+      // collision: vertical then horizontal
       player.onGround = false;
 
       // vertical
@@ -878,14 +913,14 @@
         if (!aabb(boxV, p)) continue;
         const prevY = player.y;
         if (player.vy > 0 && prevY + player.h <= p.y + 2){
-          // landing on top
           ny = p.y - player.h;
           player.vy = 0;
           player.onGround = true;
+          // land splash
+          if (!inDash && Math.abs(player.vy) < 5 && (Math.random() < 0.45)) addSplash(player.x + player.w/2, ny + player.h + 2, 0.7);
         } else if (player.vy < 0 && prevY >= p.y + p.h - 2){
-          // head bump
           ny = p.y + p.h;
-          player.vy = 30;
+          player.vy = 40;
         }
         boxV.y = ny;
       }
@@ -908,15 +943,81 @@
       player.x = nx;
       player.y = ny;
 
-      // cute idle animation vars
-      player.bob += dt * (player.onGround ? 4.4 : 2.2);
+      // reset air resources on ground touch
+      if (player.onGround){
+        player.jumpsLeft = 1;
+        player.canDash = true;
+      }
+
+      // cute idle vars
+      player.bob += dt * (player.onGround ? 4.4 : 2.4);
       player.blink -= dt;
       if (player.blink < 0 && Math.random() < 0.02){
         player.blink = 0.12 + Math.random()*0.14;
       }
 
-      // inv timer
       player.inv = Math.max(0, player.inv - dt);
+    }
+
+    function stepTail(dt){
+      if (!tail.initialized) initTail();
+
+      // anchor at body (opposite facing side so tail feels attached)
+      const baseX = player.x + (player.face > 0 ? -2 : player.w + 2);
+      const baseY = player.y + 10;
+
+      tail.pts[0].x = baseX;
+      tail.pts[0].y = baseY;
+      tail.pts[0].vx = 0;
+      tail.pts[0].vy = 0;
+
+      const soft = ui.soft.checked;
+      const damp = soft ? 0.84 : 0.80;
+      const k = soft ? 90 : 110;
+      const windForce = windNow * (soft ? 0.20 : 0.26);
+      const gravity = soft ? 240 : 290;
+
+      // integrate
+      for (let i=1;i<tail.pts.length;i++){
+        const p = tail.pts[i];
+        const prev = tail.pts[i-1];
+
+        // follow force
+        let dx = prev.x - p.x;
+        let dy = prev.y - p.y;
+        const dist = Math.max(0.001, Math.hypot(dx,dy));
+        const diff = dist - tail.len;
+        const ax = (dx/dist) * diff * k;
+        const ay = (dy/dist) * diff * k;
+
+        // inertia + forces
+        p.vx = p.vx * damp + ax * dt + windForce * dt - player.vx * 0.010 * dt;
+        p.vy = p.vy * damp + ay * dt + gravity * dt + player.vy * 0.006 * dt;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // tiny bounds so it doesn't yeet offscreen
+        p.x = clamp(p.x, -40, W()+40);
+        p.y = clamp(p.y, -40, H()+80);
+      }
+
+      // constraint pass (keeps spacing tight)
+      for (let pass=0; pass<2; pass++){
+        for (let i=1;i<tail.pts.length;i++){
+          const p = tail.pts[i];
+          const prev = tail.pts[i-1];
+          let dx = p.x - prev.x;
+          let dy = p.y - prev.y;
+          const dist = Math.max(0.001, Math.hypot(dx,dy));
+          const err = dist - tail.len;
+          const nx = dx/dist;
+          const ny = dy/dist;
+          // pull back toward correct length
+          p.x -= nx * err * 0.85;
+          p.y -= ny * err * 0.85;
+        }
+      }
     }
 
     // -------- storm / wetness / shelter logic
@@ -924,12 +1025,9 @@
       const soft = ui.soft.checked;
       storm.t += dt;
 
-      // gently drift wind
       windTarget = (Number(ui.wind.value) * 2 - 1) * (soft ? 110 : 160);
       windNow = lerp(windNow, windTarget, 1 - Math.pow(0.001, dt));
 
-      // cycle phases by time
-      // calm 0..20s, building 20..35s, storm 35..50s, then repeat
       const cycle = soft ? 46 : 52;
       const t = storm.t % cycle;
 
@@ -956,7 +1054,6 @@
         }
       }
 
-      // wetness increases outside shelter
       const inside = inShelter(player.x, player.y);
       const rainI = Number(ui.rain.value);
       const wetGain = (storm.phase === "storm" ? 26 : storm.phase === "building" ? 18 : 10);
@@ -968,16 +1065,15 @@
         wetness = clamp(wetness - wetLoss * dt, 0, 100);
       }
 
-      // damage during storm if outside and very wet
       if (storm.phase === "storm" && !inside && wetness > 85){
         if (player.inv <= 0){
           hp = Math.max(0, hp - 1);
           player.inv = soft ? 1.2 : 0.9;
           storm.shake = Math.min(1, storm.shake + (soft ? 0.12 : 0.20));
+          tailKick(0.6);
         }
       }
 
-      // lightning (visual only)
       const thunderChance = Number(ui.thunder.value);
       storm.nextLightning -= dt * (storm.phase === "storm" ? 1.6 : storm.phase === "building" ? 1.0 : 0.65);
       if (storm.nextLightning <= 0){
@@ -988,22 +1084,18 @@
         }
       }
 
-      // decay flash + shake
       storm.flash = Math.max(0, storm.flash - dt * (soft ? 3.0 : 4.5));
       storm.shake = Math.max(0, storm.shake - dt * (soft ? 1.4 : 1.9));
     }
 
     // -------- rendering
     function drawBackground(w,h){
-      // layered silhouettes for rainworld-ish depth
-      // (no fancy gradients to keep it crisp)
       const g1 = ctx.createLinearGradient(0,0,0,h);
       g1.addColorStop(0, "rgba(0,0,0,0.10)");
       g1.addColorStop(1, "rgba(0,0,0,0.55)");
       ctx.fillStyle = g1;
       ctx.fillRect(0,0,w,h);
 
-      // distant blocks
       ctx.save();
       ctx.globalAlpha = 0.30;
       ctx.fillStyle = "rgba(255,255,255,0.06)";
@@ -1017,7 +1109,6 @@
       }
       ctx.restore();
 
-      // pink fog bands (subtle)
       ctx.save();
       ctx.globalAlpha = 0.16;
       ctx.fillStyle = "rgba(255,120,200,0.16)";
@@ -1030,12 +1121,10 @@
 
     function drawPlatforms(){
       const w = W(), h = H();
-      // platform fill
       for (const p of plats){
         if (p.kind === "ground"){
           ctx.fillStyle = "rgba(0,0,0,0.55)";
           ctx.fillRect(p.x, p.y, p.w, p.h);
-          // wet sheen line
           ctx.fillStyle = "rgba(255,179,230,0.10)";
           ctx.fillRect(0, p.y, w, 2);
           continue;
@@ -1049,7 +1138,6 @@
         ctx.lineWidth = 1;
         ctx.strokeRect(p.x+0.5, p.y+0.5, p.w-1, p.h-1);
 
-        // pink rim
         ctx.strokeStyle = "rgba(255,120,200,0.18)";
         ctx.beginPath();
         ctx.moveTo(p.x, p.y+1);
@@ -1057,8 +1145,6 @@
         ctx.stroke();
       }
 
-      // shelter
-      // outer
       ctx.save();
       const glow = 0.18 + Math.sin(performance.now()*0.004) * 0.06;
       ctx.fillStyle = "rgba(0,0,0,0.52)";
@@ -1068,7 +1154,6 @@
       ctx.lineWidth = 2;
       ctx.strokeRect(shelter.x+1, shelter.y+1, shelter.w-2, shelter.h-2);
 
-      // door
       ctx.fillStyle = `rgba(255,120,200,${0.10 + glow})`;
       const dx = shelter.x + shelter.w*0.32;
       const dy = shelter.y + shelter.h*0.30;
@@ -1076,7 +1161,6 @@
       const dh = shelter.h*0.52;
       ctx.fillRect(dx, dy, dw, dh);
 
-      // label
       ctx.font = `12px ${getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
       ctx.fillStyle = "rgba(255,179,230,0.90)";
       ctx.fillText("shelter", shelter.x + 10, shelter.y + 16);
@@ -1084,7 +1168,6 @@
     }
 
     function drawSpores(dt){
-      // glow spores
       ctx.save();
       const t = performance.now() * 0.001;
       for (const s of sporeList){
@@ -1092,7 +1175,6 @@
         s.bob += dt * (1.6 + s.z*0.9);
         s.x += s.vx * (ui.soft.checked ? 0.6 : 1);
 
-        // wrap
         if (s.x < 30) s.x = W()-30;
         if (s.x > W()-30) s.x = 30;
 
@@ -1121,19 +1203,49 @@
       ctx.restore();
     }
 
-    function drawCreature(){
+    function drawTailAscii(){
+      if (!tail.initialized) return;
+
+      ctx.save();
+      ctx.font = `14px ${getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
+      ctx.textBaseline = "middle";
+      ctx.lineJoin = "round";
+
+      // tail glow outline
+      ctx.shadowColor = "rgba(255,120,200,0.45)";
+      ctx.shadowBlur = 10;
+
+      // draw characters along points (pink outline + dark fill)
+      for (let i=1;i<tail.pts.length;i++){
+        const p = tail.pts[i];
+        const ch = (i === tail.pts.length-1) ? (player.face>0 ? ">" : "<") : "~";
+        const x = p.x;
+        const y = p.y;
+
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "rgba(255,120,200,0.85)";
+        ctx.strokeText(ch, x, y);
+
+        ctx.fillStyle = "rgba(8,8,10,0.98)";
+        ctx.fillText(ch, x, y);
+      }
+
+      ctx.restore();
+    }
+
+    function drawCreatureAscii(){
       const soft = ui.soft.checked;
 
       // tiny screen shake if storm hits (disabled in soft)
       const shake = soft ? 0 : storm.shake;
-      const sx = (Math.random()-0.5) * 8 * shake;
-      const sy = (Math.random()-0.5) * 8 * shake;
+      const sx = (Math.random()-0.5) * 7 * shake;
+      const sy = (Math.random()-0.5) * 7 * shake;
 
       ctx.save();
       ctx.translate(sx, sy);
 
-      // body position
-      const bob = Math.sin(player.bob) * (player.onGround ? 1.2 : 0.6);
+      // bob
+      const bob = Math.sin(player.bob) * (player.onGround ? 0.9 : 0.45);
       const x = player.x;
       const y = player.y + bob;
 
@@ -1141,105 +1253,64 @@
       ctx.globalAlpha = 0.25;
       ctx.fillStyle = "rgba(0,0,0,0.7)";
       ctx.beginPath();
-      ctx.ellipse(x + player.w/2, y + player.h + 6, 14, 5, 0, 0, Math.PI*2);
+      ctx.ellipse(x + player.w/2, y + player.h + 7, 14, 5, 0, 0, Math.PI*2);
       ctx.fill();
 
       // invulnerable blink
       const invBlink = player.inv > 0 ? (Math.floor(performance.now()/70)%2===0) : false;
-      if (invBlink) ctx.globalAlpha = 0.35;
-      else ctx.globalAlpha = 1;
+      ctx.globalAlpha = invBlink ? 0.35 : 1;
 
-      // outline glow
-      const wetGlow = wetness / 100;
-      ctx.shadowColor = "rgba(255,120,200,0.40)";
-      ctx.shadowBlur = 12 * (0.35 + wetGlow);
+      // ascii sprite (black fill, pink outline)
+      const inDash = player.dashTimer > 0.01;
+      const inAir = !player.onGround;
 
-      // body (little slugcat-ish rectangle with ears)
-      const bodyW = player.w + 8;
-      const bodyH = player.h + 10;
-      const bx = x - 4;
-      const by = y - 8;
-
-      // tail wag
-      const wag = Math.sin(player.bob*1.25) * (player.onGround ? 0.7 : 0.35);
-      const tailDir = player.face;
-
-      ctx.fillStyle = "rgba(255,255,255,0.88)";
-      ctx.strokeStyle = "rgba(255,179,230,0.55)";
-      ctx.lineWidth = 2;
-
-      roundRect(bx, by, bodyW, bodyH, 8);
-      ctx.fill();
-      ctx.stroke();
-
-      // ears
-      ctx.fillStyle = "rgba(255,255,255,0.90)";
-      roundRect(bx + (tailDir>0? 10: bodyW-26), by - 8, 12, 12, 4);
-      ctx.fill();
-      ctx.stroke();
-
-      roundRect(bx + (tailDir>0? 26: bodyW-42), by - 6, 10, 10, 4);
-      ctx.fill();
-      ctx.stroke();
-
-      // tail
-      ctx.save();
-      ctx.translate(x + (tailDir>0 ? -2 : bodyW+2), by + bodyH*0.65);
-      ctx.rotate(tailDir>0 ? -0.25 + wag*0.25 : 0.25 - wag*0.25);
-      ctx.fillStyle = "rgba(255,255,255,0.75)";
-      ctx.strokeStyle = "rgba(255,179,230,0.45)";
-      ctx.lineWidth = 2;
-      roundRect(-10, -4, 18, 8, 5);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-
-      // face
-      const eyeY = by + 14;
-      const eyeX1 = bx + (tailDir>0 ? 16 : bodyW-24);
-      const eyeX2 = bx + (tailDir>0 ? 28 : bodyW-36);
-
+      // tiny face change
       const blink = player.blink > 0;
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "rgba(20,20,22,0.95)";
+      const eyes = blink ? "--" : "..";
+      const mouth = inDash ? ">" : (inAir ? "o" : ".");
 
-      if (!blink){
-        ctx.beginPath(); ctx.arc(eyeX1, eyeY, 2.2, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(eyeX2, eyeY, 2.2, 0, Math.PI*2); ctx.fill();
-      } else {
-        ctx.strokeStyle = "rgba(20,20,22,0.95)";
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(eyeX1-2.3, eyeY); ctx.lineTo(eyeX1+2.3, eyeY); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(eyeX2-2.3, eyeY); ctx.lineTo(eyeX2+2.3, eyeY); ctx.stroke();
+      const lines = [
+        player.face > 0 ? " /\\__/\\ " : " /\\__/\\ ",
+        player.face > 0 ? `( ${mouth}${eyes}${mouth} )` : `( ${mouth}${eyes}${mouth} )`,
+        player.face > 0 ? " /_^^_\\ " : " /_^^_\\ "
+      ];
+
+      // positioning (center ascii over body)
+      ctx.save();
+      const fontSize = 14;
+      ctx.font = `${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
+      ctx.textBaseline = "top";
+
+      const spriteW = ctx.measureText(lines[0]).width;
+      const spriteH = fontSize * 3.1;
+
+      const px = x + (player.w/2) - spriteW/2;
+      const py = y - 18;
+
+      // flip horizontally by rendering reversed characters if facing left (simple + cute)
+      const renderLine = (s) => (player.face > 0) ? s : s.split("").reverse().join("");
+
+      // glow intensity
+      const wetGlow = wetness / 100;
+      ctx.shadowColor = "rgba(255,120,200,0.50)";
+      ctx.shadowBlur = 12 * (0.25 + wetGlow);
+
+      for (let i=0;i<lines.length;i++){
+        const L = renderLine(lines[i]);
+        const yy = py + i * (fontSize * 1.05);
+
+        // outline (pink)
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = "rgba(255,120,200,0.92)";
+        ctx.strokeText(L, px, yy);
+
+        // fill (near-black)
+        ctx.fillStyle = "rgba(8,8,10,0.98)";
+        ctx.fillText(L, px, yy);
       }
 
-      // blush dots (cute debuff)
-      ctx.globalAlpha = 0.55;
-      ctx.fillStyle = "rgba(255,120,200,0.55)";
-      ctx.beginPath(); ctx.arc(eyeX1-6, eyeY+6, 2.2, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(eyeX2+6, eyeY+6, 2.2, 0, Math.PI*2); ctx.fill();
-
-      // little tummy line
-      ctx.globalAlpha = 0.25;
-      ctx.strokeStyle = "rgba(255,179,230,0.80)";
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.moveTo(bx + 10, by + bodyH - 10);
-      ctx.lineTo(bx + bodyW - 10, by + bodyH - 10);
-      ctx.stroke();
-
       ctx.restore();
-    }
-
-    function roundRect(x,y,w,h,r){
-      r = Math.min(r, w/2, h/2);
-      ctx.beginPath();
-      ctx.moveTo(x+r, y);
-      ctx.arcTo(x+w, y, x+w, y+h, r);
-      ctx.arcTo(x+w, y+h, x, y+h, r);
-      ctx.arcTo(x, y+h, x, y, r);
-      ctx.arcTo(x, y, x+w, y, r);
-      ctx.closePath();
+      ctx.restore();
     }
 
     function drawRain(dt){
@@ -1250,7 +1321,7 @@
       const n = drops.length;
 
       const vx = windNow * (soft ? 0.65 : 1);
-      const slope = vx * 0.0028; // tilt based on wind
+      const slope = vx * 0.0028;
 
       ctx.save();
       ctx.globalAlpha = 0.52;
@@ -1269,7 +1340,6 @@
         if (d.y > h + 20){
           d.y = -20 - sRand()*40;
           d.x = sRand() * w;
-          // occasional splash at ground
           if (Math.random() < 0.07 * intensity){
             addSplash(d.x, h-54, 0.6);
           }
@@ -1289,7 +1359,6 @@
 
       // splashes
       ctx.save();
-      ctx.globalAlpha = 0.55;
       ctx.fillStyle = "rgba(255,179,230,0.55)";
       for (let i=splashes.length-1;i>=0;i--){
         const s = splashes[i];
@@ -1342,10 +1411,9 @@
       $("vWind").textContent = Number(ui.wind.value).toFixed(2);
       $("vThunder").textContent = Number(ui.thunder.value).toFixed(2);
 
-      makeRain(); // regenerate counts based on intensity/soft
+      makeRain();
       spawnSpores(false);
 
-      // hum toggle
       setHum(ui.hum.checked);
 
       saveSettings();
@@ -1361,9 +1429,6 @@
     function togglePause(){
       paused = !paused;
       $("btnPause").innerHTML = paused ? `<span class="k">▶</span> resume` : `<span class="k">⏸</span> pause`;
-      $("hint").textContent = paused
-        ? "paused. your creature is taking a tiny nap in the rain (unbothered). press p to resume. (:3)"
-        : "tip: shelter is the glowing rectangle. if the storm hits, get inside. (:3)";
     }
 
     $("btnPause").addEventListener("click", togglePause);
@@ -1371,7 +1436,6 @@
     $("btnReroll").addEventListener("click", () => rollBiome());
 
     $("btnScreenshot").addEventListener("click", () => {
-      // render current canvas to png and download
       const a = document.createElement("a");
       a.href = cv.toDataURL("image/png");
       a.download = "rain-biome.png";
@@ -1380,11 +1444,39 @@
       a.remove();
     });
 
-    // keyboard pause
-    addEventListener("keydown", (e) => {
-      const k = (e.key || "").toLowerCase();
-      if (k === " " || k.startsWith("arrow")) e.preventDefault();
-    }, { passive:false });
+    // -------- roll/reset biome
+    function rollBiome(){
+      reseed();
+      makePlatforms();
+      spawnSpores(true);
+
+      storm.t = 0;
+      storm.phase = "calm";
+      storm.nextLightning = 0.8 + sRand()*2.0;
+      storm.flash = 0;
+      storm.shake = 0;
+
+      setChipState("calm");
+      $("moodOut").textContent = "soft rain";
+      $("shelterOut").textContent = "stable";
+
+      wetness = 0;
+      hp = 6;
+      spores = 0;
+
+      player.x = 80;
+      player.y = H() - 140;
+      player.vx = 0;
+      player.vy = 0;
+      player.inv = 0;
+      player.jumpsLeft = 1;
+      player.canDash = true;
+      player.dashTimer = 0;
+      player.dashCd = 0;
+
+      initTail();
+      updateChips();
+    }
 
     // -------- game loop
     let last = performance.now();
@@ -1398,9 +1490,9 @@
       if (!paused){
         stepStorm(dt);
         stepPlayer(dt);
+        stepTail(dt);
         collectCheck();
 
-        // mood text
         const inside = inShelter(player.x, player.y);
         if (storm.phase === "storm" && !inside){
           $("moodOut").textContent = hp <= 2 ? "low hp, get safe" : (wetness > 70 ? "soaked" : "storming");
@@ -1412,15 +1504,17 @@
           $("moodOut").textContent = "soft rain";
         }
 
-        // end-ish state
         if (hp <= 0){
           paused = true;
           $("btnPause").innerHTML = `<span class="k">▶</span> resume`;
-          $("hint").textContent = "you got rain-checked (hp 0). press r to reset. (skill issue but in a cute way) >:3";
+          $("moodOut").textContent = "hp 0 (rip). press r.";
         }
 
         updateChips();
       }
+
+      // consume pressed keys (edge-trigger)
+      pressed.clear();
 
       // draw
       const w = W(), h = H();
@@ -1430,11 +1524,14 @@
       drawPlatforms();
       drawSpores(dt);
       drawRain(dt);
-      drawCreature();
+
+      // tail behind creature
+      drawTailAscii();
+      drawCreatureAscii();
+
       drawLightning();
       drawVignette();
 
-      // UI chip text for shelter
       const inside = inShelter(player.x, player.y);
       $("shelterOut").textContent = inside ? "inside" : (storm.phase === "storm" ? "danger" : "open");
     }
@@ -1442,7 +1539,6 @@
 
     // start state
     rollBiome();
-    updateChips();
   </script>
 </body>
 </html>
