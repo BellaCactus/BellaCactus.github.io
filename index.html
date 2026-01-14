@@ -219,6 +219,29 @@
       color:var(--pink2);
     }
 
+    /* apps section "texty buttons" */
+    .appBtn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      padding:9px 11px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+      font-size:0.92rem;
+    }
+    .appBtn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .appBtn:active{ transform: translateY(0); opacity:0.95; }
+
     /* divider label for button rows */
     .dividerLabel{
       width:100%;
@@ -561,6 +584,94 @@
       opacity:0.95;
       margin-top:10px;
     }
+
+    /* ---------------- THEME + EVIL MODE (red) ---------------- */
+    body.evil{
+      filter: contrast(1.12) saturate(1.22) hue-rotate(-6deg);
+    }
+    body.evil .panel,
+    body.evil .btn,
+    body.evil .chip,
+    body.evil .terminal,
+    body.evil .musicBar{
+      animation: evilJitter 2.6s infinite steps(1);
+      will-change: transform, filter;
+    }
+    @keyframes evilJitter{
+      0%, 92%{ transform:none; filter:none; }
+      94%{ transform: translate(-1px, 1px) skewX(-0.2deg); filter: saturate(1.1); }
+      96%{ transform: translate(1px, -1px) skewX(0.2deg); }
+      98%{ transform: translate(-2px, 0px) skewY(0.2deg); }
+    }
+    body.evil::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:9999;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,0,0,0.08) 0px,
+          rgba(255,0,0,0.08) 1px,
+          transparent 3px,
+          transparent 6px
+        );
+      mix-blend-mode: screen;
+      opacity:0.38;
+      animation: evilScan 6.2s linear infinite;
+    }
+    @keyframes evilScan{
+      from{ background-position-y:0; }
+      to{ background-position-y:28px; }
+    }
+    body.evil::before{
+      content:"";
+      position:fixed;
+      inset:-20px;
+      pointer-events:none;
+      z-index:9998;
+      background:
+        radial-gradient(1200px 800px at 30% 25%, rgba(255,0,60,0.22), transparent 60%),
+        radial-gradient(1200px 800px at 70% 70%, rgba(255,60,60,0.14), transparent 60%);
+      filter: blur(8px);
+      opacity:0.65;
+      animation: evilPulse 3.8s ease-in-out infinite;
+    }
+    @keyframes evilPulse{
+      0%,100%{ opacity:0.55; transform: translateY(0); }
+      50%{ opacity:0.75; transform: translateY(-2px); }
+    }
+
+    /* volume slider */
+    .volWrap{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(6px);
+      user-select:none;
+    }
+    .volWrap .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
+    input.vol{
+      width:160px;
+      accent-color: var(--pink);
+      cursor:pointer;
+    }
+    .volNum{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color:var(--muted);
+      min-width:48px;
+      text-align:right;
+    }
+    @media (max-width: 520px){
+      input.vol{ width:120px; }
+      .volWrap{ width:100%; justify-content:space-between; }
+    }
   </style>
 </head>
 
@@ -601,7 +712,7 @@
       </div>
 
       <div class="chips">
-        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
+        <div class="chip"><span class="dot"></span><strong class="pulseText" id="paletteChip">palette: pink</strong></div>
         <div class="chip">timezone: <strong>nz</strong></div>
         <div class="chip">mode: <strong>building</strong></div>
       </div>
@@ -616,31 +727,32 @@
         </div>
 
         <div class="panelInner">
+
           <div class="btnRow">
-            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
-              <span class="k">git</span> bella-limiter
-            </a>
+            <a class="btn" href="pages/ascii.html"><span class="k">ascii</span> ascii zoo</a>
+            <a class="btn" href="pages/tamers.html"><span class="k">pony</span> tamers vault</a>
+            <a class="btn" href="pages/vault.html"><span class="k">vlt</span> vault</a>
+            <a class="btn" href="pages/audio-editor.html"><span class="k">wav</span> audio editor</a>
+            <a class="btn" href="pages/tab-crypt.html"><span class="k">tab</span> tab crypt</a>
 
-            <a class="btn" href="pages/limiter.html"><span class="k">open</span> limiter</a>
-            <a class="btn" href="pages/os.html"><span class="k">open</span> os</a>
-            <a class="btn" href="pages/ascii.html"><span class="k">open</span> ascii zoo</a>
+            <span class="dividerLabel">tools</span>
+            <a class="btn" href="pages/keyb.html"><span class="k">kbd</span> keyb tester</a>
+            <a class="btn" href="pages/limiter.html"><span class="k">lim</span> limiter</a>
+            <a class="btn" href="pages/epic-calc.html"><span class="k">calc</span> epic calc</a>
+            <a class="btn" href="pages/pokecap.html"><span class="k">db</span> pokecap</a>
+            <a class="btn" href="pages/shrines.html"><span class="k">♡</span> shrines</a>
+            <a class="btn" href="pages/os.html"><span class="k">os</span> os</a>
+            <a class="btn" href="pages/idle.html"><span class="k">zzz</span> idle</a>
+            <a class="btn" href="pages/glitch.html"><span class="k">fx</span> glitch</a>
+            <a class="btn" href="pages/dreams.html"><span class="k">log</span> dreams</a>
 
-            <!-- NEW PAGES -->
-            <a class="btn" href="pages/idle.html"><span class="k">open</span> idle</a>
-            <a class="btn" href="pages/glitch.html"><span class="k">open</span> glitch</a>
-            <a class="btn" href="pages/dreams.html"><span class="k">open</span> dreams</a>
-
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
-              <span class="k">yt</span> @BellaCactusYT
-            </a>
-
-            <button class="btn" id="reroll" type="button">
-              <span class="k">rng</span> reroll wall + track
-            </button>
+            <span class="dividerLabel">vibes</span>
+            <button class="btn" id="reroll" type="button"><span class="k">rng</span> reroll wall + track</button>
+            <button class="btn" id="themeBtn" type="button"><span class="k">pal</span> palette</button>
           </div>
 
           <!-- music -->
-          <div class="musicBar" id="musicBar">
+          <div class="musicBar paused" id="musicBar">
             <div class="nowPlaying">
               <div class="t">soundtrack: <span class="pulseText" id="trackName">loading…</span></div>
               <div class="t" id="trackMeta">click play if browser blocks autoplay</div>
@@ -654,6 +766,12 @@
             <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
             <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
             <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
+
+            <div class="volWrap" title="volume (saved)">
+              <span class="k">vol</span>
+              <input id="vol" class="vol" type="range" min="0" max="100" value="70" />
+              <span class="volNum" id="volNum">70%</span>
+            </div>
           </div>
 
           <canvas id="waveform" height="48"></canvas>
@@ -690,6 +808,7 @@
               <strong class="pulseText">games</strong>
               <span class="tag">destiny 2</span>
               <span class="tag">geometry dash</span>
+              <span class="tag">hypixel skyblock</span>
               <span class="tag">minecraft (technical)</span>
             </li>
             <li>
@@ -731,11 +850,11 @@
             </div>
           </li>
           <li>
-            <strong class="pulseText">site</strong>
+            <strong class="pulseText">bella cactus site</strong>
             <span class="tag">github pages</span>
             <span class="tag">terminal vibe</span>
             <div class="small" style="margin-top:6px;">
-              placeholder now, will expand when your wamp pages land.
+              the wamp pages are in. this is the real home base now, plus all the little tools.
             </div>
           </li>
         </ul>
@@ -749,24 +868,36 @@
         <div class="small">local pages (static)</div>
       </div>
       <div class="panelInner">
-        <div class="btnRow">
-          <!-- NEW STUFF (added) -->
-          <a class="btn" href="pages/idle.html"><span class="k">idle</span> screensaver</a>
-          <a class="btn" href="pages/glitch.html"><span class="k">fx</span> glitch gallery</a>
-          <a class="btn" href="pages/dreams.html"><span class="k">log</span> dream log</a>
 
-          <!-- existing -->
-          <a class="btn" href="pages/encrypter.html"><span class="k">exe</span> encrypter</a>
-          <a class="btn" href="pages/ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
-          <a class="btn" href="pages/keyb.html"><span class="k">kbd</span> keyb</a>
-          <a class="btn" href="pages/snkaegame.html"><span class="k">🐍</span> snake</a>
-          <a class="btn" href="pages/dungeoncrawler.html"><span class="k">dg</span> dungeon</a>
-          <a class="btn" href="pages/shitty-ass-gamez-3d.html"><span class="k">3d</span> gamez</a>
-          <a class="btn" href="pages/controllar-test.html"><span class="k">pad</span> controller test</a>
-          <a class="btn" href="pages/boucnignlolgo.html"><span class="k">dvd</span> bouncin logo</a>
-          <a class="btn" href="pages/sigmaness-basiclaly-epic.html"><span class="k">??</span> sigmaness</a>
-          <a class="btn" href="pages/legacy-home.html"><span class="k">old</span> legacy home</a>
+        <div class="btnRow">
+          <a class="appBtn" href="pages/audio-editor.html">audio editor</a>
+          <a class="appBtn" href="pages/tab-crypt.html">tab crypt</a>
+          <a class="appBtn" href="pages/tamers.html">tamers vault</a>
+          <a class="appBtn" href="pages/vault.html">vault</a>
+
+          <span class="dividerLabel">projects</span>
+          <a class="appBtn" href="pages/epic-calc.html">epic calc</a>
+          <a class="appBtn" href="pages/pokecap.html">pokecap</a>
+          <a class="appBtn" href="pages/legacy-home.html">legacy home</a>
+          <a class="appBtn" href="pages/sigmaness-basiclaly-epic.html">sigmaness</a>
+
+          <span class="dividerLabel">tools</span>
+          <a class="appBtn" href="pages/keyb.html">keyboard tester</a>
+          <a class="appBtn" href="pages/ascii-art-maker-type-shit.html">image/video → ascii</a>
+          <a class="appBtn" href="pages/encrypter.html">encrypter</a>
+          <a class="appBtn" href="pages/dungeoncrawler.html">dungeon</a>
+          <a class="appBtn" href="pages/snkaegame.html">snake</a>
+          <a class="appBtn" href="pages/controllar-test.html">controller</a>
+          <a class="appBtn" href="pages/ascii.html">ascii zoo</a>
+          <a class="appBtn" href="pages/idle.html">idle</a>
+          <a class="appBtn" href="pages/glitch.html">glitch</a>
+          <a class="appBtn" href="pages/dreams.html">dreams</a>
+          <a class="appBtn" href="pages/limiter.html">limiter</a>
+          <a class="appBtn" href="pages/boucnignlolgo.html">bouncing logo</a>
+          <a class="appBtn" href="pages/os.html">os</a>
+          <a class="appBtn" href="pages/shrines.html">shrines</a>
         </div>
+
         <div class="small" style="margin-top:10px;">
           if any filename here doesn’t match your repo, just rename either the file or the link label. ez.
         </div>
@@ -821,13 +952,49 @@
 
   <!-- audio elements -->
   <audio id="bgm" preload="auto" loop></audio>
-  <audio id="yeah" preload="auto" src="assets/lil-jon-yeah.mp3"></audio>
+  <audio id="yeah" preload="auto"></audio>
 
   <script>
     // --------- tiny helpers
     const $ = (id) => document.getElementById(id);
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
     const rand = (a, b) => a + Math.random() * (b - a);
+
+    // --- audio loader w/ fallback paths (tries multiple filenames/folders)
+    function tryLoadAudio(el, candidates, timeoutMs = 2200){
+      const list = (candidates || []).filter(Boolean).map(s => encodeURI(s));
+      return new Promise((resolve, reject) => {
+        let i = 0;
+        let timer = null;
+
+        const cleanup = () => {
+          if (timer) clearTimeout(timer);
+          el.removeEventListener("canplay", onOk);
+          el.removeEventListener("loadeddata", onOk);
+          el.removeEventListener("error", onErr);
+        };
+
+        const onOk = () => { cleanup(); resolve(el.currentSrc || el.src); };
+        const onErr = () => { cleanup(); next(); };
+
+        const next = () => {
+          if (i >= list.length) return reject(new Error("no working audio source"));
+          const src = list[i++];
+
+          try{ el.pause(); }catch(e){}
+          el.src = src;
+          el.load();
+
+          el.addEventListener("canplay", onOk, { once:true });
+          el.addEventListener("loadeddata", onOk, { once:true });
+          el.addEventListener("error", onErr, { once:true });
+
+          timer = setTimeout(() => { cleanup(); next(); }, timeoutMs);
+        };
+
+        next();
+      });
+    }
 
     // date
     const d = new Date();
@@ -842,26 +1009,196 @@
       }
     });
 
-    // yeah clip path fallback (assets/ -> root)
-    const yeahEl = $("yeah");
-    if (yeahEl){
-      yeahEl.addEventListener("error", () => {
-        if (!yeahEl.dataset.tried){
-          yeahEl.dataset.tried = "1";
-          yeahEl.src = "lil-jon-yeah.mp3";
-        }
+    // --------- MUSIC (random soundtrack + waveform)
+    const tracks = [
+      {
+        key: "530",
+        name: "530",
+        files: [
+          "assets/songs/530.mp3",
+          "songs/530 0.mp3",
+          "assests/530 0.mp3",
+          "assests/530.mp3",
+          "assets/530.mp3"
+        ]
+      },
+      {
+        key: "bipolar",
+        name: "bipolar",
+        files: [
+          "assets/songs/bipolar.mp3",
+          "songs/bipolar.mp3",
+          "assests/bipolar.mp3",
+          "assets/bipolar.mp3"
+        ]
+      },
+      {
+        key: "bxmb-threat",
+        name: "bxmb threat",
+        files: [
+          "assets/songs/bxmb-threat.mp3",
+          "songs/Bxmb Threat.mp3",
+          "assests/Bxmb Threat.mp3"
+        ]
+      },
+      {
+        key: "endless-sea",
+        name: "endless sea",
+        files: [
+          "assets/songs/freddie-dredd-endless-sea.mp3",
+          "songs/FREDDIE DREDD - ENDLESS SEA.mp3",
+          "assests/FREDDIE DREDD - ENDLESS SEA.mp3"
+        ]
+      },
+      {
+        key: "i-hope-that-you-think-of-me",
+        name: "i hope that you think of me",
+        files: [
+          "assets/songs/i-hope-that-you-think-of-me.mp3",
+          "songs/I hope that you think of me 0.mp3",
+          "assests/I hope that you think of me 0.mp3"
+        ]
+      },
+      {
+        key: "intergalactic-tv-show",
+        name: "intergalactic tv show",
+        files: [
+          "assets/songs/intergalactic-tv-show.mp3",
+          "songs/Intergalactic TV Show.mp3",
+          "assests/Intergalactic TV Show.mp3"
+        ]
+      },
+      {
+        key: "mobile-suit-woe",
+        name: "mobile suit woe",
+        files: [
+          "assets/songs/mobile-suit-woe.mp3",
+          "songs/Mobile Suit Woe 0.mp3",
+          "assests/Mobile Suit Woe 0.mp3"
+        ]
+      },
+      {
+        key: "tinashe-nasty",
+        name: "tinashe - nasty",
+        files: [
+          "assets/songs/tinashe-nasty.mp3",
+          "songs/Tinashe - Nasty (Official Video) 0.mp3",
+          "assests/Tinashe - Nasty (Official Video) 0.mp3"
+        ]
+      },
+      {
+        key: "who-i-smoke",
+        name: "who i smoke",
+        files: [
+          "assets/songs/who-i-smoke.mp3",
+          "songs/Who I Smoke (Official Music Video).mp3",
+          "assests/Who I Smoke (Official Music Video).mp3"
+        ]
+      },
+      {
+        key: "tay-k-dat-way",
+        name: "tay-k - dat way",
+        files: [
+          "assets/songs/tay-k-dat-way.mp3",
+          "songs/Tay-K - Dat Way [Official Audio] 4.mp3",
+          "assests/Tay-K - Dat Way [Official Audio] 4.mp3"
+        ]
+      },
+      {
+        key: "tay-k-i-love-my-choppa",
+        name: "tay-k - i love my choppa",
+        files: [
+          "assets/songs/tay-k-i-love-my-choppa.mp3",
+          "songs/Tay-K - I Love My Choppa [Official Audio] 4.mp3",
+          "assests/Tay-K - I Love My Choppa [Official Audio] 4.mp3"
+        ]
+      }
+    ];
+
+    const bgm = $("bgm");
+    const musicBar = $("musicBar");
+    const trackName = $("trackName");
+    const trackMeta = $("trackMeta");
+
+    let trackIndex = Math.floor(Math.random() * tracks.length);
+    let muted = false;
+
+    // volume (saved)
+    const VOL_KEY = "bella_volume";
+    const volEl = $("vol");
+    const volNum = $("volNum");
+    const savedVol = Number(localStorage.getItem(VOL_KEY));
+    const initialVol = Number.isFinite(savedVol) ? savedVol : 0.70;
+
+    function setVolume(v){
+      const vv = Math.max(0, Math.min(1, v));
+      bgm.volume = vv;
+      if (volEl) volEl.value = String(Math.round(vv * 100));
+      if (volNum) volNum.textContent = `${Math.round(vv * 100)}%`;
+      localStorage.setItem(VOL_KEY, String(vv));
+    }
+
+    setVolume(initialVol);
+
+    if (volEl){
+      volEl.addEventListener("input", (e) => {
+        const v = Number(e.target.value) / 100;
+        setVolume(v);
       });
     }
 
+    // waveform nodes
+    let audioCtx = null;
+    let analyser = null;
+    let data = null;
+    let srcNode = null;
 
-    // oneko easter egg: click -> play "yeah"
+    async function yepResumeAudio(){
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+    }
+
+    async function loadTrack(i){
+      trackIndex = (i + tracks.length) % tracks.length;
+      const t = tracks[trackIndex];
+
+      trackName.textContent = t.name;
+      trackMeta.textContent = "loading…";
+
+      try{
+        const chosen = await tryLoadAudio(bgm, t.files);
+        const nice = decodeURI(chosen).split("/").pop();
+        trackMeta.textContent = `file: ${nice}`;
+      }catch(e){
+        trackMeta.textContent = "track missing (check assets/songs)";
+      }
+    }
+
+    async function ensureTrackLoaded(){
+      // if src is empty, or we haven't loaded yet
+      if (!bgm.src){
+        await loadTrack(trackIndex);
+      }
+    }
+
+    // oneko easter egg: click -> play "yeah" (tries both spellings/paths)
     $("oneko").addEventListener("click", async () => {
-      try {
+      try{
         await yepResumeAudio();
         const y = $("yeah");
+
+        if (!y.src){
+          await tryLoadAudio(y, [
+            "assests/lil-jon-yeah.mp3",
+            "assets/lil-jon-yeah.mp3",
+            "media/lil-jon-yeah.mp3"
+          ]).catch(()=>{});
+        }
+
         y.currentTime = 0;
         y.play().catch(()=>{});
-      } catch(e){}
+      }catch(e){}
     });
 
     // --------- INTRO GATE (video then show site)
@@ -869,6 +1206,16 @@
     const introVideo = $("introVideo");
     const main = $("main");
     const skipIntro = $("skipIntro");
+
+    const HARD_SKIP_MS = 6500;
+    let hardSkipTimer = null;
+
+    function armHardSkip(){
+      clearTimeout(hardSkipTimer);
+      hardSkipTimer = setTimeout(() => {
+        try{ showSite(); }catch(e){}
+      }, HARD_SKIP_MS);
+    }
 
     const introFrames = [
 `   <span class="pink">[ booting… ]</span>
@@ -889,25 +1236,70 @@
     setIntroAscii(0);
     const introInterval = setInterval(() => setIntroAscii(++introAsciiTick), 900);
 
+    armHardSkip();
+    ["error","stalled","abort","emptied"].forEach(ev => {
+      introVideo.addEventListener(ev, () => {
+        try{ showSite(); }catch(e){}
+      }, { once:true });
+    });
+
+    addEventListener("keydown", (e) => {
+      if ((e.key || "").toLowerCase() === "escape"){
+        try{ showSite(); }catch(err){}
+      }
+    });
+
     function showSite(){
+      clearTimeout(hardSkipTimer);
       clearInterval(introInterval);
       introGate.classList.add("hidden");
       main.style.visibility = "visible";
-      // spawn stickers + start terminal + pick track + intel
+
       rerollAll();
       startTerminal();
       refreshIntelBase();
+
+      // best effort autoplay
+      (async () => {
+        try{
+          setupWaveform();
+          await yepResumeAudio();
+          await ensureTrackLoaded();
+          await bgm.play();
+          musicBar.classList.remove("paused");
+          $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+          trackMeta.textContent = "autoplay engaged";
+        }catch(e){
+          trackMeta.textContent = "tap play if audio is blocked";
+          const poke = async () => {
+            try{
+              setupWaveform();
+              await yepResumeAudio();
+              await ensureTrackLoaded();
+              await bgm.play();
+              musicBar.classList.remove("paused");
+              $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+              trackMeta.textContent = "audio enabled";
+            }catch(e2){}
+            window.removeEventListener('pointerdown', poke, true);
+            window.removeEventListener('keydown', poke, true);
+          };
+          window.addEventListener('pointerdown', poke, true);
+          window.addEventListener('keydown', poke, true);
+        }
+      })();
     }
 
     skipIntro.addEventListener("click", () => {
+      armHardSkip();
       try { introVideo.pause(); } catch(e){}
       showSite();
     });
 
     introVideo.addEventListener("ended", showSite);
 
-    // if autoplay is blocked, clicking video should start it
     introVideo.addEventListener("click", () => {
+      armHardSkip();
       introVideo.play().catch(()=>{});
     });
 
@@ -942,7 +1334,6 @@
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      // "safe zones" where stickers shouldn't spawn (avoid covering your readable content)
       const safe = [];
       const wrapEl = document.querySelector(".wrap");
       if (wrapEl){
@@ -1019,66 +1410,94 @@
       spawnStickers();
     });
 
-    // --------- MUSIC (random soundtrack + waveform)
-    // files live in: assets/songs/
-    const SONG_BASES = ["assets/songs/", "songs/", ""]; // fallback paths (just in case)
-    const tracks = [
-      { file: "530.mp3", label: "530" },
-      { file: "bipolar.mp3", label: "bipolar" },
-      { file: "bxmb-threat.mp3", label: "bxmb threat" },
-      { file: "freddie-dredd-endless-sea.mp3", label: "endless sea (freddie dredd)" },
-      { file: "i-hope-that-you-think-of-me.mp3", label: "i hope that you think of me" },
-      { file: "intergalactic-tv-show.mp3", label: "intergalactic tv show" },
-      { file: "mobile-suit-woe.mp3", label: "mobile suit woe" },
-      { file: "tay-k-dat-way.mp3", label: "dat way (tay-k)" },
-      { file: "tay-k-i-love-my-choppa.mp3", label: "i love my choppa (tay-k)" },
-      { file: "tinashe-nasty.mp3", label: "nasty (tinashe)" },
-      { file: "who-i-smoke.mp3", label: "who i smoke" }
-    ];
+    // --------- THEME (pink / white / red / etc) + evil mode hook
+    const THEME_KEY = "bella_theme";
+    const THEMES = ["pink","white","red","purple","blue","green","amber"]; // red = evil
+    let currentTheme = localStorage.getItem(THEME_KEY) || "pink";
 
-    const bgm = $("bgm");
-    const musicBar = $("musicBar");
-    const trackName = $("trackName");
-    const trackMeta = $("trackMeta");
-
-    let trackIndex = Math.floor(Math.random() * tracks.length);
-    let muted = false;
-
-    bgm.addEventListener("error", () => {
-      trackMeta.textContent = "audio failed to load (check file paths)";
-    });
-
-
-    async function yepResumeAudio(){
-      if (audioCtx && audioCtx.state === "suspended") {
-        await audioCtx.resume();
+    function setCssThemeVars(mode){
+      if (mode === "white"){
+        document.documentElement.style.setProperty("--pink", "#ffffff");
+        document.documentElement.style.setProperty("--pink2", "#d6d6dc");
+        document.documentElement.style.setProperty("--pink3", "#ffffff");
+      } else if (mode === "red"){
+        document.documentElement.style.setProperty("--pink", "#ff2a2a");
+        document.documentElement.style.setProperty("--pink2", "#ff7a7a");
+        document.documentElement.style.setProperty("--pink3", "#b00000");
+      } else if (mode === "purple"){
+        document.documentElement.style.setProperty("--pink", "#b97aff");
+        document.documentElement.style.setProperty("--pink2", "#e1c7ff");
+        document.documentElement.style.setProperty("--pink3", "#6d2aff");
+      } else if (mode === "blue"){
+        document.documentElement.style.setProperty("--pink", "#58b7ff");
+        document.documentElement.style.setProperty("--pink2", "#bfe9ff");
+        document.documentElement.style.setProperty("--pink3", "#147dff");
+      } else if (mode === "green"){
+        document.documentElement.style.setProperty("--pink", "#42ffb0");
+        document.documentElement.style.setProperty("--pink2", "#b9ffe2");
+        document.documentElement.style.setProperty("--pink3", "#00b86b");
+      } else if (mode === "amber"){
+        document.documentElement.style.setProperty("--pink", "#ffb020");
+        document.documentElement.style.setProperty("--pink2", "#ffe1a8");
+        document.documentElement.style.setProperty("--pink3", "#ff6a00");
+      } else {
+        document.documentElement.style.setProperty("--pink", "#ff78c8");
+        document.documentElement.style.setProperty("--pink2", "#ffb3e6");
+        document.documentElement.style.setProperty("--pink3", "#ff4db8");
       }
     }
 
-    async function loadTrack(i){
-      trackIndex = (i + tracks.length) % tracks.length;
-      const t = tracks[trackIndex];
+    function isEvil(){ return currentTheme === "red"; }
 
-      // try a couple base folders so it still works if you move files around
-      const candidates = SONG_BASES.map(b => b + t.file);
+    async function applyTheme(mode, opts={}){
+      currentTheme = mode;
+      localStorage.setItem(THEME_KEY, mode);
+      setCssThemeVars(mode);
+      document.body.classList.toggle("evil", isEvil());
 
-      const pick = await (async () => {
-        for (const c of candidates){
+      const chip = $("paletteChip");
+      if (chip) chip.textContent = `palette: ${mode}`;
+
+      // red theme -> force bxmb threat
+      if (isEvil()){
+        const bx = tracks.findIndex(t => t.key === "bxmb-threat");
+        if (bx !== -1){
+          await loadTrack(bx);
           try{
-            const r = await fetch(c, { method: "HEAD", cache: "no-store" });
-            if (r.ok) return c;
+            setupWaveform();
+            await yepResumeAudio();
+            await bgm.play();
+            musicBar.classList.remove("paused");
+            $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+            trackMeta.textContent = `evil mode: forced track`;
+          }catch(e){
+            trackMeta.textContent = "evil mode armed. tap play if blocked.";
+          }
+        }
+      } else {
+        if (opts.autoplay){
+          try{
+            setupWaveform();
+            await yepResumeAudio();
+            await ensureTrackLoaded();
+            await bgm.play();
+            musicBar.classList.remove("paused");
+            $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
           }catch(e){}
         }
-        return candidates[0];
-      })();
+      }
+    }
 
-      bgm.src = pick;
-      trackName.textContent = t.label;
-      trackMeta.textContent = `file: ${pick}`;
+    function cycleTheme(){
+      const i = THEMES.indexOf(currentTheme);
+      const next = THEMES[(i + 1) % THEMES.length];
+      applyTheme(next, { autoplay: true });
     }
 
     $("playPause").addEventListener("click", async () => {
       await yepResumeAudio();
+      try{ setupWaveform(); }catch(e){}
+      try{ await ensureTrackLoaded(); }catch(e){}
       if (bgm.paused) {
         bgm.play().catch(()=>{});
         musicBar.classList.remove("paused");
@@ -1092,6 +1511,7 @@
 
     $("nextTrack").addEventListener("click", async () => {
       await yepResumeAudio();
+      try{ setupWaveform(); }catch(e){}
       await loadTrack(trackIndex + 1);
       bgm.play().catch(()=>{});
       musicBar.classList.remove("paused");
@@ -1104,14 +1524,15 @@
       $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
     });
 
+    $("themeBtn").addEventListener("click", async () => {
+      try{ setupWaveform(); }catch(e){}
+      await yepResumeAudio().catch(()=>{});
+      cycleTheme();
+    });
+
     // waveform
     const waveformCanvas = $("waveform");
     const wf = waveformCanvas.getContext("2d");
-
-    let audioCtx = null;
-    let analyser = null;
-    let data = null;
-    let srcNode = null;
 
     function setupWaveform(){
       if (audioCtx) return;
@@ -1144,8 +1565,9 @@
       wf.clearRect(0,0,cw,ch);
 
       wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
-      wf.strokeStyle = "#ff78c8";
-      wf.shadowColor = "#ff78c8";
+      const accent = getComputedStyle(document.documentElement).getPropertyValue("--pink").trim() || "#ff78c8";
+      wf.strokeStyle = accent;
+      wf.shadowColor = accent;
       wf.shadowBlur = 16;
 
       wf.beginPath();
@@ -1167,24 +1589,18 @@
       wf.globalAlpha = 1;
     }
 
-    loadTrack(trackIndex);
-    musicBar.classList.add("paused");
-    document.addEventListener("click", () => setupWaveform(), { once:true });
-
     // --------- TERMINAL (types script, stops growing, then idles)
     const typedEl = $("typed");
     const outEl = $("termOut");
 
-    // updated: includes your new pages too
     const terminalScript = [
       { cmd: "whoami", out: "bella (aka BellaCactus)" },
-      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
-      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams" },
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft, hypixel skyblock" },
+      { cmd: "ls pages/", out: "ascii  tamers  vault  audio-editor  tab-crypt  keyb  limiter  epic-calc  pokecap  shrines  os  idle  glitch  dreams" },
+      { cmd: "open pokecap", out: "pages/pokecap.html" },
       { cmd: "open glitch", out: "pages/glitch.html" },
       { cmd: "open dreams", out: "pages/dreams.html" },
       { cmd: "open idle", out: "pages/idle.html" },
-      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
-      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
       { cmd: "run apps", out: "apps panel loaded (scroll a bit)  ->  /#apps" },
       { cmd: "scan --local", out: "intel panel loaded (scroll a bit)  ->  /#intel" }
     ];
@@ -1268,7 +1684,7 @@
  > ^ <`,
 ` (\\_/)
  ( •_•)
- / >🍪`,
+ / >:3`,
 `  /\\_/\\
  (=^.^=)
  (")(")`,
@@ -1290,7 +1706,8 @@
     // --------- REROLL
     function rerollAll(){
       spawnStickers();
-      loadTrack(Math.floor(Math.random() * tracks.length));
+      trackIndex = Math.floor(Math.random() * tracks.length);
+      loadTrack(trackIndex).catch(()=>{});
       musicBar.classList.add("paused");
       $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
     }
@@ -1764,7 +2181,10 @@
     window.addEventListener("offline", refreshIntelBase);
 
     // --------- start
-    // show site will be triggered by video end or skip
+    // prime the first track (non-blocking) + theme
+    loadTrack(trackIndex).catch(()=>{});
+    applyTheme(currentTheme);
+    document.addEventListener("click", () => setupWaveform(), { once:true });
   </script>
 </body>
 </html>
