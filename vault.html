@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>vault • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --accent: var(--pink);
+      --accent2: var(--pink2);
+      --accent3: var(--pink3);
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 20% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 85% 25%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, color-mix(in srgb, var(--accent3) 9%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+    }
+
+    body.evil{
+      --accent:#ff3b3b;
+      --accent2:#ff8b8b;
+      --accent3:#ff1f6b;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:44px 16px 90px;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(6px);
+    }
+
+    .head{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    h1{
+      margin:0;
+      font-size:1.15rem;
+      font-family: var(--mono);
+      color:var(--accent2);
+      letter-spacing:0.3px;
+    }
+    .small{
+      font-size:0.86rem;
+      color:var(--muted);
+      font-family: var(--mono);
+    }
+
+    .inner{ padding:16px; }
+
+    .term{
+      font-family: var(--mono);
+      background: rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      padding:14px 14px;
+      min-height:220px;
+      position:relative;
+      overflow:hidden;
+    }
+    .line{ margin:8px 0; color: rgba(255,255,255,0.90); }
+    .p{ color: var(--accent2); }
+    .ghost{
+      position:absolute;
+      right:12px;
+      bottom:10px;
+      color: rgba(255,255,255,0.12);
+      font-size:12px;
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      text-decoration:none;
+      user-select:none;
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      font-family: var(--sans);
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--accent2); }
+
+    .note{
+      margin-top:10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size:0.84rem;
+      opacity:0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="head">
+        <h1><span class="pulseText">vault</span> • access granted</h1>
+        <div class="small">press <span class="pulseText">esc</span> to go home</div>
+      </div>
+      <div class="inner">
+        <div class="term" id="term">
+          <div class="line"><span class="p">bella@cactus</span>:~$ cat vault.log</div>
+          <div class="line">[ok] door accepted phrase</div>
+          <div class="line">[ok] user intent: explore weird site corners</div>
+          <div class="line">[warn] evil mode may alter reality</div>
+          <div class="line">[hint] new page unlocked: <span class="pulseText">shrines</span></div>
+          <div class="line">[todo] add more hidden rooms later</div>
+          <div class="line" style="margin-top:14px;"><span class="p">bella@cactus</span>:~$</div>
+          <div class="ghost" aria-hidden="true">this page is supposed to feel like a secret you weren’t meant to keep.</div>
+        </div>
+
+        <div class="btnRow">
+          <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+          <a class="btn" href="shrines.html"><span class="k">open</span> shrines</a>
+          <a class="btn" href="idle.html"><span class="k">open</span> idle</a>
+          <button class="btn" id="btnTheme" type="button"><span class="k">pal</span> theme</button>
+        </div>
+
+        <div class="note" id="note"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const THEME_KEY = "bella_theme";
+    let themeMode = localStorage.getItem(THEME_KEY) || "pink";
+
+    function applyTheme(mode){
+      themeMode = mode;
+      document.body.classList.toggle("evil", mode === "red");
+
+      const root = document.documentElement.style;
+      if (mode === "white"){
+        root.setProperty("--accent", "#ffffff");
+        root.setProperty("--accent2", "#d6d6dc");
+        root.setProperty("--accent3", "#ffffff");
+      } else if (mode === "red"){
+        root.setProperty("--accent", "#ff3b3b");
+        root.setProperty("--accent2", "#ff8b8b");
+        root.setProperty("--accent3", "#ff1f6b");
+      } else {
+        root.setProperty("--accent", "#ff78c8");
+        root.setProperty("--accent2", "#ffb3e6");
+        root.setProperty("--accent3", "#ff4db8");
+      }
+      localStorage.setItem(THEME_KEY, mode);
+      document.getElementById("note").textContent =
+        (mode === "red")
+          ? "evil mode is enabled. behave? optional. >:3"
+          : `theme: ${mode}`;
+    }
+
+    function cycleTheme(){
+      const cur = themeMode;
+      const next = cur === "pink" ? "white" : (cur === "white" ? "red" : "pink");
+      applyTheme(next);
+    }
+
+    applyTheme(themeMode);
+    document.getElementById("btnTheme").addEventListener("click", cycleTheme);
+
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k === "escape") location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
