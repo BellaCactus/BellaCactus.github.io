@@ -561,95 +561,6 @@
       opacity:0.95;
       margin-top:10px;
     }
-  
-
-/* ---------------- THEME + EVIL MODE (red) ---------------- */
-body.evil{
-  filter: contrast(1.12) saturate(1.22) hue-rotate(-6deg);
-}
-body.evil .panel,
-body.evil .btn,
-body.evil .chip,
-body.evil .terminal,
-body.evil .musicBar{
-  animation: evilJitter 2.6s infinite steps(1);
-  will-change: transform, filter;
-}
-@keyframes evilJitter{
-  0%, 92%{ transform:none; filter:none; }
-  94%{ transform: translate(-1px, 1px) skewX(-0.2deg); filter: saturate(1.1); }
-  96%{ transform: translate(1px, -1px) skewX(0.2deg); }
-  98%{ transform: translate(-2px, 0px) skewY(0.2deg); }
-}
-body.evil::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:9999;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,0,0,0.08) 0px,
-      rgba(255,0,0,0.08) 1px,
-      transparent 3px,
-      transparent 6px
-    );
-  mix-blend-mode: screen;
-  opacity:0.38;
-  animation: evilScan 6.2s linear infinite;
-}
-@keyframes evilScan{
-  from{ background-position-y:0; }
-  to{ background-position-y:28px; }
-}
-body.evil::before{
-  content:"";
-  position:fixed;
-  inset:-20px;
-  pointer-events:none;
-  z-index:9998;
-  background:
-    radial-gradient(1200px 800px at 30% 25%, rgba(255,0,60,0.22), transparent 60%),
-    radial-gradient(1200px 800px at 70% 70%, rgba(255,60,60,0.14), transparent 60%);
-  filter: blur(8px);
-  opacity:0.65;
-  animation: evilPulse 3.8s ease-in-out infinite;
-}
-@keyframes evilPulse{
-  0%,100%{ opacity:0.55; transform: translateY(0); }
-  50%{ opacity:0.75; transform: translateY(-2px); }
-}
-
-/* volume slider */
-.volWrap{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.10);
-  background: rgba(0,0,0,0.22);
-  backdrop-filter: blur(6px);
-  user-select:none;
-}
-.volWrap .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
-input.vol{
-  width:160px;
-  accent-color: var(--pink);
-  cursor:pointer;
-}
-.volNum{
-  font-family: var(--mono);
-  font-size:0.82rem;
-  color:var(--muted);
-  min-width:48px;
-  text-align:right;
-}
-@media (max-width: 520px){
-  input.vol{ width:120px; }
-  .volWrap{ width:100%; justify-content:space-between; }
-}
   </style>
 </head>
 
@@ -705,32 +616,24 @@ input.vol{
         </div>
 
         <div class="panelInner">
-          <div class="btnRow">
-            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
-              <span class="k">git</span> bella-limiter
-            </a>
-
-            <a class="btn" href="limiter.html"><span class="k">open</span> limiter</a>
-            <a class="btn" href="os.html"><span class="k">open</span> os</a>
-            <a class="btn" href="ascii.html"><span class="k">open</span> ascii zoo</a>
-
-            <!-- NEW PAGES -->
-            <a class="btn" href="idle.html"><span class="k">open</span> idle</a>
-            <a class="btn" href="glitch.html"><span class="k">open</span> glitch</a>
-            <a class="btn" href="dreams.html"><span class="k">open</span> dreams</a>
-
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
-              <span class="k">yt</span> @BellaCactusYT
-            </a>
-
-            <button class="btn" id="reroll" type="button">
-              <span class="k">rng</span> reroll wall + track
-            </button>
-
-            <button class="btn" id="themeBtn" type="button">
-              <span class="k">pal</span> palette
-            </button>
-          </div>
+          
+<div class="btnRow">
+  <a class="btn" href="ascii.html"><span class="k">ascii</span> ascii zoo</a>
+  <a class="btn" href="tamers.html"><span class="k">pony</span> tamers vault</a>
+  <a class="btn" href="vault.html"><span class="k">vlt</span> vault</a>
+  <a class="btn" href="audio-editor.html"><span class="k">wav</span> audio editor</a>
+  <a class="btn" href="tab-crypt.html"><span class="k">tab</span> tab crypt</a>
+  <span class="dividerLabel">tools</span>
+  <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb tester</a>
+  <a class="btn" href="limiter.html"><span class="k">lim</span> limiter</a>
+  <a class="btn" href="epic-calc.html"><span class="k">calc</span> epic calc</a>
+  <a class="btn" href="pokecap.html"><span class="k">db</span> pokecap</a>
+  <a class="btn" href="shrines.html"><span class="k">♡</span> shrines</a>
+  <a class="btn" href="os.html"><span class="k">os</span> os</a>
+  <a class="btn" href="idle.html"><span class="k">zzz</span> idle</a>
+  <a class="btn" href="glitch.html"><span class="k">fx</span> glitch</a>
+  <a class="btn" href="dreams.html"><span class="k">log</span> dreams</a>
+</div>
 
           <!-- music -->
           <div class="musicBar" id="musicBar">
@@ -747,12 +650,6 @@ input.vol{
             <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
             <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
             <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
-
-            <div class="volWrap" title="volume (saved)">
-              <span class="k">vol</span>
-              <input id="vol" class="vol" type="range" min="0" max="100" value="70" />
-              <span class="volNum" id="volNum">70%</span>
-            </div>
           </div>
 
           <canvas id="waveform" height="48"></canvas>
@@ -848,24 +745,33 @@ input.vol{
         <div class="small">local pages (static)</div>
       </div>
       <div class="panelInner">
-        <div class="btnRow">
-          <!-- NEW STUFF (added) -->
-          <a class="btn" href="idle.html"><span class="k">idle</span> screensaver</a>
-          <a class="btn" href="glitch.html"><span class="k">fx</span> glitch gallery</a>
-          <a class="btn" href="dreams.html"><span class="k">log</span> dream log</a>
-
-          <!-- existing -->
-          <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
-          <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
-          <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
-          <a class="btn" href="snkaegame.html"><span class="k">🐍</span> snake</a>
-          <a class="btn" href="dungeoncrawler.html"><span class="k">dg</span> dungeon</a>
-          <a class="btn" href="shitty-ass-gamez-3d.html"><span class="k">3d</span> gamez</a>
-          <a class="btn" href="controllar-test.html"><span class="k">pad</span> controller test</a>
-          <a class="btn" href="boucnignlolgo.html"><span class="k">dvd</span> bouncin logo</a>
-          <a class="btn" href="sigmaness-basiclaly-epic.html"><span class="k">??</span> sigmaness</a>
-          <a class="btn" href="legacy-home.html"><span class="k">old</span> legacy home</a>
-        </div>
+        
+<div class="btnRow">
+  <a class="appBtn" href="audio-editor.html">audio editor</a>
+  <a class="appBtn" href="tab-crypt.html">tab crypt</a>
+  <a class="appBtn" href="tamers.html">tamers vault</a>
+  <a class="appBtn" href="vault.html">vault</a>
+  <span class="dividerLabel">projects</span>
+  <a class="appBtn" href="epic-calc.html">epic calc</a>
+  <a class="appBtn" href="pokecap.html">pokecap</a>
+  <a class="appBtn" href="legacy-home.html">legacy home</a>
+  <a class="appBtn" href="sigmaness-basiclaly-epic.html">sigmaness</a>
+  <span class="dividerLabel">tools</span>
+  <a class="appBtn" href="keyb.html">keyboard tester</a>
+  <a class="appBtn" href="ascii-art-maker-type-shit.html">image/video → ascii</a>
+  <a class="appBtn" href="encrypter.html">encrypter</a>
+  <a class="appBtn" href="dungeoncrawler.html">dungeon</a>
+  <a class="appBtn" href="snkaegame.html">snake</a>
+  <a class="appBtn" href="controllar-test.html">controller</a>
+  <a class="appBtn" href="ascii.html">ascii zoo</a>
+  <a class="appBtn" href="idle.html">idle</a>
+  <a class="appBtn" href="glitch.html">glitch</a>
+  <a class="appBtn" href="dreams.html">dreams</a>
+  <a class="appBtn" href="limiter.html">limiter</a>
+  <a class="appBtn" href="boucnignlolgo.html">bouncing logo</a>
+  <a class="appBtn" href="os.html">os</a>
+  <a class="appBtn" href="shrines.html">shrines</a>
+</div>
         <div class="small" style="margin-top:10px;">
           if any filename here doesn’t match your repo, just rename either the file or the link label. ez.
         </div>
@@ -937,7 +843,7 @@ input.vol{
     onekoImg.addEventListener("error", () => {
       if (!onekoImg.dataset.tried) {
         onekoImg.dataset.tried = "1";
-        onekoImg.src = "onekogif";
+        onekoImg.src = "oneko.gif";
       }
     });
 
@@ -957,20 +863,7 @@ input.vol{
     const main = $("main");
     const skipIntro = $("skipIntro");
 
-    
-// hard fallback: if the intro media never finishes (missing file / autoplay blocked / mobile weirdness)
-// we force-skip after a few seconds so the page never gets "stuck" on the gate.
-const HARD_SKIP_MS = 6500;
-let hardSkipTimer = null;
-
-function armHardSkip(){
-  clearTimeout(hardSkipTimer);
-  hardSkipTimer = setTimeout(() => {
-    try{ showSite(); }catch(e){}
-  }, HARD_SKIP_MS);
-}
-
-const introFrames = [
+    const introFrames = [
 `   <span class="pink">[ booting… ]</span>
    hello everypony sequence armed
    loading: terminal • music • stickers`,
@@ -988,25 +881,8 @@ const introFrames = [
     let introAsciiTick = 0;
     setIntroAscii(0);
     const introInterval = setInterval(() => setIntroAscii(++introAsciiTick), 900);
-// arm fallback + skip on media errors
-armHardSkip();
-["error","stalled","abort","emptied"].forEach(ev => {
-  introVideo.addEventListener(ev, () => {
-    // video missing or refused, don't trap the user
-    try{ showSite(); }catch(e){}
-  }, { once:true });
-});
-
-// extra skip: Esc key on the gate
-addEventListener("keydown", (e) => {
-  if ((e.key || "").toLowerCase() === "escape"){
-    try{ showSite(); }catch(err){}
-  }
-});
-
 
     function showSite(){
-      clearTimeout(hardSkipTimer);
       clearInterval(introInterval);
       introGate.classList.add("hidden");
       main.style.visibility = "visible";
@@ -1014,48 +890,30 @@ addEventListener("keydown", (e) => {
       rerollAll();
       startTerminal();
       refreshIntelBase();
-
-
-// try autoplay (best effort; browsers may require a gesture)
-(async () => {
-  try{
-    setupWaveform();
-    await yepResumeAudio();
-    await bgm.play();
-    musicBar.classList.remove("paused");
-    $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-    trackMeta.textContent = "autoplay engaged";
-  }catch(e){
-    trackMeta.textContent = "tap play if audio is blocked";
-    const poke = async () => {
-      try{
-        setupWaveform();
-        await yepResumeAudio();
-        await bgm.play();
-        musicBar.classList.remove("paused");
-        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-        trackMeta.textContent = "audio enabled";
-      }catch(e2){}
-      window.removeEventListener('pointerdown', poke, true);
-      window.removeEventListener('keydown', poke, true);
-    };
-    window.addEventListener('pointerdown', poke, true);
-    window.addEventListener('keydown', poke, true);
-  }
-})();
     }
 
     skipIntro.addEventListener("click", () => {
-      armHardSkip();
       try { introVideo.pause(); } catch(e){}
       showSite();
     });
 
     introVideo.addEventListener("ended", showSite);
 
+    // safety nets so you never get stuck on the intro
+    introVideo.addEventListener("error", () => showSite());
+    introGate.addEventListener("click", (e) => {
+      if (e.target && e.target.id !== "skipIntro") showSite();
+    });
+    addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && introGate.style.display !== "none") showSite();
+    });
+    setTimeout(() => {
+      if (introGate.style.display !== "none") showSite();
+    }, 8000);
+
+
     // if autoplay is blocked, clicking video should start it
     introVideo.addEventListener("click", () => {
-      armHardSkip();
       introVideo.play().catch(()=>{});
     });
 
@@ -1169,17 +1027,18 @@ addEventListener("keydown", (e) => {
 
     // --------- MUSIC (random soundtrack + waveform)
     const tracks = [
-      { file: "Bxmb Threat.mp3", label: "bxmb threat" },
-      { file: "FREDDIE DREDD - ENDLESS SEA.mp3", label: "endless sea (freddie dredd)" },
-      { file: "Tay-K - Dat Way [Official Audio] 4.mp3", label: "dat way (tay-k)" },
-      { file: "Tinashe - Nasty (Official Video) 0.mp3", label: "nasty (tinashe)" },
-      { file: "Intergalactic TV Show.mp3", label: "intergalactic tv show" },
-      { file: "I hope that you think of me 0.mp3", label: "i hope that you think of me" },
-      { file: "530 0.mp3", label: "530 (kanye)" },
-      { file: "bipolar.mp3", label: "bipolar (wifiskeleton)" },
-      { file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3", label: "i love my choppa (tay-k)" },
-      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" },
-      { file: "Mobile Suit Woe 0.mp3", label: "mobile suit woe" }
+      { name: "lil-jon-yeah", file: "lil-jon-yeah.mp3" },
+      { name: "530", file: "530 0.mp3" },
+      { name: "bipolar", file: "bipolar.mp3" },
+      { name: "bxmb threat", file: "Bxmb Threat.mp3" },
+      { name: "endless sea", file: "FREDDIE DREDD - ENDLESS SEA.mp3" },
+      { name: "i hope that you think of me", file: "I hope that you think of me 0.mp3" },
+      { name: "intergalactic tv show", file: "Intergalactic TV Show.mp3" },
+      { name: "mobile suit woe", file: "Mobile Suit Woe 0.mp3" },
+      { name: "tinashe - nasty", file: "Tinashe - Nasty (Official Video) 0.mp3" },
+      { name: "who i smoke", file: "Who I Smoke (Official Music Video).mp3" },
+      { name: "tay-k - dat way", file: "Tay-K - Dat Way [Official Audio] 4.mp3" },
+      { name: "tay-k - i love my choppa", file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3" }
     ];
 
     const bgm = $("bgm");
@@ -1189,30 +1048,6 @@ addEventListener("keydown", (e) => {
 
     let trackIndex = Math.floor(Math.random() * tracks.length);
     let muted = false;
-
-// volume (saved)
-const VOL_KEY = "bella_volume";
-const volEl = $("vol");
-const volNum = $("volNum");
-const savedVol = Number(localStorage.getItem(VOL_KEY));
-const initialVol = Number.isFinite(savedVol) ? savedVol : 0.70;
-
-function setVolume(v){
-  const vv = Math.max(0, Math.min(1, v));
-  bgm.volume = vv;
-  if (volEl) volEl.value = String(Math.round(vv * 100));
-  if (volNum) volNum.textContent = `${Math.round(vv * 100)}%`;
-  localStorage.setItem(VOL_KEY, String(vv));
-}
-
-setVolume(initialVol);
-
-if (volEl){
-  volEl.addEventListener("input", (e) => {
-    const v = Number(e.target.value) / 100;
-    setVolume(v);
-  });
-}
 
     async function yepResumeAudio(){
       if (audioCtx && audioCtx.state === "suspended") {
@@ -1228,104 +1063,6 @@ if (volEl){
       trackMeta.textContent = `file: ${t.file}`;
     }
 
-
-// --------- THEME (pink / white / red) + evil mode hook
-const THEME_KEY = "bella_theme";
-const THEMES = ["pink","white","red","purple","blue","green","amber"]; // red = evil
-let currentTheme = localStorage.getItem(THEME_KEY) || "pink";
-
-
-function setCssThemeVars(mode){
-  // we only touch the vars this file already uses (pink/pink2/pink3)
-  if (mode === "white"){
-    document.documentElement.style.setProperty("--pink", "#ffffff");
-    document.documentElement.style.setProperty("--pink2", "#d6d6dc");
-    document.documentElement.style.setProperty("--pink3", "#ffffff");
-  } else if (mode === "red"){
-    document.documentElement.style.setProperty("--pink", "#ff2a2a");
-    document.documentElement.style.setProperty("--pink2", "#ff7a7a");
-    document.documentElement.style.setProperty("--pink3", "#b00000");
-  } else if (mode === "purple"){
-    document.documentElement.style.setProperty("--pink", "#b97aff");
-    document.documentElement.style.setProperty("--pink2", "#e1c7ff");
-    document.documentElement.style.setProperty("--pink3", "#6d2aff");
-  } else if (mode === "blue"){
-    document.documentElement.style.setProperty("--pink", "#58b7ff");
-    document.documentElement.style.setProperty("--pink2", "#bfe9ff");
-    document.documentElement.style.setProperty("--pink3", "#147dff");
-  } else if (mode === "green"){
-    document.documentElement.style.setProperty("--pink", "#42ffb0");
-    document.documentElement.style.setProperty("--pink2", "#b9ffe2");
-    document.documentElement.style.setProperty("--pink3", "#00b86b");
-  } else if (mode === "amber"){
-    document.documentElement.style.setProperty("--pink", "#ffb020");
-    document.documentElement.style.setProperty("--pink2", "#ffe1a8");
-    document.documentElement.style.setProperty("--pink3", "#ff6a00");
-  } else {
-    // pink default
-    document.documentElement.style.setProperty("--pink", "#ff78c8");
-    document.documentElement.style.setProperty("--pink2", "#ffb3e6");
-    document.documentElement.style.setProperty("--pink3", "#ff4db8");
-  }
-}
-
-function isEvil(){ return currentTheme === "red"; }
-
-async function applyTheme(mode, opts={}){
-  currentTheme = mode;
-  localStorage.setItem(THEME_KEY, mode);
-  setCssThemeVars(mode);
-  document.body.classList.toggle("evil", isEvil());
-
-  // update little chip text if present
-  const chip = document.querySelector('.chip strong.pulseText');
-  if (chip){
-    chip.textContent = `palette: ${mode}`;
-  }
-
-  // red theme -> force bxmb threat
-  if (isEvil()){
-    const bx = tracks.findIndex(t => t.file === "Bxmb Threat.mp3");
-    if (bx !== -1){
-      loadTrack(bx);
-      try{
-        setupWaveform();
-        await yepResumeAudio();
-        await bgm.play();
-        musicBar.classList.remove("paused");
-        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-        trackMeta.textContent = `evil mode: forced track`;
-      }catch(e){
-        trackMeta.textContent = "evil mode armed. tap play if blocked.";
-      }
-    }
-  } else {
-    // leaving evil: don't auto-swap track unless asked
-    if (opts.autoplay){
-      try{
-        setupWaveform();
-        await yepResumeAudio();
-        await bgm.play();
-        musicBar.classList.remove("paused");
-        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-      }catch(e){
-        // ok
-      }
-    }
-  }
-
-  // make waveform match theme
-  try{
-    const c = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
-    waveformCanvas.style.filter = isEvil() ? 'contrast(1.2) saturate(1.3)' : '';
-  }catch(e){}
-}
-
-function cycleTheme(){
-  const i = THEMES.indexOf(currentTheme);
-  const next = THEMES[(i + 1) % THEMES.length];
-  applyTheme(next, { autoplay: true });
-}
     $("playPause").addEventListener("click", async () => {
       await yepResumeAudio();
       if (bgm.paused) {
@@ -1352,15 +1089,6 @@ function cycleTheme(){
       bgm.muted = muted;
       $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
     });
-
-// palette button
-$("themeBtn").addEventListener("click", async () => {
-  // create audio context early so theme swap can force-track
-  try{ setupWaveform(); }catch(e){}
-  await yepResumeAudio().catch(()=>{});
-  cycleTheme();
-});
-
 
     // waveform
     const waveformCanvas = $("waveform");
@@ -1402,9 +1130,8 @@ $("themeBtn").addEventListener("click", async () => {
       wf.clearRect(0,0,cw,ch);
 
       wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
-      const accent = getComputedStyle(document.documentElement).getPropertyValue("--pink").trim() || "#ff78c8";
-      wf.strokeStyle = accent;
-      wf.shadowColor = accent;
+      wf.strokeStyle = "#ff78c8";
+      wf.shadowColor = "#ff78c8";
       wf.shadowBlur = 16;
 
       wf.beginPath();
@@ -1427,7 +1154,6 @@ $("themeBtn").addEventListener("click", async () => {
     }
 
     loadTrack(trackIndex);
-    applyTheme(currentTheme);
     musicBar.classList.add("paused");
     document.addEventListener("click", () => setupWaveform(), { once:true });
 
