@@ -1,72 +1,104 @@
-# bella cactus (github pages) 
+# bella cactus (github pages)
 
-a static, terminal-ish, fake-os-ish personal website with a black/white/pink palette, little interactive toys, and “this tab is alive” type shiii
+terminal-core personal website. black/white/pink by default, optional red “evil” palette. **static-only** (github pages), **no backend**, just html/css/js.
 
-**stack:** pure html + css + client-side js  
-**hosting:** github pages (no backend)
+## vibe
 
----
+- fake-os / terminal playground aesthetic
+- black / white / pink (and a red mode when you want it spicy)
+- cozy-chaotic, meant to be **explored**, not skimmed
+- subtle motion > loud motion
 
-## what’s inside
+## highlights
 
-### main hub
-- **`index.html`**: the home “terminal hub”
-  - intro gate video (`hello-everypony-mlp-dexter.mp4`)
-  - soundtrack player + waveform viz (browser may block autoplay)
-  - terminal typing script + rotating ascii critters
-  - sticker wall background (clickable images)
-  - “intel” panel (explicit buttons for permissions, no silent tracking)
+- **intro gate**: auto-playing video if the browser allows it (otherwise click once).
+- **music bar + waveform**: random track picker + lil waveform line.
+- **terminal script**: types out little commands and responses.
+- **sticker wall**: random image stickers sprinkled behind the UI.
+- **command palette**: quick actions + navigation.
+- **easter eggs**: oneko, secrets, and a few “why did i add this” moments.
 
-### featured pages
-- **`limiter.html`**: bella limiter project page (feature deep-dive / terminal vibes)
-- **`os.html`**: fake os / cli playground (includes local storage + some indexeddb stuff)
-- **`ascii.html`**: ascii zoo + **local stash** (IndexedDB for images/audio on *this browser only*)
-- **`idle.html`**: screensaver-style page (canvas vibes, optional audio toggle)
-- **`glitch.html`**: glitch gallery (drag/drop or load an image, all local-only)
-- **`dreams.html`**: surreal dream log (uses localStorage)
+## pages
 
-### extra toybox pages (mini apps)
-- `encrypter.html` (encrypt/decrypt tool)
-- `ascii-art-maker-type-shit.html` (ascii converter)
-- `keyb.html` (keyboard tester)
-- `snkaegame.html` (snake)
-- `dungeoncrawler.html` (dungeon crawler)
-- `shitty-ass-gamez-3d.html` (3d-ish page)
-- `controllar-test.html` (controller tester)
-- `boucnignlolgo.html` (bouncing logo)
-- `shrines.html` (directory of fixations)
-- `vault.html` (vault page)
-- `legacy-home.html`, `sigmaness-basiclaly-epic.html` (legacy / extra)
+main pages that match the “site world” vibe:
 
----
+- `index.html` : main hub (terminal + music + stickers + palette)
+- `limiter.html` : bella limiter page
+- `os.html` : fake cli / fake os page
+- `ascii.html` : ascii zoo
+- `idle.html` : screensaver-style page (leave it open)
+- `glitch.html` : glitch / corruption playground
+- `dreams.html` : surreal dream log
 
-## assets + vibe ingredients
+extra mini-tools / experiments:
 
-**music files currently included:**
-- `530 0.mp3`
-- `bipolar.mp3`
-- `Tay-K - I Love My Choppa [Official Audio] 4.mp3`
-- `Who I Smoke (Official Music Video).mp3`
-- `lil-jon-yeah.mp3` (oneko click easter egg)
+- `encrypter.html`
+- `ascii-art-maker-type-shit.html`
+- `keyb.html`
+- `snkaegame.html`
+- `dungeoncrawler.html`
+- `shitty-ass-gamez-3d.html`
+- `controllar-test.html`
+- `boucnignlolgo.html`
+- `sigmaness-basiclaly-epic.html`
+- `legacy-home.html`
+- `shrines.html`
+- `vault.html`
 
-**images / stickers:**
-- `twi looking.png`
-- `twi and trixy.jpg`
-- `ponies in bed.jpg`
-- `yuri meme.png`
+## controls (good to know)
 
-**oneko:**
-- `oneko.gif` + a few extra oneko images
+### index
 
----
+- **ctrl+k** (or **/**) opens the command palette.
+- **esc** closes palette / overlays.
 
-## running it locally (so it doesn’t get weird with files)
+the palette understands stuff like:
 
-you *can* double click `index.html`, but some browsers get fussy about audio/canvas/files when opened as `file://`.
+- `open dreams`, `open idle`, `open glitch`, etc.
+- `theme pink` / `theme white` / `theme red`
 
-recommended tiny server:
+### idle screensaver
 
-### windows / mac / linux
+- **space**: pause/resume
+- **r**: reroll sprites/text
+- **t**: cycle theme
+- **esc**: back to `index.html`
+
+## customization
+
+you can reskin the whole thing without touching any backend stuff.
+
+### change the soundtrack
+
+the music list lives in `index.html` (search for `const tracks = [`).
+
+- drop `.mp3` files in the repo root (same folder as `index.html`)
+- add them to the tracks list
+- keep filenames exact (spaces + punctuation matter)
+
+### change stickers
+
+the sticker filenames are also listed in `index.html` (search `stickerFiles`).
+
+- add images (`.png/.jpg/.gif`) to the repo root
+- update the list
+
+### theme persistence
+
+theme is saved in `localStorage` under:
+
+- `bella_theme`  (values: `pink`, `white`, `red`)
+
+so if you flip to red mode once, it sticks until you change it.
+
+## run locally
+
+quick and dirty:
+
+- just double-click `index.html` and it will mostly work.
+
+recommended (avoids some browser weirdness with media):
+
 ```bash
-# in the repo folder
+# from the repo folder
 python -m http.server 8000
