@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link rel="icon" type="image/png" href="twi looking.png" />
 
   <style>
@@ -27,6 +28,7 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
+      /* palette system */
       --accent: var(--pink);
       --accent2: var(--pink2);
       --accent3: var(--pink3);
@@ -45,65 +47,6 @@
       font-family: var(--sans);
       line-height:1.55;
       overflow-x:hidden;
-    }
-
-    /* evil mode: big vibe shift */
-    body.evil{
-      --accent:#ff3b3b;
-      --accent2:#ff8b8b;
-      --accent3:#ff1f6b;
-      filter: saturate(1.05) contrast(1.04);
-    }
-    body.evil::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:999;
-      background:
-        radial-gradient(1000px 800px at 20% 10%, rgba(255,0,60,0.18), transparent 60%),
-        radial-gradient(900px 700px at 80% 40%, rgba(255,0,0,0.14), transparent 60%),
-        repeating-linear-gradient(to bottom,
-          rgba(255,255,255,0.06) 0px,
-          rgba(255,255,255,0.06) 1px,
-          rgba(0,0,0,0) 3px,
-          rgba(0,0,0,0) 6px
-        );
-      mix-blend-mode: screen;
-      opacity:0.16;
-      animation: scanDrift 6s linear infinite;
-    }
-    @keyframes scanDrift{
-      0%{ transform: translateY(0); }
-      100%{ transform: translateY(18px); }
-    }
-    body.evil::after{
-      content:"";
-      position:fixed;
-      inset:-10%;
-      pointer-events:none;
-      z-index:998;
-      background: linear-gradient(90deg, rgba(255,0,60,0.10), rgba(0,0,0,0));
-      opacity:0.10;
-      animation: evilBreath 3.6s ease-in-out infinite;
-      mix-blend-mode: multiply;
-    }
-    @keyframes evilBreath{
-      0%{ transform: translateX(-1%) rotate(-0.3deg); }
-      50%{ transform: translateX(1.2%) rotate(0.3deg); }
-      100%{ transform: translateX(-1%) rotate(-0.3deg); }
-    }
-
-    /* glitch pulse helper */
-    .glitchPulse{
-      animation: gPulse 220ms steps(2) 1;
-      filter: saturate(1.12) contrast(1.06);
-    }
-    @keyframes gPulse{
-      0%{ transform: translate(0,0); }
-      25%{ transform: translate(2px,-1px); }
-      55%{ transform: translate(-2px,1px); }
-      100%{ transform: translate(0,0); }
     }
 
     a{color:var(--accent); text-decoration:none;}
@@ -152,7 +95,7 @@
       border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
       display:grid;
       place-items:center;
-      box-shadow: 0 20px 70px rgba(0,0,0,0.55);
+      box-shadow: var(--shadow);
       overflow:hidden;
     }
     .badge img{
@@ -176,6 +119,7 @@
       font-size:0.98rem;
       max-width:560px;
     }
+
     .chips{
       display:flex;
       gap:8px;
@@ -216,11 +160,10 @@
     .panel{
       background: linear-gradient(180deg, var(--panel), var(--panel2));
       border:1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 20px 70px rgba(0,0,0,0.55);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
-      backdrop-filter: blur(6px);
     }
     .panelInner{ padding:16px 16px; }
     .panelTitle{
@@ -277,6 +220,17 @@
       color:var(--accent2);
     }
 
+    .dividerLabel{
+      width:100%;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed rgba(255,255,255,0.10);
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: color-mix(in srgb, var(--accent2) 92%, transparent);
+      opacity:0.95;
+    }
+
     .terminal{
       background: radial-gradient(900px 300px at 20% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
                   rgba(0,0,0,0.35);
@@ -322,6 +276,10 @@
       color:rgba(255,255,255,0.92);
       font-family: var(--mono);
     }
+    .ascii .pink{
+      color:var(--accent2);
+      text-shadow:0 0 10px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
 
     ul.clean{
       list-style:none;
@@ -344,6 +302,7 @@
       border:1px solid rgba(255,255,255,0.08);
     }
 
+    /* music widget */
     .musicBar{
       display:flex;
       align-items:center;
@@ -405,6 +364,7 @@
       opacity:0.88;
     }
 
+    /* floating oneko */
     .oneko{
       position:fixed;
       bottom:12px;
@@ -428,6 +388,7 @@
       display:block;
     }
 
+    /* wall images behind everything */
     #wall{
       position:fixed;
       inset:0;
@@ -455,6 +416,7 @@
       border-radius:10px;
     }
 
+    /* intro gate */
     #introGate{
       position:fixed;
       inset:0;
@@ -482,9 +444,6 @@
       background: rgba(255,255,255,0.04);
       padding:12px 14px;
       box-shadow: 0 18px 55px rgba(0,0,0,0.55);
-      font-family: var(--mono);
-      color: rgba(255,255,255,0.85);
-      white-space:pre-wrap;
     }
     .introHint{
       color:var(--muted);
@@ -495,6 +454,7 @@
       padding:0 12px;
     }
 
+    /* footer */
     .footer{
       margin-top:22px;
       text-align:center;
@@ -604,6 +564,7 @@
     #cookie:active{ transform: translateY(0) scale(0.99); }
     #cookie span{ font-size:22px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); }
 
+    /* secret modal */
     #secretGate{
       position:fixed;
       inset:0;
@@ -664,6 +625,7 @@
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
     }
 
+    /* hidden password hint */
     #hintGhost{
       position:fixed;
       right:12px;
@@ -720,8 +682,40 @@
       border-radius:999px;
       transition: width 0.35s ease;
     }
+    .scanlines{
+      pointer-events:none;
+      position:absolute;
+      inset:-20%;
+      opacity:0.14;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.06) 0px,
+          rgba(255,255,255,0.06) 1px,
+          rgba(0,0,0,0) 3px,
+          rgba(0,0,0,0) 6px
+        );
+      animation: drift 6s linear infinite;
+    }
+    @keyframes drift{
+      0%{ transform: translateY(0); }
+      100%{ transform: translateY(18px); }
+    }
 
-    /* toast */
+    /* evil mode */
+    body.evil{
+      --accent:#ff3b3b;
+      --accent2:#ff8b8b;
+      --accent3:#ff1f6b;
+      filter: saturate(1.05) contrast(1.02);
+    }
+    body.evil .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
+      background-size: 220% 100%;
+      animation: shimmer 3.2s ease-in-out infinite;
+    }
+
+    /* ambient whisper toast */
     #toast{
       position:fixed;
       left:12px;
@@ -742,26 +736,36 @@
     }
     #toast.on{ opacity:1; transform: translateY(0); }
 
+    /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       .pulseText{ animation:none; }
       .oneko{ animation:none; }
       .bars span{ animation:none; }
-      body.evil::before, body.evil::after{ animation:none; }
+      .scanlines{ animation:none; }
     }
   </style>
 </head>
 
 <body>
   <div id="wall" aria-hidden="true"></div>
+
+  <!-- hidden hint (password appears here very faintly) -->
   <div id="hintGhost" aria-hidden="true"></div>
 
-  <!-- intro -->
+  <!-- intro gate -->
   <div id="introGate">
     <video id="introVideo" autoplay muted playsinline>
       <source src="hello-everypony-mlp-dexter.mp4" type="video/mp4" />
     </video>
-    <div class="introAscii" id="introAscii"></div>
-    <div class="introHint">if autoplay is blocked, click the video once. after it ends, the site spawns. (:3)</div>
+
+    <div class="introAscii">
+      <pre class="ascii" id="introAscii"></pre>
+    </div>
+
+    <div class="introHint">
+      if autoplay is blocked, click the video once. after it ends, the site spawns. (:3)
+    </div>
+
     <button class="btn" id="skipIntro" type="button" style="pointer-events:auto;">
       <span class="k">esc</span> skip intro
     </button>
@@ -775,14 +779,13 @@
         <div class="hint">enter to run • esc to close</div>
       </div>
       <div class="palInputRow">
-        <input id="palInput" type="text" autocomplete="off" spellcheck="false"
-          placeholder="type a command: open dreams, theme red, crash, reroll..." />
+        <input id="palInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a command: open dreams, theme red, crash, reroll..." />
       </div>
       <div class="palList" id="palList"></div>
     </div>
   </div>
 
-  <!-- secret -->
+  <!-- secret door modal -->
   <div id="secretGate" aria-hidden="true">
     <div class="secretBox" role="dialog" aria-modal="true" aria-label="secret door">
       <div class="secretHead">
@@ -801,9 +804,10 @@
     </div>
   </div>
 
-  <!-- crash -->
+  <!-- fake crash -->
   <div id="crash" aria-hidden="true">
     <div class="crashCard">
+      <div class="scanlines"></div>
       <div class="crashTitle"><span class="pulseText">system exception</span> • bellaOS kernel panic</div>
       <div class="crashSub" id="crashText">
         a fatal error has occurred. do not close the tab. the tab is already cursed.<br>
@@ -814,10 +818,10 @@
     </div>
   </div>
 
-  <!-- cookie -->
+  <!-- golden cookie -->
   <div id="cookie" title="suspiciously clickable" aria-hidden="false"><span>🍓</span></div>
 
-  <!-- toast -->
+  <!-- ambient toast -->
   <div id="toast" aria-hidden="true"></div>
 
   <!-- main -->
@@ -835,13 +839,14 @@
 
       <div class="chips">
         <div class="chip" id="chipTheme"><span class="dot"></span><strong class="pulseText">pink mode</strong></div>
+        <div class="chip">timezone: <strong>nz</strong></div>
         <div class="chip">mode: <strong id="chipMode">building</strong></div>
-        <div class="chip">audio: <strong id="chipAudio">muted-autoplay</strong></div>
       </div>
     </div>
 
     <div class="grid">
-      <section class="panel" id="pLeft">
+      <!-- left -->
+      <section class="panel">
         <div class="panelTitle">
           <h2>links</h2>
           <div class="small">last update: <span id="date"></span></div>
@@ -849,14 +854,22 @@
 
         <div class="panelInner">
           <div class="btnRow">
+            <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">
+              <span class="k">git</span> bella-limiter
+            </a>
+
             <a class="btn" href="limiter.html"><span class="k">open</span> limiter</a>
             <a class="btn" href="os.html"><span class="k">open</span> os</a>
             <a class="btn" href="ascii.html"><span class="k">open</span> ascii zoo</a>
             <a class="btn" href="idle.html"><span class="k">open</span> idle</a>
             <a class="btn" href="glitch.html"><span class="k">open</span> glitch</a>
             <a class="btn" href="dreams.html"><span class="k">open</span> dreams</a>
+
             <a class="btn" href="shrines.html"><span class="k">open</span> shrines</a>
-            <a class="btn" href="vault.html"><span class="k">open</span> vault</a>
+
+            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+              <span class="k">yt</span> @BellaCactusYT
+            </a>
 
             <button class="btn" id="reroll" type="button">
               <span class="k">rng</span> reroll wall + track
@@ -871,10 +884,11 @@
             </button>
           </div>
 
+          <!-- music -->
           <div class="musicBar" id="musicBar">
             <div class="nowPlaying">
               <div class="t">soundtrack: <span class="pulseText" id="trackName">loading…</span></div>
-              <div class="t" id="trackMeta">autoplay tries muted • click once to unmute</div>
+              <div class="t" id="trackMeta">click play if browser blocks autoplay</div>
             </div>
             <div class="bars" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span>
@@ -884,13 +898,14 @@
           <div class="btnRow">
             <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
             <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
-            <button class="btn" id="mute" type="button"><span class="k">vol</span> unmute</button>
-            <button class="btn" id="btnCrash" type="button"><span class="k">!</span> crash</button>
+            <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
+            <button class="btn" id="btnCrash" type="button" title="rare on reroll too"><span class="k">!</span> crash</button>
           </div>
 
           <canvas id="waveform" height="48"></canvas>
 
-          <div class="terminal" aria-label="terminal" id="pTerm">
+          <!-- terminal -->
+          <div class="terminal" aria-label="terminal">
             <div class="termLine">
               <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
               <span class="cmd" id="typed"></span><span class="cursor"></span>
@@ -904,7 +919,8 @@
         </div>
       </section>
 
-      <aside class="panel" id="pRight">
+      <!-- right -->
+      <aside class="panel">
         <div class="panelTitle">
           <h2>about</h2>
           <div class="small pulseText">hi :3</div>
@@ -916,21 +932,94 @@
           </p>
 
           <ul class="clean">
-            <li><strong class="pulseText">games</strong> <span class="tag">destiny 2</span><span class="tag">geometry dash</span><span class="tag">skyblock</span></li>
-            <li><strong class="pulseText">studying</strong> <span class="tag">level 6</span><span class="tag">computing</span></li>
-            <li><strong class="pulseText">passions</strong> <span class="tag">reverse eng</span><span class="tag">tools</span><span class="tag">automation</span><span class="tag">servers</span></li>
+            <li>
+              <strong class="pulseText">games</strong>
+              <span class="tag">destiny 2</span>
+              <span class="tag">geometry dash</span>
+              <span class="tag">minecraft (technical)</span>
+            </li>
+            <li>
+              <strong class="pulseText">studying</strong>
+              <span class="tag">level 6</span>
+              <span class="tag">computing</span>
+            </li>
+            <li>
+              <strong class="pulseText">passions</strong>
+              <span class="tag">reverse eng</span>
+              <span class="tag">tools</span>
+              <span class="tag">automation</span>
+              <span class="tag">servers</span>
+            </li>
           </ul>
 
           <div class="btnRow" style="margin-top:14px;">
+            <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
+            <a class="btn" href="#apps"><span class="k">run</span> apps</a>
             <button class="btn" type="button" id="btnSecret"><span class="k">???</span> secret</button>
           </div>
 
           <div class="small" style="margin-top:10px;">
-            tip: press <span class="pulseText">/</span> for commands • try <span class="pulseText">theme red</span> (evil mode)
+            tip: press <span class="pulseText">/</span> for commands • try <span class="pulseText">theme red</span> if you want the site to get weird.
           </div>
         </div>
       </aside>
     </div>
+
+    <section class="panel" id="projects" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>projects</h2>
+        <div class="small">stuff i’m working on / polishing</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">bella limiter</strong>
+            <span class="tag">overlay</span>
+            <span class="tag">network-y</span>
+            <div class="small" style="margin-top:6px;">
+              repo: <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
+            </div>
+          </li>
+          <li>
+            <strong class="pulseText">site</strong>
+            <span class="tag">github pages</span>
+            <span class="tag">terminal vibe</span>
+            <div class="small" style="margin-top:6px;">
+              living art-tech project. it bites sometimes.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="apps" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>apps / tools</h2>
+        <div class="small">local pages (static)</div>
+      </div>
+      <div class="panelInner">
+        <div class="btnRow">
+          <a class="btn" href="idle.html"><span class="k">idle</span> screensaver</a>
+          <a class="btn" href="glitch.html"><span class="k">fx</span> glitch gallery</a>
+          <a class="btn" href="dreams.html"><span class="k">log</span> dream log</a>
+          <a class="btn" href="shrines.html"><span class="k">dir</span> shrines</a>
+
+          <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
+          <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
+          <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
+          <a class="btn" href="snkaegame.html"><span class="k">🐍</span> snake</a>
+          <a class="btn" href="dungeoncrawler.html"><span class="k">dg</span> dungeon</a>
+          <a class="btn" href="shitty-ass-gamez-3d.html"><span class="k">3d</span> gamez</a>
+          <a class="btn" href="controllar-test.html"><span class="k">pad</span> controller test</a>
+          <a class="btn" href="boucnignlolgo.html"><span class="k">dvd</span> bouncin logo</a>
+          <a class="btn" href="sigmaness-basiclaly-epic.html"><span class="k">??</span> sigmaness</a>
+          <a class="btn" href="legacy-home.html"><span class="k">old</span> legacy home</a>
+        </div>
+        <div class="small" style="margin-top:10px;">
+          if any filename here doesn’t match your repo, rename the file or the link. ez.
+        </div>
+      </div>
+    </section>
 
     <div class="footer">
       © <span class="pulseText">bella cactus</span> • html + stubbornness
@@ -951,38 +1040,50 @@
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
     const rand = (a, b) => a + Math.random() * (b - a);
 
+    // date
     $("date").textContent = new Date().toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
+    // oneko fallback filename
     const onekoImg = $("onekoImg");
     onekoImg.addEventListener("error", () => {
-      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried = "1"; onekoImg.src = "onekogif"; }
+      if (!onekoImg.dataset.tried) {
+        onekoImg.dataset.tried = "1";
+        onekoImg.src = "onekogif";
+      }
     });
 
-    // oneko click
+    // oneko click: play "yeah"
     $("oneko").addEventListener("click", async () => {
-      await userGestureAudio();
+      try { await resumeAudioContext(); } catch(e){}
       const y = $("yeah");
       y.currentTime = 0;
       y.play().catch(()=>{});
     });
 
-    // intro
+    // intro gate
     const introGate = $("introGate");
     const introVideo = $("introVideo");
     const main = $("main");
     const skipIntro = $("skipIntro");
 
     const introFrames = [
-      `[ booting… ]\nhello everypony sequence armed\nloading: terminal • music • stickers`,
-      `[ handshake ]\nuser: bella\ntheme: black/white/pink`,
-      `[ ok ]\nautoplay tries muted\nclick once to unmute :3`
+`   <span class="pink">[ booting… ]</span>
+   hello everypony sequence armed
+   loading: terminal • music • stickers`,
+`   <span class="pink">[ handshake ]</span>
+   user: bella
+   theme: black/white/pink`,
+`   <span class="pink">[ ok ]</span>
+   press play if autoplay blocks
+   then we drop into the site :3`
     ];
+
+    function setIntroAscii(i){
+      $("introAscii").innerHTML = introFrames[i % introFrames.length];
+    }
     let introAsciiTick = 0;
-    $("introAscii").textContent = introFrames[0];
-    const introInterval = setInterval(() => {
-      introAsciiTick++;
-      $("introAscii").textContent = introFrames[introAsciiTick % introFrames.length];
-    }, 900);
+    setIntroAscii(0);
+    const introInterval = setInterval(() => setIntroAscii(++introAsciiTick), 900);
 
     function showSite(){
       clearInterval(introInterval);
@@ -992,11 +1093,12 @@
       startTerminal();
       spawnCookieLater();
       startAmbientWhispers();
-      // autoplay attempt after intro ends
-      setTimeout(() => { attemptAutoplay(); }, 200);
     }
 
-    skipIntro.addEventListener("click", () => { try{ introVideo.pause(); }catch(e){} showSite(); });
+    skipIntro.addEventListener("click", () => {
+      try { introVideo.pause(); } catch(e){}
+      showSite();
+    });
     introVideo.addEventListener("ended", showSite);
     introVideo.addEventListener("click", () => introVideo.play().catch(()=>{}));
 
@@ -1009,18 +1111,26 @@
       "yuri meme.png"
     ];
 
-    function clearWall(){ while(wall.firstChild) wall.removeChild(wall.firstChild); }
+    function clearWall(){
+      while(wall.firstChild) wall.removeChild(wall.firstChild);
+    }
     function rectsOverlap(a, b, pad=10){
-      return !(a.x + a.w + pad < b.x || a.x > b.x + b.w + pad || a.y + a.h + pad < b.y || a.y > b.y + b.h + pad);
+      return !(
+        a.x + a.w + pad < b.x ||
+        a.x > b.x + b.w + pad ||
+        a.y + a.h + pad < b.y ||
+        a.y > b.y + b.h + pad
+      );
     }
 
     function spawnStickers(){
       clearWall();
+
       const countTarget = window.innerWidth < 700 ? 7 : 12;
       const w = window.innerWidth;
       const h = window.innerHeight;
-      const safe = [];
 
+      const safe = [];
       const wrapEl = document.querySelector(".wrap");
       if (wrapEl){
         const r = wrapEl.getBoundingClientRect();
@@ -1030,6 +1140,7 @@
       }
 
       const placed = [];
+
       for (let i=0;i<countTarget;i++){
         const file = stickerFiles[i % stickerFiles.length];
         const size = rand(120, window.innerWidth < 900 ? 220 : 260);
@@ -1048,7 +1159,8 @@
           for (const p of placed){ if (rectsOverlap(box, p, 18)){ hit = true; break; } }
           if (hit) continue;
 
-          ok = true; break;
+          ok = true;
+          break;
         }
         if (!ok) continue;
 
@@ -1076,26 +1188,15 @@
         wall.appendChild(div);
       }
     }
+
     window.addEventListener("resize", spawnStickers);
 
     // music + waveform
-    const SPECIAL_EVIL_FILE = "Bxmb Threat.mp3";
-
     const tracks = [
-      // existing
       { file: "530 0.mp3", label: "530 (kanye)" },
       { file: "bipolar.mp3", label: "bipolar (wifiskeleton)" },
       { file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3", label: "i love my choppa (tay-k)" },
-      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" },
-
-      // new uploads
-      { file: "Bxmb Threat.mp3", label: "bxmb threat" },
-      { file: "Tay-K - Dat Way [Official Audio] 4.mp3", label: "dat way (tay-k)" },
-      { file: "I hope that you think of me 0.mp3", label: "i hope that you think of me" },
-      { file: "Intergalactic TV Show.mp3", label: "intergalactic tv show" },
-      { file: "Tinashe - Nasty (Official Video) 0.mp3", label: "nasty (tinashe)" },
-      { file: "Mobile Suit Woe 0.mp3", label: "mobile suit woe" },
-      { file: "FREDDIE DREDD - ENDLESS SEA.mp3", label: "endless sea (freddie dredd)" },
+      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" }
     ];
 
     const bgm = $("bgm");
@@ -1111,8 +1212,9 @@
     let data = null;
     let srcNode = null;
 
-    let everInteracted = false;
-    const chipAudio = $("chipAudio");
+    async function resumeAudioContext(){
+      if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
+    }
 
     function setupWaveform(){
       if (audioCtx) return;
@@ -1130,28 +1232,6 @@
       drawWave();
     }
 
-    async function userGestureAudio(){
-      setupWaveform();
-      try{
-        if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
-      }catch(e){}
-      // if we were doing muted autoplay, unmute now
-      if (!everInteracted){
-        everInteracted = true;
-        if (bgm.muted){
-          bgm.muted = false;
-          muted = false;
-          $("mute").innerHTML = `<span class="k">vol</span> mute`;
-          chipAudio.textContent = "unmuted";
-          pingToast("audio unlocked (user gesture)");
-        }
-      }
-    }
-
-    // listen for first real gesture
-    document.addEventListener("pointerdown", () => { userGestureAudio(); }, { passive:true });
-    document.addEventListener("keydown", () => { userGestureAudio(); });
-
     function loadTrack(i){
       trackIndex = (i + tracks.length) % tracks.length;
       const t = tracks[trackIndex];
@@ -1160,37 +1240,9 @@
       trackMeta.textContent = `file: ${t.file}`;
     }
 
-    function loadTrackByFile(file){
-      const idx = tracks.findIndex(t => t.file === file);
-      if (idx >= 0) loadTrack(idx);
-      else {
-        loadTrack(0);
-        trackMeta.textContent = `missing special track: ${file}`;
-      }
-    }
-
-    async function attemptAutoplay(){
-      setupWaveform();
-      // attempt muted autoplay (usually allowed)
-      bgm.muted = true;
-      muted = true;
-      $("mute").innerHTML = `<span class="k">vol</span> unmute`;
-      chipAudio.textContent = "muted-autoplay";
-
-      try{
-        await bgm.play();
-        musicBar.classList.remove("paused");
-        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-        pingToast("autoplay ok (muted). click once to unmute.");
-      }catch(e){
-        musicBar.classList.add("paused");
-        $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
-        pingToast("autoplay blocked. click play once.");
-      }
-    }
-
     $("playPause").addEventListener("click", async () => {
-      await userGestureAudio();
+      setupWaveform();
+      await resumeAudioContext().catch(()=>{});
       if (bgm.paused) {
         bgm.play().catch(()=>{});
         musicBar.classList.remove("paused");
@@ -1203,23 +1255,18 @@
     });
 
     $("nextTrack").addEventListener("click", async () => {
-      await userGestureAudio();
+      setupWaveform();
+      await resumeAudioContext().catch(()=>{});
       loadTrack(trackIndex + 1);
       bgm.play().catch(()=>{});
       musicBar.classList.remove("paused");
       $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-      if (document.body.classList.contains("evil")){
-        pingToast("evil playlist rotation…");
-        evilPulse();
-      }
     });
 
-    $("mute").addEventListener("click", async () => {
-      await userGestureAudio();
+    $("mute").addEventListener("click", () => {
       muted = !muted;
       bgm.muted = muted;
       $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
-      chipAudio.textContent = muted ? "muted" : "unmuted";
     });
 
     const waveformCanvas = $("waveform");
@@ -1273,10 +1320,10 @@
 
     const terminalScript = [
       { cmd: "whoami", out: "bella (aka BellaCactus)" },
-      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams  shrines  vault" },
+      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams  shrines" },
       { cmd: "hint", out: "press / for command palette" },
       { cmd: "hint", out: "a tiny visitor appears sometimes. click it." },
-      { cmd: "theme", out: "try: theme red  (evil mode + bxmb threat)" }
+      { cmd: "theme", out: "try: theme red  (evil mode)" }
     ];
 
     let lineIndex = 0, charIndex = 0, typing = false, idle = false;
@@ -1292,13 +1339,16 @@
       div.className = "termLine";
       div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
-      while(outEl.children.length > 6) outEl.removeChild(outEl.firstChild);
+      const maxLines = 6;
+      while(outEl.children.length > maxLines) outEl.removeChild(outEl.firstChild);
     }
 
     function startTerminal(){
       if (typing) return;
-      typing = true; idle = false;
-      lineIndex = 0; charIndex = 0;
+      typing = true;
+      idle = false;
+      lineIndex = 0;
+      charIndex = 0;
       typedEl.textContent = "";
       tickType();
     }
@@ -1307,7 +1357,8 @@
       if (!typing) return;
 
       if (lineIndex >= terminalScript.length){
-        typing = false; idle = true;
+        typing = false;
+        idle = true;
         idleType();
         return;
       }
@@ -1340,7 +1391,7 @@
       loop();
     }
 
-    // ascii
+    // ascii animals
     const animals = [
 ` /\\_/\\
 ( o.o )
@@ -1359,11 +1410,13 @@
   /    \\`
     ];
     let animalIndex = Math.floor(Math.random()*animals.length);
-    function setAnimal(i){ $("asciiAnimal").textContent = animals[(i + animals.length) % animals.length]; }
+    function setAnimal(i){
+      $("asciiAnimal").textContent = animals[(i + animals.length) % animals.length];
+    }
     setAnimal(animalIndex);
     setInterval(() => setAnimal(++animalIndex), 6500);
 
-    // theme system
+    // theme system (pink/white/red evil)
     const THEME_KEY = "bella_theme";
     function applyTheme(mode){
       document.body.classList.toggle("evil", mode === "red");
@@ -1375,22 +1428,14 @@
         root.setProperty("--accent2", "#d6d6dc");
         root.setProperty("--accent3", "#ffffff");
         chip.textContent = "white mode";
-        $("chipMode").textContent = "building";
       } else if (mode === "red"){
+        // evil uses body.evil vars, but keep fallback too
         root.setProperty("--accent", "#ff3b3b");
         root.setProperty("--accent2", "#ff8b8b");
         root.setProperty("--accent3", "#ff1f6b");
         chip.textContent = "evil mode";
         $("chipMode").textContent = "do not trust";
-
-        // force bxmb threat
-        loadTrackByFile(SPECIAL_EVIL_FILE);
-        bgm.loop = true;
-
-        // if already playing, keep playing; if not, try autoplay again
-        if (!bgm.paused) { bgm.play().catch(()=>{}); }
-        evilPulse();
-        pingToast("evil mode: bxmb threat loaded");
+        pingToast("warning: evil mode armed >:3");
       } else {
         root.setProperty("--accent", "#ff78c8");
         root.setProperty("--accent2", "#ffb3e6");
@@ -1409,45 +1454,22 @@
     }
 
     $("btnThemeCycle").addEventListener("click", cycleTheme);
+    // restore theme
     applyTheme(localStorage.getItem(THEME_KEY) || "pink");
-
-    // evil glitch driver
-    function evilPulse(){
-      if (!document.body.classList.contains("evil")) return;
-      const targets = [ $("pLeft"), $("pRight"), $("pTerm") ].filter(Boolean);
-      for (const el of targets){
-        el.classList.remove("glitchPulse");
-        void el.offsetWidth;
-        el.classList.add("glitchPulse");
-      }
-    }
-    // periodic evil corruption
-    setInterval(() => {
-      if (!document.body.classList.contains("evil")) return;
-      if (Math.random() < 0.55) evilPulse();
-      if (Math.random() < 0.18) pingToast("signal corrupted…");
-    }, 2400);
 
     // reroll
     function rerollAll(){
       spawnStickers();
-      if (!document.body.classList.contains("evil")){
-        loadTrack(Math.floor(Math.random() * tracks.length));
-      } else {
-        loadTrackByFile(SPECIAL_EVIL_FILE);
-      }
+      loadTrack(Math.floor(Math.random() * tracks.length));
+      musicBar.classList.add("paused");
+      $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
 
-      // if already playing, keep rolling
-      if (!bgm.paused) bgm.play().catch(()=>{});
-      if (bgm.paused) musicBar.classList.add("paused");
-      if (!bgm.paused) musicBar.classList.remove("paused");
-
-      // tiny chance crash
+      // tiny chance to crash on reroll (easter egg)
       if (Math.random() < 0.045) crashNow("reroll triggered a fatal vibe check");
     }
     $("reroll").addEventListener("click", rerollAll);
 
-    // command palette
+    // command palette (/, ctrl+k)
     const paletteGate = $("paletteGate");
     const palInput = $("palInput");
     const palList = $("palList");
@@ -1458,7 +1480,6 @@
       { label: "open idle", run: ()=> location.href="idle.html" },
       { label: "open ascii", run: ()=> location.href="ascii.html" },
       { label: "open shrines", run: ()=> location.href="shrines.html" },
-      { label: "open vault", run: ()=> location.href="vault.html" },
       { label: "theme pink", run: ()=> applyTheme("pink") },
       { label: "theme white", run: ()=> applyTheme("white") },
       { label: "theme red", run: ()=> applyTheme("red") },
@@ -1474,13 +1495,18 @@
       renderPalette("");
       setTimeout(()=> palInput.focus(), 0);
     }
+
     function closePalette(){
       paletteGate.classList.remove("on");
       paletteGate.setAttribute("aria-hidden","true");
     }
+
     function renderPalette(q){
       const query = (q || "").trim().toLowerCase();
-      const list = commands.filter(c => !query || c.label.includes(query)).slice(0, 8);
+      const list = commands
+        .filter(c => !query || c.label.includes(query))
+        .slice(0, 8);
+
       palList.innerHTML = "";
       if (!list.length){
         const d = document.createElement("div");
@@ -1489,6 +1515,7 @@
         palList.appendChild(d);
         return;
       }
+
       for (const item of list){
         const d = document.createElement("div");
         d.className = "palItem";
@@ -1496,24 +1523,39 @@
         palList.appendChild(d);
       }
     }
+
     function runPalette(){
       const v = (palInput.value || "").trim().toLowerCase();
       const exact = commands.find(c => c.label === v);
       const starts = commands.find(c => c.label.startsWith(v));
       const pick = exact || starts;
 
+      // allow "open x" shortcuts
       if (!pick && v.startsWith("open ")){
         const target = v.slice(5).trim();
-        const map = { "dreams":"dreams.html", "glitch":"glitch.html", "idle":"idle.html", "ascii":"ascii.html", "shrines":"shrines.html", "vault":"vault.html" };
+        const map = {
+          "dreams":"dreams.html",
+          "glitch":"glitch.html",
+          "idle":"idle.html",
+          "ascii":"ascii.html",
+          "shrines":"shrines.html",
+          "vault":"vault.html"
+        };
         if (map[target]) { location.href = map[target]; return; }
       }
+
+      // allow "theme x" shortcuts
       if (!pick && v.startsWith("theme ")){
         const t = v.slice(6).trim();
         if (t === "pink" || t === "white" || t === "red") { applyTheme(t); pingToast(`theme -> ${t}`); closePalette(); return; }
       }
 
-      if (pick){ closePalette(); pick.run(); }
-      else pingToast("unknown command. try: open dreams, theme red, secret");
+      if (pick){
+        closePalette();
+        pick.run();
+      } else {
+        pingToast("unknown command. try: open dreams, theme red, secret");
+      }
     }
 
     $("btnPal").addEventListener("click", openPalette);
@@ -1527,11 +1569,19 @@
     addEventListener("keydown", (e) => {
       const k = (e.key || "").toLowerCase();
       const ctrlk = (e.ctrlKey || e.metaKey) && k === "k";
-      if (ctrlk){ e.preventDefault(); openPalette(); return; }
+
+      if (ctrlk){
+        e.preventDefault();
+        openPalette();
+        return;
+      }
       if (k === "/" && !paletteGate.classList.contains("on")){
+        // avoid triggering while typing in inputs
         const tag = (document.activeElement && document.activeElement.tagName || "").toLowerCase();
         if (tag === "input" || tag === "textarea") return;
-        e.preventDefault(); openPalette(); return;
+        e.preventDefault();
+        openPalette();
+        return;
       }
       if (k === "escape"){
         if (paletteGate.classList.contains("on")) closePalette();
@@ -1559,23 +1609,32 @@
 
     function placeCookie(){
       const w = innerWidth, h = innerHeight;
-      cookie.style.left = `${rand(18, Math.max(18, w - 62))}px`;
-      cookie.style.top = `${rand(18, Math.max(18, h - 62))}px`;
+      const x = rand(18, Math.max(18, w - 62));
+      const y = rand(18, Math.max(18, h - 62));
+      cookie.style.left = `${x}px`;
+      cookie.style.top = `${y}px`;
     }
 
     function spawnCookieLater(){
-      const delay = rand(18000, 42000);
+      const delay = rand(18000, 42000); // 18-42s
       setTimeout(() => {
         placeCookie();
+        cookie.style.opacity = "0.92";
         pingToast("a tiny visitor appeared…");
+        // auto hide after a bit if not clicked
         setTimeout(()=> hideCookie(), rand(12000, 20000));
       }, delay);
     }
-    function hideCookie(){ cookie.style.left = "-9999px"; cookie.style.top = "-9999px"; }
+
+    function hideCookie(){
+      cookie.style.left = "-9999px";
+      cookie.style.top = "-9999px";
+    }
 
     cookie.addEventListener("click", () => {
       openSecret();
       hideCookie();
+      // respawn later
       secretPass = makePassword();
       $("hintGhost").textContent = `password: ${secretPass}  //  do not say it out loud`;
       spawnCookieLater();
@@ -1588,5 +1647,132 @@
       secretGate.setAttribute("aria-hidden","false");
       setTimeout(()=> secretInput.focus(), 0);
     }
+
     function closeSecret(){
-      secretGate.classList.remove
+      secretGate.classList.remove("on");
+      secretGate.setAttribute("aria-hidden","true");
+    }
+
+    $("btnSecret").addEventListener("click", openSecret);
+    $("secretClose").addEventListener("click", closeSecret);
+    secretGate.addEventListener("mousedown", (e)=>{ if (e.target === secretGate) closeSecret(); });
+
+    function checkSecret(){
+      const v = (secretInput.value || "").trim();
+      if (!v){
+        secretMsg.textContent = "enter something bestie (:3)";
+        return;
+      }
+      if (v === secretPass){
+        secretMsg.textContent = "accepted. opening vault…";
+        pingToast("door unlocked");
+        setTimeout(()=> location.href = "vault.html", 650);
+      } else {
+        secretMsg.textContent = "nope. wrong phrase. (it’s on-screen.)";
+        pingToast("denied");
+      }
+    }
+
+    $("secretGo").addEventListener("click", checkSecret);
+    secretInput.addEventListener("keydown", (e)=>{
+      if (e.key === "Enter"){ e.preventDefault(); checkSecret(); }
+      if (e.key === "Escape"){ e.preventDefault(); closeSecret(); }
+    });
+
+    // crash screen
+    const crash = $("crash");
+    const crashBar = $("crashBar");
+    const crashText = $("crashText");
+    let crashTimer = null;
+
+    function crashNow(reason){
+      if (crash.classList.contains("on")) return;
+      closePalette();
+      closeSecret();
+      crash.classList.add("on");
+      crash.setAttribute("aria-hidden","false");
+
+      let p = 0;
+      crashBar.style.width = "0%";
+      crashText.innerHTML =
+        `a fatal error has occurred. do not close the tab. the tab is already cursed.<br>` +
+        `reason: <span style="opacity:0.9;">${escapeHtml(reason || "unknown")}</span><br>` +
+        `collecting sadness… (0%)<br>` +
+        `<span style="opacity:0.7;">press esc to reboot</span>`;
+
+      clearInterval(crashTimer);
+      crashTimer = setInterval(() => {
+        p = clamp(p + rand(3, 12), 0, 100);
+        crashBar.style.width = `${p}%`;
+        crashText.innerHTML =
+          `a fatal error has occurred. do not close the tab. the tab is already cursed.<br>` +
+          `reason: <span style="opacity:0.9;">${escapeHtml(reason || "unknown")}</span><br>` +
+          `collecting sadness… (${Math.floor(p)}%)<br>` +
+          `<span style="opacity:0.7;">press esc to reboot</span>`;
+        if (p >= 100){
+          clearInterval(crashTimer);
+          crashText.innerHTML =
+            `reboot ready. press esc.<br>` +
+            `<span style="opacity:0.7;">or just stare at it. that’s valid too.</span>`;
+        }
+      }, 380);
+    }
+
+    function rebootFromCrash(){
+      crash.classList.remove("on");
+      crash.setAttribute("aria-hidden","true");
+      clearInterval(crashTimer);
+      crashTimer = null;
+      pingToast("reboot complete");
+      // a tiny “reboot” reroll
+      rerollAll();
+    }
+
+    $("btnCrash").addEventListener("click", () => crashNow("manual crash invoked"));
+
+    // ambient whispers
+    const toast = $("toast");
+    const whisperPool = [
+      "the ui is watching you",
+      "press / to open commands",
+      "your tabs are alive",
+      "soft reboot of the soul",
+      "pink glow, low hp",
+      "you found a hidden process",
+      "do not disturb: building",
+      "evil mode hungers",
+      "the cookie knows"
+    ];
+
+    let toastT = null;
+    function pingToast(text){
+      clearTimeout(toastT);
+      toast.textContent = text;
+      toast.classList.add("on");
+      toastT = setTimeout(()=> toast.classList.remove("on"), 2100);
+    }
+
+    function startAmbientWhispers(){
+      const loop = () => {
+        const delay = rand(45000, 110000); // 45-110s
+        setTimeout(() => {
+          // small chance to show something spicy when evil
+          const isEvil = document.body.classList.contains("evil");
+          if (Math.random() < 0.75){
+            const msg = isEvil && Math.random() < 0.35 ? "the red theme is not cosmetic" : whisperPool[Math.floor(Math.random()*whisperPool.length)];
+            pingToast(msg);
+          }
+          loop();
+        }, delay);
+      };
+      loop();
+    }
+
+    // start audio context on first click anywhere (helps autoplay rules)
+    document.addEventListener("click", () => setupWaveform(), { once:true });
+
+    // boot
+    // site shows when video ends or skip pressed
+  </script>
+</body>
+</html>
