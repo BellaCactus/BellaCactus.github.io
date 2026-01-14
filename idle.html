@@ -15,15 +15,8 @@
       --border: rgba(255,255,255,0.10);
       --text:#f7f7f7;
       --muted:#b9b9c2;
-
       --pink:#ff78c8;
       --pink2:#ffb3e6;
-      --pink3:#ff4db8;
-
-      --accent: var(--pink);
-      --accent2: var(--pink2);
-      --accent3: var(--pink3);
-
       --shadow: 0 20px 70px rgba(0,0,0,0.55);
       --radius:16px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -35,20 +28,20 @@
     body{
       margin:0;
       background:
-        radial-gradient(900px 600px at 15% 12%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
-        radial-gradient(900px 600px at 90% 30%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
-        radial-gradient(1200px 700px at 40% 95%, color-mix(in srgb, var(--accent3) 9%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 15% 12%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
         linear-gradient(180deg, var(--bg), var(--bg2));
       color:var(--text);
       font-family: var(--sans);
       overflow:hidden;
     }
 
-    a{color:var(--accent); text-decoration:none;}
+    a{color:var(--pink); text-decoration:none;}
     a:hover{text-decoration:underline;}
 
     .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
       background-size: 260% 100%;
       -webkit-background-clip:text;
       background-clip:text;
@@ -75,12 +68,7 @@
       max-width:980px;
       margin:0 auto;
       padding:22px 16px;
-      pointer-events:none; /* screensaver click-through */
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-    .wrap.hiddenUI{
-      opacity:0;
-      transform: translateY(-8px);
+      pointer-events:none; /* let screensaver be click-through */
     }
 
     .panel{
@@ -105,7 +93,7 @@
     .panelTitle h1{
       margin:0;
       font-size:1.05rem;
-      color:var(--accent2);
+      color:var(--pink2);
       letter-spacing:0.3px;
       font-weight:700;
     }
@@ -152,11 +140,11 @@
     .btn:hover{
       text-decoration:none;
       transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
     }
     .btn:active{ transform: translateY(0); opacity:0.95; }
-    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--accent2); }
+    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
 
     .tog{
       display:inline-flex;
@@ -172,7 +160,7 @@
       user-select:none;
       pointer-events:auto;
     }
-    .tog input{ accent-color: var(--accent); }
+    .tog input{ accent-color: var(--pink); }
 
     /* corner hint */
     .hint{
@@ -189,12 +177,6 @@
       border-radius:12px;
       backdrop-filter: blur(6px);
       pointer-events:none;
-      max-width:min(520px, 92vw);
-      transition: opacity 0.22s ease, transform 0.22s ease;
-    }
-    .hint.hide{
-      opacity:0;
-      transform: translateY(8px);
     }
 
     /* oneko */
@@ -218,40 +200,51 @@
     }
     .oneko img{ width:52px; image-rendering:pixelated; display:block; }
 
-    /* evil mode hook (reads same localStorage key as index) */
-    body.evil{
-      --accent:#ff3b3b;
-      --accent2:#ff8b8b;
-      --accent3:#ff1f6b;
-      filter: saturate(1.05) contrast(1.02);
-    }
-
     /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       .pulseText{ animation:none; }
       .oneko{ animation:none; }
     }
+
+
+/* auto-hide ui when you stop moving */
+body.uiHidden .wrap{ opacity:0; transform: translateY(-8px); pointer-events:none; }
+body.uiHidden .hint{ opacity:0; }
+.wrap{ transition: opacity .35s ease, transform .35s ease; }
+.hint{ transition: opacity .35s ease; }
+
+/* evil sync (if index is set to red theme) */
+body.evil{ filter: contrast(1.12) saturate(1.22) hue-rotate(-6deg); }
+body.evil::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:5;
+  background:repeating-linear-gradient(to bottom, rgba(255,0,0,0.08) 0px, rgba(255,0,0,0.08) 1px, transparent 3px, transparent 6px);
+  opacity:0.35;
+  mix-blend-mode: screen;
+  animation: scan 6.2s linear infinite;
+}
+@keyframes scan{ from{background-position-y:0} to{background-position-y:28px} }
   </style>
 </head>
 
 <body>
   <canvas id="bg" aria-hidden="true"></canvas>
 
-  <div class="wrap" id="uiWrap">
+  <div class="wrap">
     <div class="panel">
       <div class="panelTitle">
         <h1>idle screensaver</h1>
-        <div class="small">
-          leave me open • press <span class="pulseText">space</span> to pause • <span class="pulseText">r</span> to reroll
-          • ui hides if you stop moving
-        </div>
+        <div class="small">leave me open • press <span class="pulseText">space</span> to pause • <span class="pulseText">r</span> to reroll</div>
       </div>
       <div class="panelInner">
         <div class="btnRow">
           <a class="btn" href="index.html"><span class="k">cd</span> home</a>
           <button class="btn" id="btnPause" type="button"><span class="k">⏸</span> pause</button>
           <button class="btn" id="btnReroll" type="button"><span class="k">rng</span> reroll</button>
-          <button class="btn" id="btnTheme" type="button"><span class="k">pal</span> theme</button>
+          <button class="btn" id="btnTheme" type="button"><span class="k">fx</span> pink/white</button>
         </div>
 
         <label class="tog" title="less chaos, more calm">
@@ -264,24 +257,22 @@
           fake viz
         </label>
 
-        <label class="tog" title="audio needs a click (browser rules). expects a file named idle-bgm.mp3">
-          <input id="chkAudio" type="checkbox" />
+        <label class="tog" title="autoplay attempt: Mobile Suit Woe (click once if browser blocks)">
+          <input id="chkAudio" type="checkbox" checked />
           audio
         </label>
       </div>
     </div>
   </div>
 
-  <div class="hint" id="hint">
-    tip: click anywhere once to arm audio (browser rules) (:3) • press <span class="pulseText">esc</span> to go home
-  </div>
+  <div class="hint">tip: click anywhere once if audio is blocked (browser rules) (:3)</div>
 
   <div class="oneko" id="oneko" title="click me" aria-hidden="false">
     <img id="onekoImg" src="oneko.gif" alt="oneko" />
   </div>
 
   <audio id="bgm" preload="auto" loop>
-    <source src="Mobile Suit Woe 0" type="audio/mpeg" />
+    <source src="Mobile Suit Woe 0.mp3" type="audio/mpeg" />
   </audio>
 
   <audio id="yeah" preload="auto">
@@ -294,82 +285,7 @@
     const rand = (a,b) => a + Math.random() * (b - a);
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-    // ---- theme sync with index (THEME_KEY = "bella_theme") ----
-    const THEME_KEY = "bella_theme";
-    let themeMode = localStorage.getItem(THEME_KEY) || "pink";
-
-    function applyTheme(mode){
-      themeMode = mode;
-      document.body.classList.toggle("evil", mode === "red");
-
-      const root = document.documentElement.style;
-      if (mode === "white"){
-        root.setProperty("--accent", "#ffffff");
-        root.setProperty("--accent2", "#d6d6dc");
-        root.setProperty("--accent3", "#ffffff");
-      } else if (mode === "red"){
-        root.setProperty("--accent", "#ff3b3b");
-        root.setProperty("--accent2", "#ff8b8b");
-        root.setProperty("--accent3", "#ff1f6b");
-      } else {
-        root.setProperty("--accent", "#ff78c8");
-        root.setProperty("--accent2", "#ffb3e6");
-        root.setProperty("--accent3", "#ff4db8");
-      }
-      localStorage.setItem(THEME_KEY, mode);
-    }
-
-    function cycleTheme(){
-      const cur = themeMode;
-      const next = cur === "pink" ? "white" : (cur === "white" ? "red" : "pink");
-      applyTheme(next);
-      flashHint(`theme -> ${next}${next === "red" ? " (evil mode >:3)" : ""}`);
-    }
-
-    applyTheme(themeMode);
-
-    // ---- ui auto-hide when idle ----
-    const uiWrap = $("uiWrap");
-    const hint = $("hint");
-    let idleTimer = null;
-    let uiHidden = false;
-    const HIDE_AFTER_MS = 2800; // “few seconds”
-
-    function showUI(){
-      if (!uiHidden) return;
-      uiHidden = false;
-      uiWrap.classList.remove("hiddenUI");
-      hint.classList.remove("hide");
-    }
-
-    function hideUI(){
-      if (uiHidden) return;
-      uiHidden = true;
-      uiWrap.classList.add("hiddenUI");
-      hint.classList.add("hide");
-    }
-
-    function poke(){
-      showUI();
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        // don’t hide if user is focused on controls
-        const tag = (document.activeElement && document.activeElement.tagName || "").toLowerCase();
-        if (tag === "input" || tag === "button" || tag === "select") {
-          poke();
-          return;
-        }
-        hideUI();
-      }, HIDE_AFTER_MS);
-    }
-
-    addEventListener("mousemove", poke, { passive:true });
-    addEventListener("mousedown", poke, { passive:true });
-    addEventListener("keydown", poke);
-    addEventListener("touchstart", poke, { passive:true });
-    poke();
-
-    // ---- oneko fallback ----
+    // oneko fallback
     const onekoImg = $("onekoImg");
     onekoImg.addEventListener("error", () => {
       if (!onekoImg.dataset.tried) {
@@ -378,7 +294,56 @@
       }
     });
 
-    // ---- canvas setup ----
+    // oneko click: lil jon yeah if present
+    $("oneko").addEventListener("click", async () => {
+      try { await resumeAudio(); } catch(e){}
+      const y = $("yeah");
+      y.currentTime = 0;
+      y.play().catch(()=>{});
+    });
+
+// theme sync with index (pink / white / red)
+const THEME_KEY = "bella_theme";
+const THEMES = ["pink","white","red"]; // red = evil
+let theme = localStorage.getItem(THEME_KEY) || "pink";
+
+// keep the existing render logic happy
+let pinkMode = theme !== "white";
+
+function setCssThemeVars(mode){
+  if (mode === "white"){
+    document.documentElement.style.setProperty("--pink", "#ffffff");
+    document.documentElement.style.setProperty("--pink2", "#d6d6dc");
+  } else if (mode === "red"){
+    document.documentElement.style.setProperty("--pink", "#ff2a2a");
+    document.documentElement.style.setProperty("--pink2", "#ff7a7a");
+  } else {
+    document.documentElement.style.setProperty("--pink", "#ff78c8");
+    document.documentElement.style.setProperty("--pink2", "#ffb3e6");
+  }
+}
+
+function applyTheme(){
+  pinkMode = theme !== "white";
+  setCssThemeVars(theme);
+  document.body.classList.toggle("evil", theme === "red");
+  const btn = $("btnTheme");
+  if (btn){
+    const label = (theme === 'red') ? 'evil' : theme;
+    btn.innerHTML = `<span class="k">fx</span> theme: ${label}`;
+  }
+}
+
+function cycleTheme(){
+  const i = THEMES.indexOf(theme);
+  theme = THEMES[(i + 1) % THEMES.length];
+  localStorage.setItem(THEME_KEY, theme);
+  applyTheme();
+}
+
+applyTheme();
+
+    // canvas
     const c = $("bg");
     const ctx = c.getContext("2d");
 
@@ -393,7 +358,7 @@
     addEventListener("resize", () => { fit(); reroll(); });
     fit();
 
-    // ---- ascii sprites ----
+    // ascii sprites
     const critters = [
 ` /\\_/\\
 ( o.o )
@@ -426,8 +391,7 @@
       "this is fine. (it isn't.)",
       "sleep mode: feral",
       "signal found in the static",
-      "press r to reroll reality",
-      "press / on index for commands"
+      "press r to reroll reality"
     ];
 
     const stars = [];
@@ -473,9 +437,11 @@
       for (let i=0;i<n;i++){
         const art = pick(critters);
         const lines = art.split("\n");
+        const w = Math.max(...lines.map(l => l.length));
         sprites.push({
           art,
           lines,
+          wChars: w,
           x: rand(40, innerWidth - 200),
           y: rand(120, innerHeight - 120),
           vx: rand(-0.12, 0.12),
@@ -484,17 +450,19 @@
           rvel: rand(-0.0015, 0.0015),
           a: rand(0.35, 0.80),
           s: rand(12, 15),
+          hue: rand(0, 1)
         });
       }
     }
 
-    // ---- audio + viz (FIXED) ----
+    // subtle viz (fake or audio)
     const bgm = $("bgm");
-    const chkAudio = $("chkAudio");
-    const chkFakeViz = $("chkFakeViz");
-
     let audioCtx = null, analyser = null, data = null, srcNode = null;
-    let audioArmed = false;
+
+    async function resumeAudio(){
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") await audioCtx.resume();
+    }
 
     function setupAudio(){
       if (audioCtx) return;
@@ -507,52 +475,17 @@
         srcNode.connect(analyser);
         analyser.connect(audioCtx.destination);
       }catch(e){
-        analyser = null; // fallback to fake viz
+        // some browsers can be weird; fallback to fake viz
+        analyser = null;
       }
     }
 
-    async function armAudio(){
-      if (audioArmed) return true;
-      setupAudio();
-      try{
-        if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
-        audioArmed = true;
-        flashHint("audio armed (:3)");
-        return true;
-      }catch(e){
-        flashHint("audio blocked. click again maybe.");
-        return false;
-      }
-    }
-
-    async function tryPlayBgm(){
-      // must be armed first
-      const ok = await armAudio();
-      if (!ok) return;
-      try{
-        await bgm.play();
-        flashHint("bgm playing");
-      }catch(e){
-        flashHint("bgm blocked. click anywhere once, then toggle audio again.");
-      }
-    }
-
-    // one-time gesture hook: first click arms audio
-    document.addEventListener("click", () => { armAudio(); }, { once:false, passive:true });
-
-    // if mp3 missing, show a helpful hint
-    bgm.addEventListener("error", () => {
-      flashHint("idle-bgm.mp3 not found. add one or keep fake viz.");
-      chkAudio.checked = false;
-    });
-
-    // viz reader
     function readViz(){
-      const forceFake = chkFakeViz.checked || !analyser || bgm.paused;
+      const fake = $("chkFakeViz").checked || !analyser || bgm.paused;
       const arrLen = 128;
       const arr = new Float32Array(arrLen);
 
-      if (forceFake){
+      if (fake){
         const t = performance.now() * 0.001;
         for (let i=0;i<arrLen;i++){
           const k = i / (arrLen - 1);
@@ -568,7 +501,7 @@
       analyser.getByteTimeDomainData(data);
       for (let i=0;i<arrLen;i++){
         const idx = Math.floor(i / (arrLen - 1) * (data.length - 1));
-        arr[i] = (data[idx] / 255) * 2 - 1;
+        arr[i] = (data[idx] / 255) * 2 - 1; // -1..1
       }
       return arr;
     }
@@ -581,7 +514,7 @@
       ctx.save();
       ctx.globalAlpha = softMode ? 0.32 : 0.50;
       ctx.lineWidth = 2;
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#ff78c8";
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--pink").trim() || "#ff78c8";
       ctx.shadowColor = ctx.strokeStyle;
       ctx.shadowBlur = softMode ? 8 : 14;
 
@@ -594,6 +527,7 @@
       }
       ctx.stroke();
 
+      // faint center line
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 0.16;
       ctx.beginPath();
@@ -605,7 +539,6 @@
       ctx.restore();
     }
 
-    // ---- reroll + loop ----
     function reroll(){
       makeStars();
       makeTexts();
@@ -613,13 +546,14 @@
     }
     reroll();
 
+    // animation loop
     let paused = false;
-
     function draw(){
       requestAnimationFrame(draw);
       if (paused) return;
 
-      ctx.clearRect(0,0,innerWidth,innerHeight);
+      // clear
+      ctx.clearRect(0,0,innerWidth, innerHeight);
 
       // stars
       ctx.save();
@@ -627,10 +561,12 @@
         s.p += s.v * 0.02;
         s.y += s.v;
         s.x += Math.sin(s.p) * 0.08;
+
         if (s.y > innerHeight + 10){
           s.y = -10;
           s.x = Math.random() * innerWidth;
         }
+
         ctx.globalAlpha = 0.18 + Math.sin(s.p) * 0.08;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
@@ -639,7 +575,7 @@
       }
       ctx.restore();
 
-      // whisper text
+      // drifting whisper text
       ctx.save();
       for (const t of texts){
         t.phase += 0.01 * t.wob;
@@ -655,12 +591,8 @@
 
         ctx.globalAlpha = t.a;
         ctx.font = `${t.s}px ${getComputedStyle(document.body).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
-        ctx.fillStyle = (themeMode === "white")
-          ? "rgba(230,230,236,0.92)"
-          : "rgba(255,179,230,0.95)";
-        ctx.shadowColor = (themeMode === "white")
-          ? "rgba(255,255,255,0.25)"
-          : "rgba(255,120,200,0.35)";
+        ctx.fillStyle = pinkMode ? "rgba(255,179,230,0.95)" : "rgba(230,230,236,0.92)";
+        ctx.shadowColor = pinkMode ? "rgba(255,120,200,0.35)" : "rgba(255,255,255,0.25)";
         ctx.shadowBlur = softMode ? 8 : 14;
         ctx.fillText(t.t, t.x, yy);
       }
@@ -673,6 +605,7 @@
         s.y += s.vy * (softMode ? 0.55 : 1);
         s.rot += s.rvel * (softMode ? 0.65 : 1);
 
+        // soft bounce boundaries
         const pad = 40;
         if (s.x < pad || s.x > innerWidth - pad) s.vx *= -1;
         if (s.y < pad || s.y > innerHeight - pad) s.vy *= -1;
@@ -684,78 +617,95 @@
         ctx.font = `${s.s}px ${getComputedStyle(document.body).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
         ctx.textBaseline = "top";
 
+        // draw multi-line ascii with glow
         ctx.shadowBlur = softMode ? 10 : 16;
-        ctx.shadowColor = (themeMode === "white")
-          ? "rgba(255,255,255,0.18)"
-          : "rgba(255,120,200,0.35)";
-        ctx.fillStyle = (themeMode === "white")
-          ? "rgba(245,245,250,0.85)"
-          : "rgba(255,255,255,0.90)";
+        ctx.shadowColor = pinkMode ? "rgba(255,120,200,0.35)" : "rgba(255,255,255,0.18)";
+        ctx.fillStyle = pinkMode ? "rgba(255,255,255,0.90)" : "rgba(245,245,250,0.85)";
 
-        for (let i=0;i<s.lines.length;i++){
-          ctx.fillText(s.lines[i], 0, i * (s.s + 1));
+        const lines = s.lines;
+        for (let i=0;i<lines.length;i++){
+          ctx.fillText(lines[i], 0, i * (s.s + 1));
         }
 
+        ctx.setTransform(devicePixelRatio || 1,0,0,devicePixelRatio || 1,0,0);
         ctx.setTransform(1,0,0,1,0,0);
       }
       ctx.restore();
 
+      // subtle viz line
       drawViz();
     }
 
-    // ---- hint helpers ----
-    let hintT = null;
-    function flashHint(msg){
-      hint.textContent = msg;
-      hint.classList.remove("hide");
-      clearTimeout(hintT);
-      hintT = setTimeout(() => {
-        // only hide hint if UI is hidden
-        if (uiHidden) hint.classList.add("hide");
-      }, 2200);
-    }
-
-    // ---- controls ----
+    // controls
     function setPaused(v){
       paused = v;
       $("btnPause").innerHTML = paused ? `<span class="k">▶</span> resume` : `<span class="k">⏸</span> pause`;
-      flashHint(paused ? "paused" : "resumed");
     }
 
     $("btnPause").addEventListener("click", () => setPaused(!paused));
-    $("btnReroll").addEventListener("click", () => { reroll(); flashHint("rerolled"); });
-    $("btnTheme").addEventListener("click", cycleTheme);
+    $("btnReroll").addEventListener("click", () => reroll());
+    $("btnTheme").addEventListener("click", () => { cycleTheme(); });
     $("chkSoft").addEventListener("change", (e) => { softMode = !!e.target.checked; });
 
-    chkAudio.addEventListener("change", async (e) => {
+    // optional audio
+    $("chkAudio").addEventListener("change", async (e) => {
       const on = !!e.target.checked;
       if (on){
-        await tryPlayBgm();
+        setupAudio();
+        await resumeAudio().catch(()=>{});
+        bgm.play().catch(()=>{});
       } else {
         try{ bgm.pause(); }catch(e2){}
-        flashHint("bgm paused");
       }
     });
 
-    // oneko click: lil jon yeah
-    $("oneko").addEventListener("click", async () => {
-      await armAudio();
-      const y = $("yeah");
-      y.currentTime = 0;
-      y.play().catch(()=>{});
-    });
+
+// --- ui auto-hide (no mouse movement) ---
+const UI_HIDE_MS = 2600;
+let uiTimer = null;
+
+function showUI(){
+  document.body.classList.remove("uiHidden");
+  clearTimeout(uiTimer);
+  uiTimer = setTimeout(() => document.body.classList.add("uiHidden"), UI_HIDE_MS);
+}
+
+["mousemove","mousedown","touchstart","keydown","pointermove"].forEach(ev => {
+  addEventListener(ev, showUI, { passive:true });
+});
+
+showUI();
+
+// --- autoplay attempt (browser may require one interaction) ---
+async function tryStartAudio(){
+  try{ setupAudio(); }catch(e){}
+  try{ await resumeAudio(); }catch(e){}
+  try{ await bgm.play(); }catch(e){}
+}
+
+// if checkbox is on by default, try right away + on first interaction
+if ($("chkAudio").checked){
+  tryStartAudio();
+  const unlock = async () => {
+    await tryStartAudio();
+    removeEventListener("pointerdown", unlock, true);
+    removeEventListener("keydown", unlock, true);
+  };
+  addEventListener("pointerdown", unlock, true);
+  addEventListener("keydown", unlock, true);
+}
 
     // keyboard
     addEventListener("keydown", (e) => {
       const k = (e.key || "").toLowerCase();
       if (k === " "){ e.preventDefault(); setPaused(!paused); }
-      if (k === "r"){ reroll(); flashHint("rerolled"); }
+      if (k === "r"){ reroll(); }
       if (k === "t"){ cycleTheme(); }
       if (k === "escape"){ location.href = "index.html"; }
     });
 
+    // start
     draw();
   </script>
 </body>
 </html>
-
