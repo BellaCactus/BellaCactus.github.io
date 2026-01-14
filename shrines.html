@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>shrines • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --accent: var(--pink);
+      --accent2: var(--pink2);
+      --accent3: var(--pink3);
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 18% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, color-mix(in srgb, var(--accent3) 9%, transparent), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+    }
+
+    body.evil{
+      --accent:#ff3b3b;
+      --accent2:#ff8b8b;
+      --accent3:#ff1f6b;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:44px 16px 90px;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0;
+      font-size:1.35rem;
+      font-family: var(--mono);
+      letter-spacing:0.3px;
+      color:var(--accent2);
+    }
+    .small{
+      font-size:0.86rem;
+      color:var(--muted);
+      font-family: var(--mono);
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(6px);
+    }
+
+    .head{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      text-decoration:none;
+      user-select:none;
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      font-family: var(--sans);
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--accent2); }
+
+    .sidebar, .content{
+      padding:14px;
+    }
+
+    .tree{
+      font-family: var(--mono);
+      font-size:0.90rem;
+      line-height:1.55;
+      color: rgba(255,255,255,0.88);
+    }
+    .node{
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.28);
+      border-radius:14px;
+      padding:10px 10px;
+      margin-bottom:10px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .node:hover{
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+      background: color-mix(in srgb, var(--accent) 10%, rgba(0,0,0,0.28));
+    }
+    .node.active{
+      border-color: color-mix(in srgb, var(--accent2) 55%, transparent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+    }
+    .nodeTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .pill{
+      font-size:0.72rem;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--accent2);
+    }
+
+    .viewer{
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.30);
+      border-radius:14px;
+      padding:14px;
+      min-height:320px;
+      font-family: var(--mono);
+      color: rgba(255,255,255,0.90);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .viewer h2{
+      margin:0;
+      font-size:1.05rem;
+      color: var(--accent2);
+      letter-spacing:0.2px;
+    }
+    .viewer p{
+      margin:10px 0 0;
+      color: rgba(255,255,255,0.82);
+      line-height:1.6;
+    }
+
+    .meta{
+      margin-top:12px;
+      color: var(--muted);
+      font-size:0.84rem;
+      opacity:0.95;
+    }
+
+    .ghost{
+      position:absolute;
+      right:12px;
+      bottom:10px;
+      color: rgba(255,255,255,0.10);
+      font-size:12px;
+      pointer-events:none;
+      user-select:none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1><span class="pulseText">shrines</span> • directory of fixations</h1>
+        <div class="small">click folders on the left • press <span class="pulseText">t</span> to theme-cycle • esc to home</div>
+      </div>
+      <div class="btnRow">
+        <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+        <a class="btn" href="vault.html"><span class="k">open</span> vault</a>
+        <button class="btn" id="btnTheme" type="button"><span class="k">pal</span> theme</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="head">
+          <div class="small">folders</div>
+          <div class="small"><span class="pulseText">/home/bella/shrines</span></div>
+        </div>
+        <div class="sidebar">
+          <div id="tree" class="tree"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="head">
+          <div class="small">viewer</div>
+          <div class="small" id="path"></div>
+        </div>
+        <div class="content">
+          <div class="viewer" id="viewer">
+            <h2 class="pulseText">select a folder</h2>
+            <p>this page is basically a fancy file browser for your obsessions. we can expand it later with images, links, little “artifacts”, whatever.</p>
+            <div class="meta">tip: you can edit the shrine data in the JS at the bottom.</div>
+            <div class="ghost" aria-hidden="true">this is a shrine. not a portfolio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const THEME_KEY = "bella_theme";
+    let themeMode = localStorage.getItem(THEME_KEY) || "pink";
+
+    function applyTheme(mode){
+      themeMode = mode;
+      document.body.classList.toggle("evil", mode === "red");
+
+      const root = document.documentElement.style;
+      if (mode === "white"){
+        root.setProperty("--accent", "#ffffff");
+        root.setProperty("--accent2", "#d6d6dc");
+        root.setProperty("--accent3", "#ffffff");
+      } else if (mode === "red"){
+        root.setProperty("--accent", "#ff3b3b");
+        root.setProperty("--accent2", "#ff8b8b");
+        root.setProperty("--accent3", "#ff1f6b");
+      } else {
+        root.setProperty("--accent", "#ff78c8");
+        root.setProperty("--accent2", "#ffb3e6");
+        root.setProperty("--accent3", "#ff4db8");
+      }
+      localStorage.setItem(THEME_KEY, mode);
+      document.getElementById("path").textContent = `/home/bella/shrines • theme=${mode}`;
+    }
+
+    function cycleTheme(){
+      const cur = themeMode;
+      const next = cur === "pink" ? "white" : (cur === "white" ? "red" : "pink");
+      applyTheme(next);
+    }
+
+    applyTheme(themeMode);
+    document.getElementById("btnTheme").addEventListener("click", cycleTheme);
+
+    // ---- shrine data ----
+    const SHRINES = [
+      {
+        id: "games",
+        name: "games",
+        pill: "hotbar",
+        path: "/home/bella/shrines/games",
+        title: "games",
+        body: [
+          "destiny 2, geometry dash, hypixel skyblock, geoguessr…",
+          "this folder is basically your dopamine loot cave."
+        ],
+        meta: "status: always installed • debuff: time dilation"
+      },
+      {
+        id: "tools",
+        name: "tools",
+        pill: "build",
+        path: "/home/bella/shrines/tools",
+        title: "tools + tinkering",
+        body: [
+          "reverse engineering, automation, server nonsense, weird utilities.",
+          "if it’s clever, cursed, or saves time, it belongs here."
+        ],
+        meta: "status: tinkering • buff: curiosity"
+      },
+      {
+        id: "watch",
+        name: "watchlist",
+        pill: "media",
+        path: "/home/bella/shrines/watchlist",
+        title: "watchlist",
+        body: [
+          "jenny nicholson, creepcast, papa meat, skeeter jean…",
+          "stuff that makes your brain go brrrr without demanding too much."
+        ],
+        meta: "status: cozy • buff: comfort"
+      },
+      {
+        id: "mlp",
+        name: "mlp",
+        pill: "pony",
+        path: "/home/bella/shrines/mlp",
+        title: "mlp",
+        body: [
+          "pink comfort folder. twi, trixie, and whatever else lives in your tabs.",
+          "this is allowed to be unserious."
+        ],
+        meta: "status: soft mode • buff: sparkle"
+      },
+      {
+        id: "secrets",
+        name: ".secrets",
+        pill: "??",
+        path: "/home/bella/shrines/.secrets",
+        title: "notes you ‘didn’t write’",
+        body: [
+          "if you can read this, you probably clicked the cookie.",
+          "add more hidden pages later. make it a whole maze."
+        ],
+        meta: "status: hidden • warning: may enable evil mode"
+      }
+    ];
+
+    const tree = document.getElementById("tree");
+    const viewer = document.getElementById("viewer");
+    const pathEl = document.getElementById("path");
+
+    function esc(s){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function renderTree(activeId){
+      tree.innerHTML = "";
+      for (const s of SHRINES){
+        const div = document.createElement("div");
+        div.className = "node" + (s.id === activeId ? " active" : "");
+        div.innerHTML = `
+          <div class="nodeTitle">
+            <div><span class="pulseText">${esc(s.name)}</span></div>
+            <span class="pill">${esc(s.pill)}</span>
+          </div>
+          <div style="color: rgba(255,255,255,0.55); font-size:0.84rem; margin-top:6px;">
+            ${esc(s.path)}
+          </div>
+        `;
+        div.addEventListener("click", () => openShrine(s.id));
+        tree.appendChild(div);
+      }
+    }
+
+    function openShrine(id){
+      const s = SHRINES.find(x => x.id === id);
+      if (!s) return;
+
+      renderTree(id);
+      pathEl.textContent = s.path + ` • theme=${themeMode}`;
+
+      viewer.innerHTML = `
+        <h2 class="pulseText">${esc(s.title)}</h2>
+        ${s.body.map(p => `<p>${esc(p)}</p>`).join("")}
+        <div class="meta">${esc(s.meta)}</div>
+        <div class="ghost" aria-hidden="true">folders aren’t dead. they’re just sleeping.</div>
+      `;
+
+      // tiny easter egg: opening .secrets in evil mode whispers
+      if (s.id === "secrets" && themeMode === "red"){
+        viewer.innerHTML += `<p style="opacity:0.85; margin-top:12px;">…something in the red theme likes this folder.</p>`;
+      }
+    }
+
+    renderTree(null);
+
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k === "t") cycleTheme();
+      if (k === "escape") location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
