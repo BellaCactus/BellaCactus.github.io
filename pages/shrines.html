@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>shrines • bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="twi looking.png" />
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
   <style>
     :root{
       --bg:#070707;
@@ -244,7 +244,7 @@
         <div class="small">click folders on the left • press <span class="pulseText">t</span> to theme-cycle • esc to home</div>
       </div>
       <div class="btnRow">
-        <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+        <a class="btn" href="../index.html"><span class="k">cd</span> home</a>
         <a class="btn" href="vault.html"><span class="k">open</span> vault</a>
         <button class="btn" id="btnTheme" type="button"><span class="k">pal</span> theme</button>
       </div>
@@ -431,7 +431,7 @@
     addEventListener("keydown", (e) => {
       const k = (e.key || "").toLowerCase();
       if (k === "t") cycleTheme();
-      if (k === "escape") location.href = "index.html";
+      if (k === "escape") location.href = "../index.html";
     });
   </script>
 </body>

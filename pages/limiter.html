@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- favicon: change filename if needed -->
-  <link rel="icon" type="image/png" href="twi looking.png">
+  <link rel="icon" type="image/png" href="../media/favicon.png">
 
   <style>
     :root{
@@ -446,14 +446,14 @@
       <div class="brand">
         <div class="badge" aria-hidden="true">
           <!-- use twi looking as the little icon square -->
-          <img src="twi looking.png" alt="icon">
+          <img src="../media/twi looking.png" alt="icon">
         </div>
         <div class="titlebox">
           <h1 class="pulseText">bella limiter</h1>
           <div class="sub">feature rundown + how it behaves, in human words (mostly)</div>
 
           <div class="btnRow">
-            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <a class="btn" href="../index.html"><span class="k">cd</span> home</a>
             <a class="btn" href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer"><span class="k">git</span> repo</a>
             <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer"><span class="k">yt</span> channel</a>
             <a class="btn" href="#features"><span class="k">ls</span> features</a>
@@ -724,12 +724,12 @@
 
   <!-- optional oneko easter egg (click me) -->
   <div class="oneko" title="click me" aria-label="oneko">
-    <img id="onekoImg" src="oneko.gif" alt="oneko">
+    <img id="onekoImg" src="../media/oneko.gif" alt="oneko">
   </div>
 
   <!-- lil jon yeah easter egg audio (only plays if file exists) -->
   <audio id="liljon" preload="auto">
-    <source src="lil-jon-yeah.mp3" type="audio/mpeg">
+    <source src="../assests/lil-jon-yeah.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -738,12 +738,12 @@
     document.getElementById("date").textContent =
       d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
-    // oneko gif fallback (supports your weird filename "onekogif")
+    // oneko gif fallback (supports your weird filename "../media/oneko.gif")
     const oneko = document.getElementById("onekoImg");
     oneko.addEventListener("error", () => {
       if (!oneko.dataset.tried) {
         oneko.dataset.tried = "1";
-        oneko.src = "onekogif";
+        oneko.src = "../media/oneko.gif";
       }
     });
 
@@ -761,10 +761,10 @@
     const stickerLayer = document.getElementById("stickerLayer");
 
     const stickers = [
-      "ponies in bed.jpg",
-      "twi and trixy.jpg",
-      "twi looking.png",
-      "yuri meme.png"
+      "../media/ponies in bed.jpg",
+      "../media/twi and trixy.jpg",
+      "../media/twi looking.png",
+      "../media/yuri meme.png"
     ];
 
     // deterministic-ish per refresh, but still random enough

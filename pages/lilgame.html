@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>rain • bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="twi looking.png" />
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
 
   <style>
     :root{
@@ -309,7 +309,7 @@
     <div class="top">
       <div class="brand">
         <div class="badge" aria-hidden="true">
-          <img src="twi looking.png" alt="badge" />
+          <img src="../media/twi looking.png" alt="badge" />
         </div>
         <div class="titlebox">
           <h1 class="pulseText">rain biome</h1>
@@ -333,7 +333,7 @@
         </div>
         <div class="panelInner">
           <div class="btnRow">
-            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <a class="btn" href="../index.html"><span class="k">cd</span> home</a>
             <button class="btn" id="btnReset" type="button"><span class="k">rst</span> reset</button>
             <button class="btn" id="btnReroll" type="button"><span class="k">rng</span> reroll biome</button>
             <button class="btn" id="btnPause" type="button"><span class="k">⏸</span> pause</button>
@@ -420,11 +420,11 @@
   </div>
 
   <div class="oneko" id="oneko" title="click me">
-    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+    <img id="onekoImg" src="../media/oneko.gif" alt="oneko" />
   </div>
 
   <audio id="yeah" preload="auto">
-    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+    <source src="../assests/lil-jon-yeah.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -436,7 +436,7 @@
     // oneko fallback + click
     const onekoImg = $("onekoImg");
     onekoImg.addEventListener("error", () => {
-      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="onekogif"; }
+      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="../media/oneko.gif"; }
     });
     $("oneko").addEventListener("click", () => {
       const y = $("yeah");
@@ -693,7 +693,7 @@
         if (["arrowup","arrowdown","arrowleft","arrowright","space"].includes(k)) e.preventDefault();
       }
 
-      if (k === "escape") location.href = "index.html";
+      if (k === "escape") location.href = "../index.html";
       if (k === "p") { togglePause(); return; }
       if (k === "r") { rollBiome(); return; }
 

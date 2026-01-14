@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>glitch • bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="twi looking.png" />
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
 
   <style>
     :root{
@@ -264,7 +264,7 @@
     <div class="top">
       <div class="brand">
         <div class="badge" aria-hidden="true">
-          <img src="twi looking.png" alt="badge" />
+          <img src="../media/twi looking.png" alt="badge" />
         </div>
         <div class="titlebox">
           <h1 class="pulseText">glitch gallery</h1>
@@ -286,7 +286,7 @@
         </div>
         <div class="panelInner">
           <div class="btnRow">
-            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <a class="btn" href="../index.html"><span class="k">cd</span> home</a>
             <button class="btn" id="btnReroll" type="button"><span class="k">rng</span> reroll corruption</button>
             <button class="btn" id="btnFreeze" type="button"><span class="k">⏸</span> freeze</button>
             <label class="btn" style="cursor:pointer;">
@@ -351,11 +351,11 @@
   </div>
 
   <div class="oneko" id="oneko" title="click me">
-    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+    <img id="onekoImg" src="../media/oneko.gif" alt="oneko" />
   </div>
 
   <audio id="yeah" preload="auto">
-    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+    <source src="../assests/lil-jon-yeah.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -366,7 +366,7 @@
     // oneko fallback + click
     const onekoImg = $("onekoImg");
     onekoImg.addEventListener("error", () => {
-      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="onekogif"; }
+      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="../media/oneko.gif"; }
     });
     $("oneko").addEventListener("click", () => {
       const y = $("yeah");
@@ -390,7 +390,7 @@
     addEventListener("resize", fit);
 
     // default image: try your existing stickers, fallback to procedural
-    const defaults = ["twi and trixy.jpg", "ponies in bed.jpg", "yuri meme.png", "twi looking.png"];
+    const defaults = ["../media/twi and trixy.jpg", "../media/ponies in bed.jpg", "../media/yuri meme.png", "../media/twi looking.png"];
     let baseImg = new Image();
     baseImg.crossOrigin = "anonymous";
 
@@ -576,7 +576,7 @@
       const k = (e.key || "").toLowerCase();
       if (k === "r") reroll();
       if (k === " ") { e.preventDefault(); $("btnFreeze").click(); }
-      if (k === "escape") location.href = "index.html";
+      if (k === "escape") location.href = "../index.html";
     });
 
     // start

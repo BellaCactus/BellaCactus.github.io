@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>idle • bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="twi looking.png" />
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
 
   <style>
     :root{
@@ -269,7 +269,7 @@ input.vol{
       </div>
       <div class="panelInner">
         <div class="btnRow">
-          <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+          <a class="btn" href="../index.html"><span class="k">cd</span> home</a>
           <button class="btn" id="btnPause" type="button"><span class="k">⏸</span> pause</button>
           <button class="btn" id="btnReroll" type="button"><span class="k">rng</span> reroll</button>
           <button class="btn" id="btnTheme" type="button"><span class="k">fx</span> pink/white</button>
@@ -302,15 +302,15 @@ input.vol{
   <div class="hint">tip: click anywhere once if audio is blocked (browser rules) (:3)</div>
 
   <div class="oneko" id="oneko" title="click me" aria-hidden="false">
-    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+    <img id="onekoImg" src="../media/oneko.gif" alt="oneko" />
   </div>
 
   <audio id="bgm" preload="auto" loop>
-    <source src="Mobile Suit Woe 0.mp3" type="audio/mpeg" />
+    <source src="../assests/Mobile Suit Woe 0.mp3" type="audio/mpeg" />
   </audio>
 
   <audio id="yeah" preload="auto">
-    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+    <source src="../assests/lil-jon-yeah.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -324,7 +324,7 @@ input.vol{
     onekoImg.addEventListener("error", () => {
       if (!onekoImg.dataset.tried) {
         onekoImg.dataset.tried = "1";
-        onekoImg.src = "onekogif";
+        onekoImg.src = "../media/oneko.gif";
       }
     });
 
@@ -769,7 +769,7 @@ if ($("chkAudio").checked){
       if (k === " "){ e.preventDefault(); setPaused(!paused); }
       if (k === "r"){ reroll(); }
       if (k === "t"){ cycleTheme(); }
-      if (k === "escape"){ location.href = "index.html"; }
+      if (k === "escape"){ location.href = "../index.html"; }
     });
 
     // start
