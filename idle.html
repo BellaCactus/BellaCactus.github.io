@@ -227,6 +227,34 @@ body.evil::after{
   animation: scan 6.2s linear infinite;
 }
 @keyframes scan{ from{background-position-y:0} to{background-position-y:28px} }
+
+/* volume slider */
+.volWrap{
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+  color:var(--muted);
+  font-family: var(--mono);
+  font-size:0.82rem;
+  user-select:none;
+}
+.volWrap .k{ color:var(--pink2); }
+input.vol{
+  width:170px;
+  accent-color: var(--pink);
+  cursor:pointer;
+}
+.volNum{ min-width:48px; text-align:right; }
+@media (max-width: 520px){
+  input.vol{ width:120px; }
+  .panelInner{ gap:8px; }
+  .volWrap{ width:100%; justify-content:space-between; }
+}
   </style>
 </head>
 
@@ -261,6 +289,12 @@ body.evil::after{
           <input id="chkAudio" type="checkbox" checked />
           audio
         </label>
+
+<div class="volWrap" title="volume (saved)">
+  <span class="k">vol</span>
+  <input id="vol" class="vol" type="range" min="0" max="100" value="70" />
+  <span class="volNum" id="volNum">70%</span>
+</div>
       </div>
     </div>
   </div>
@@ -304,16 +338,26 @@ body.evil::after{
 
 // theme sync with index (pink / white / red)
 const THEME_KEY = "bella_theme";
-const THEMES = ["pink","white","red"]; // red = evil
+const THEMES = ["pink","white","violet","cyan","lime","red"]; // red = evil
 let theme = localStorage.getItem(THEME_KEY) || "pink";
 
 // keep the existing render logic happy
 let pinkMode = theme !== "white";
 
+
 function setCssThemeVars(mode){
   if (mode === "white"){
     document.documentElement.style.setProperty("--pink", "#ffffff");
     document.documentElement.style.setProperty("--pink2", "#d6d6dc");
+  } else if (mode === "violet"){
+    document.documentElement.style.setProperty("--pink", "#b66cff");
+    document.documentElement.style.setProperty("--pink2", "#e0c2ff");
+  } else if (mode === "cyan"){
+    document.documentElement.style.setProperty("--pink", "#40fff0");
+    document.documentElement.style.setProperty("--pink2", "#b8fffb");
+  } else if (mode === "lime"){
+    document.documentElement.style.setProperty("--pink", "#a6ff4d");
+    document.documentElement.style.setProperty("--pink2", "#d7ffad");
   } else if (mode === "red"){
     document.documentElement.style.setProperty("--pink", "#ff2a2a");
     document.documentElement.style.setProperty("--pink2", "#ff7a7a");
@@ -457,6 +501,30 @@ applyTheme();
 
     // subtle viz (fake or audio)
     const bgm = $("bgm");
+
+// volume (saved)
+const VOL_KEY = "bella_volume";
+const volEl = $("vol");
+const volNum = $("volNum");
+const savedVol = Number(localStorage.getItem(VOL_KEY));
+const initialVol = Number.isFinite(savedVol) ? savedVol : 0.70;
+
+function setVolume(v){
+  const vv = Math.max(0, Math.min(1, v));
+  bgm.volume = vv;
+  if (volEl) volEl.value = String(Math.round(vv * 100));
+  if (volNum) volNum.textContent = `${Math.round(vv * 100)}%`;
+  localStorage.setItem(VOL_KEY, String(vv));
+}
+
+setVolume(initialVol);
+
+if (volEl){
+  volEl.addEventListener("input", (e) => {
+    const v = Number(e.target.value) / 100;
+    setVolume(v);
+  });
+}
     let audioCtx = null, analyser = null, data = null, srcNode = null;
 
     async function resumeAudio(){
