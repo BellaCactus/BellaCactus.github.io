@@ -1247,7 +1247,7 @@
     function loadTrack(i){
       trackIndex = (i + tracks.length) % tracks.length;
       const t = tracks[trackIndex];
-      bgm.src = t.file;
+      bgm.src = encodeURI(t.file);
       trackName.textContent = t.name; // FIXED (was t.label)
       trackMeta.textContent = `file: ${t.file}`;
     }
