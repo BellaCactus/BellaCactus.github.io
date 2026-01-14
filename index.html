@@ -620,6 +620,36 @@ body.evil::before{
   0%,100%{ opacity:0.55; transform: translateY(0); }
   50%{ opacity:0.75; transform: translateY(-2px); }
 }
+
+/* volume slider */
+.volWrap{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(6px);
+  user-select:none;
+}
+.volWrap .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
+input.vol{
+  width:160px;
+  accent-color: var(--pink);
+  cursor:pointer;
+}
+.volNum{
+  font-family: var(--mono);
+  font-size:0.82rem;
+  color:var(--muted);
+  min-width:48px;
+  text-align:right;
+}
+@media (max-width: 520px){
+  input.vol{ width:120px; }
+  .volWrap{ width:100%; justify-content:space-between; }
+}
   </style>
 </head>
 
@@ -717,6 +747,12 @@ body.evil::before{
             <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
             <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
             <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
+
+            <div class="volWrap" title="volume (saved)">
+              <span class="k">vol</span>
+              <input id="vol" class="vol" type="range" min="0" max="100" value="70" />
+              <span class="volNum" id="volNum">70%</span>
+            </div>
           </div>
 
           <canvas id="waveform" height="48"></canvas>
@@ -1122,6 +1158,30 @@ body.evil::before{
     let trackIndex = Math.floor(Math.random() * tracks.length);
     let muted = false;
 
+// volume (saved)
+const VOL_KEY = "bella_volume";
+const volEl = $("vol");
+const volNum = $("volNum");
+const savedVol = Number(localStorage.getItem(VOL_KEY));
+const initialVol = Number.isFinite(savedVol) ? savedVol : 0.70;
+
+function setVolume(v){
+  const vv = Math.max(0, Math.min(1, v));
+  bgm.volume = vv;
+  if (volEl) volEl.value = String(Math.round(vv * 100));
+  if (volNum) volNum.textContent = `${Math.round(vv * 100)}%`;
+  localStorage.setItem(VOL_KEY, String(vv));
+}
+
+setVolume(initialVol);
+
+if (volEl){
+  volEl.addEventListener("input", (e) => {
+    const v = Number(e.target.value) / 100;
+    setVolume(v);
+  });
+}
+
     async function yepResumeAudio(){
       if (audioCtx && audioCtx.state === "suspended") {
         await audioCtx.resume();
@@ -1139,8 +1199,9 @@ body.evil::before{
 
 // --------- THEME (pink / white / red) + evil mode hook
 const THEME_KEY = "bella_theme";
-const THEMES = ["pink","white","red"]; // red = evil
+const THEMES = ["pink","white","violet","cyan","lime","red"]; // red = evil
 let currentTheme = localStorage.getItem(THEME_KEY) || "pink";
+
 
 function setCssThemeVars(mode){
   // we only touch the vars this file already uses (pink/pink2/pink3)
@@ -1148,6 +1209,18 @@ function setCssThemeVars(mode){
     document.documentElement.style.setProperty("--pink", "#ffffff");
     document.documentElement.style.setProperty("--pink2", "#d6d6dc");
     document.documentElement.style.setProperty("--pink3", "#ffffff");
+  } else if (mode === "violet"){
+    document.documentElement.style.setProperty("--pink", "#b66cff");
+    document.documentElement.style.setProperty("--pink2", "#e0c2ff");
+    document.documentElement.style.setProperty("--pink3", "#7a2dff");
+  } else if (mode === "cyan"){
+    document.documentElement.style.setProperty("--pink", "#40fff0");
+    document.documentElement.style.setProperty("--pink2", "#b8fffb");
+    document.documentElement.style.setProperty("--pink3", "#00b6ff");
+  } else if (mode === "lime"){
+    document.documentElement.style.setProperty("--pink", "#a6ff4d");
+    document.documentElement.style.setProperty("--pink2", "#d7ffad");
+    document.documentElement.style.setProperty("--pink3", "#34d11a");
   } else if (mode === "red"){
     document.documentElement.style.setProperty("--pink", "#ff2a2a");
     document.documentElement.style.setProperty("--pink2", "#ff7a7a");
@@ -1170,7 +1243,7 @@ async function applyTheme(mode, opts={}){
   // update little chip text if present
   const chip = document.querySelector('.chip strong.pulseText');
   if (chip){
-    chip.textContent = (mode === 'red') ? 'black / white / red' : 'black / white / pink';
+    chip.textContent = `palette: ${mode}`;
   }
 
   // red theme -> force bxmb threat
