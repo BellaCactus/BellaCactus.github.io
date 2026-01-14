@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+from pathlib import Path, PurePosixPath
+
+html = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -36,19 +38,32 @@
       animation: shimmer 4.8s ease-in-out infinite;
     }
     @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-    .wrap{max-width:1100px; margin:0 auto; padding:34px 16px 110px;}
+
+    .wrap{max-width:1150px; margin:0 auto; padding:34px 16px 110px;}
     .panel{
       background: linear-gradient(180deg, var(--panel), var(--panel2));
       border:1px solid var(--border); border-radius: var(--radius);
       box-shadow: var(--shadow); overflow:hidden; backdrop-filter: blur(6px);
+      position:relative;
+    }
+    .panel::before{
+      content:""; position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(900px 220px at 20% 0%, rgba(255,120,200,0.12), transparent 55%),
+        radial-gradient(900px 240px at 80% 0%, rgba(255,179,230,0.08), transparent 60%);
+      filter: blur(10px); opacity:0.8;
     }
     .panelTitle{
+      position:relative;
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding:14px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
       background: rgba(0,0,0,0.18);
     }
     .panelTitle h1{margin:0; font-size:1.2rem; font-family:var(--mono); color:var(--pink2);}
-    .panelInner{padding:14px 16px;}
+    .panelInner{position:relative; padding:14px 16px;}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .rowLeft,.rowRight{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
     .btn{
       cursor:pointer; display:inline-flex; align-items:center; gap:8px;
       padding:10px 12px; border-radius:12px;
@@ -60,7 +75,19 @@
     .btn:hover{transform: translateY(-1px); border-color: rgba(255,120,200,0.35); background: rgba(255,120,200,0.10);}
     .btn:active{transform: translateY(0); opacity:0.95;}
     .btn .k{font-family:var(--mono); font-size:0.8rem; color:var(--pink2);}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .btn.ghost{background: rgba(0,0,0,0.18);}
+    .btn.bad{border-color: rgba(255,77,184,0.25);}
+    .btn.bad:hover{background: rgba(255,77,184,0.10); border-color: rgba(255,77,184,0.45);}
+    .btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.24);
+      font-family:var(--mono); font-size:0.82rem; color:var(--muted);
+      max-width:100%;
+    }
+
     .search{
       flex:1; min-width:220px;
       padding:10px 12px; border-radius:12px;
@@ -69,28 +96,151 @@
       font-family: var(--mono); outline:none;
     }
     .search::placeholder{color: rgba(185,185,194,0.8);}
+
+    select.select{
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.28); color:var(--text);
+      font-family: var(--mono); outline:none;
+    }
+
     .small{font-family:var(--mono); font-size:0.82rem; color:var(--muted);}
+    .hint{
+      margin-top:10px;
+      border:1px dashed rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .kbd{
+      font-family:var(--mono);
+      font-size:0.78rem;
+      padding:2px 7px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.85);
+    }
+
+    .tagbar{
+      margin-top:12px;
+      display:flex; flex-wrap:wrap; gap:8px;
+      align-items:center;
+    }
+    .chip{
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.85);
+      font-family: var(--mono);
+      font-size:0.80rem;
+      user-select:none;
+      transition: transform .08s ease, border .2s ease, background .2s ease, opacity .2s ease;
+    }
+    .chip:hover{transform: translateY(-1px); border-color: rgba(255,120,200,0.35); background: rgba(255,120,200,0.10);}
+    .chip.active{border-color: rgba(255,120,200,0.55); background: rgba(255,120,200,0.12);}
+    .chip .n{color: var(--muted);}
+
+    .status{
+      margin-top:12px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .bar{
+      height:10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+      overflow:hidden;
+      flex:1;
+      min-width:220px;
+    }
+    .bar > i{
+      display:block; height:100%; width:0%;
+      background: linear-gradient(90deg, rgba(255,120,200,0.1), rgba(255,120,200,0.65), rgba(255,179,230,0.65));
+      box-shadow: 0 0 25px rgba(255,120,200,0.22);
+      transition: width 0.2s ease;
+    }
+
     .grid{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:12px;}
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
-    .card{border:1px solid rgba(255,255,255,0.10); border-radius:16px; overflow:hidden; background: rgba(0,0,0,0.20);}
+
+    .card{border:1px solid rgba(255,255,255,0.10); border-radius:16px; overflow:hidden; background: rgba(0,0,0,0.20); position:relative;}
     .thumb{aspect-ratio:16/9; width:100%; display:block; border:0; padding:0; background:transparent; cursor:pointer;}
     .thumb img{width:100%; height:100%; object-fit:cover; filter:saturate(1.05) contrast(1.05);}
     .meta{padding:12px; display:flex; flex-direction:column; gap:6px;}
     .title{font-family:var(--mono); font-size:0.92rem; line-height:1.35; color:rgba(255,255,255,0.95);}
+    .metaRow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+    .dot{opacity:0.6;}
+    .metaRow a{font-family:var(--mono); font-size:0.8rem;}
+    .badge{
+      position:absolute; top:10px; left:10px;
+      padding:5px 8px; border-radius:999px;
+      background: rgba(0,0,0,0.55);
+      border:1px solid rgba(255,255,255,0.12);
+      font-family: var(--mono);
+      font-size:0.75rem;
+      color: rgba(255,255,255,0.88);
+      backdrop-filter: blur(6px);
+    }
+
     .modal{
       position:fixed; inset:0; display:none; align-items:center; justify-content:center;
       background: rgba(0,0,0,0.66); backdrop-filter: blur(6px); padding:16px; z-index:50;
     }
     .modal.open{display:flex;}
-    .player{width:min(1100px, 96vw); background: rgba(0,0,0,0.35);
-      border:1px solid rgba(255,255,255,0.12); border-radius:18px; overflow:hidden; box-shadow: var(--shadow);
+    .player{
+      width:min(1100px, 96vw);
+      background: rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
     }
-    .playerTop{display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.35);
+    .playerTop{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
       font-family:var(--mono); font-size:0.84rem; color:var(--muted);
     }
-    iframe{width:100%; aspect-ratio:16/9; border:0; display:block; background:black;}
+    .playerTop .left{display:flex; align-items:center; gap:10px; min-width:0;}
+    .playerTop .right{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .playerTop .titleLine{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:56vw;}
+    iframe{
+      width:100%;
+      aspect-ratio:16/9;
+      border:0;
+      display:block;
+      background:black;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%; bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.65);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:14px;
+      padding:10px 12px;
+      font-family: var(--mono);
+      font-size:0.84rem;
+      color: rgba(255,255,255,0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      display:none;
+      z-index:80;
+      max-width:min(680px, 92vw);
+    }
+    .toast.show{display:block; animation: toastIn .18s ease-out;}
+    @keyframes toastIn{from{transform: translateX(-50%) translateY(6px); opacity:0}to{transform: translateX(-50%) translateY(0); opacity:1}}
+
+    .footerRow{
+      margin-top:12px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
   </style>
 </head>
 <body>
@@ -98,53 +248,250 @@
     <section class="panel">
       <div class="panelTitle">
         <h1>tamers12345 vault <span class="pulseText">(:3)</span></h1>
-        <span class="small" id="count">0</span>
+        <span class="pill" id="count">0</span>
       </div>
+
       <div class="panelInner">
         <div class="row">
-          <a class="btn" href="index.html"><span class="k">cd</span> home</a>
-          <button class="btn" id="rand" type="button"><span class="k">rng</span> random</button>
-          <input class="search" id="q" placeholder="search title / id..." autocomplete="off" />
+          <div class="rowLeft">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <a class="btn ghost" id="openChannel" href="#" target="_blank" rel="noopener"><span class="k">net</span> pony.tube</a>
+            <button class="btn" id="refresh" type="button" title="fetch latest from pony.tube"><span class="k">api</span> refresh</button>
+            <button class="btn" id="rand" type="button"><span class="k">rng</span> random</button>
+          </div>
+
+          <div class="rowRight" style="flex:1;">
+            <input class="search" id="q" placeholder="search title / tags / description..." autocomplete="off" />
+            <select class="select" id="sort" title="sort">
+              <option value="publishedAt_desc">newest</option>
+              <option value="publishedAt_asc">oldest</option>
+              <option value="views_desc">views</option>
+              <option value="likes_desc">likes</option>
+              <option value="name_asc">a → z</option>
+            </select>
+          </div>
         </div>
+
+        <div class="tagbar" id="tagbar" aria-label="tags"></div>
+
+        <div class="status">
+          <div class="bar" aria-label="loading">
+            <i id="barFill"></i>
+          </div>
+          <span class="small" id="statusText">ready.</span>
+        </div>
+
         <div class="grid" id="grid"></div>
-        <div class="small" style="margin-top:10px;">edit the <span class="pulseText">TAMERS</span> list inside this file to add videos (videoId + title).</div>
+
+        <div class="footerRow">
+          <div class="small">
+            tips: <span class="kbd">/</span> focus search • <span class="kbd">r</span> random • <span class="kbd">esc</span> close player
+          </div>
+          <button class="btn" id="more" type="button"><span class="k">+</span> load more</button>
+        </div>
+
+        <div class="hint small">
+          this page pulls public videos from the pony.tube channel via the PeerTube API (and caches results locally). if the API ever blocks you, it’ll fallback to a tiny manual list you can edit.
+        </div>
       </div>
     </section>
   </div>
 
   <div class="modal" id="modal" aria-hidden="true">
-    <div class="player">
+    <div class="player" role="dialog" aria-modal="true" aria-label="video player">
       <div class="playerTop">
-        <span class="pulseText" id="pt">playing…</span>
-        <button class="btn" id="close" type="button"><span class="k">esc</span> close</button>
+        <div class="left">
+          <span class="pulseText titleLine" id="pt">playing…</span>
+          <span class="small" id="psub"></span>
+        </div>
+        <div class="right">
+          <a class="btn ghost" id="watch" href="#" target="_blank" rel="noopener"><span class="k">w</span> watch</a>
+          <button class="btn ghost" id="copy" type="button"><span class="k">cp</span> copy link</button>
+          <button class="btn bad" id="close" type="button"><span class="k">esc</span> close</button>
+        </div>
       </div>
-      <iframe id="player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe id="player"
+        sandbox="allow-same-origin allow-scripts allow-presentation allow-popups"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen></iframe>
     </div>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     const $ = (id) => document.getElementById(id);
 
-    // put your vids here
-    const TAMERS = [
-      { videoId: "dQw4w9WgXcQ", title: "replace this with a real tamers video" },
-      { videoId: "M7lc1UVf-VE", title: "replace this too" }
+    // ===== settings =====
+    const INSTANCE = "https://pony.tube";
+    const CHANNEL_HANDLE = "tamersarchive"; // <- matches /c/tamersarchive/videos
+    const CACHE_KEY = "tamers_vault_cache_v1";
+    const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
+    const PAGE_SIZE = 48; // how many cards render at once (keeps it snappy on big lists)
+
+    // fallback manual list (only used if API fetch fails)
+    const MANUAL = [
+      // { uuid: "ad395c9b-9702-4060-ac05-4c94b64956ab", shortUUID: "", name: "example", url: "https://pony.tube/videos/watch/..." }
     ];
 
-    function thumb(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
-    function embed(id){ return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1&autoplay=1`; }
+    function fmtInt(n){
+      n = Number(n || 0);
+      return n.toLocaleString("en-NZ");
+    }
+    function fmtDate(iso){
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleDateString("en-NZ", { year:"numeric", month:"short", day:"2-digit" });
+    }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
+    function absPath(p){
+      if (!p) return "";
+      if (p.startsWith("http://") || p.startsWith("https://")) return p;
+      return INSTANCE.replace(/\/$/, "") + (p.startsWith("/") ? p : "/" + p);
+    }
+
+    // PeerTube embed URLs look like: /videos/embed/<uuid> (can add params like autoplay, start, etc)
+    function embedUrl(uuid){
+      const u = new URL(INSTANCE.replace(/\/$/, "") + "/videos/embed/" + uuid);
+      u.searchParams.set("autoplay", "1");
+      u.searchParams.set("muted", "0");
+      u.searchParams.set("peertubeLink", "0");
+      u.searchParams.set("title", "0");
+      u.searchParams.set("warningTitle", "0");
+      return u.toString();
+    }
+
+    // Pony.Tube has short links like /w/<shortUUID> on many pages
+    function watchUrl(v){
+      if (v.shortUUID) return INSTANCE.replace(/\/$/, "") + "/w/" + v.shortUUID;
+      if (v.uuid) return INSTANCE.replace(/\/$/, "") + "/videos/watch/" + v.uuid;
+      return v.url || "#";
+    }
+
+    function bestThumb(v){
+      // PeerTube API usually provides thumbnailPath and previewPath (relative)
+      return absPath(v.previewPath || v.thumbnailPath || v.thumbnail || v.preview || "");
+    }
+
+    function toast(msg){
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
+    // ===== dom =====
     const grid = $("grid");
     const q = $("q");
     const count = $("count");
-
     const modal = $("modal");
     const player = $("player");
     const pt = $("pt");
+    const psub = $("psub");
+    const watchA = $("watch");
+    const barFill = $("barFill");
+    const statusText = $("statusText");
+    const tagbar = $("tagbar");
+    const sortSel = $("sort");
+    const moreBtn = $("more");
+    const refreshBtn = $("refresh");
+
+    $("openChannel").href = INSTANCE.replace(/\/$/, "") + "/c/" + CHANNEL_HANDLE + "/videos";
+
+    // ===== state =====
+    let ALL = [];           // full list from API/cache/manual
+    let FILTERED = [];      // after search + tag filter
+    let RENDER_N = PAGE_SIZE;
+    let ACTIVE_TAG = "";
+
+    function setProgress(pct){
+      pct = clamp(pct, 0, 100);
+      barFill.style.width = pct.toFixed(1) + "%";
+    }
+    function setStatus(s){
+      statusText.textContent = s;
+    }
+
+    function normalize(v){
+      // keep fields consistent even if we’re using MANUAL fallback
+      return {
+        uuid: v.uuid || "",
+        shortUUID: v.shortUUID || "",
+        name: v.name || v.title || "",
+        description: v.description || "",
+        publishedAt: v.publishedAt || v.createdAt || "",
+        views: v.views || v.viewCount || 0,
+        likes: (v.likes || (v.likesCount ?? 0)) ?? 0,
+        dislikes: v.dislikes || 0,
+        tags: Array.isArray(v.tags) ? v.tags : [],
+        duration: v.duration || 0,
+        previewPath: v.previewPath || v.preview || "",
+        thumbnailPath: v.thumbnailPath || v.thumbnail || "",
+        url: v.url || ""
+      };
+    }
+
+    function computeTags(list){
+      const map = new Map();
+      for (const v of list){
+        for (const t of (v.tags || [])){
+          const k = String(t || "").trim();
+          if (!k) continue;
+          map.set(k, (map.get(k) || 0) + 1);
+        }
+      }
+      const sorted = [...map.entries()].sort((a,b) => b[1]-a[1]).slice(0, 18);
+      return sorted;
+    }
+
+    function renderTagbar(){
+      tagbar.innerHTML = "";
+      const tags = computeTags(ALL);
+
+      if (!tags.length){
+        const s = document.createElement("span");
+        s.className = "small";
+        s.textContent = "no tags detected (still cute tho)";
+        tagbar.appendChild(s);
+        return;
+      }
+
+      const allChip = document.createElement("div");
+      allChip.className = "chip" + (ACTIVE_TAG ? "" : " active");
+      allChip.innerHTML = `<span>#all</span><span class="n">${fmtInt(ALL.length)}</span>`;
+      allChip.addEventListener("click", () => { ACTIVE_TAG = ""; applyFilters(true); });
+      tagbar.appendChild(allChip);
+
+      for (const [t,n] of tags){
+        const chip = document.createElement("div");
+        chip.className = "chip" + (ACTIVE_TAG === t ? " active" : "");
+        chip.innerHTML = `<span>#${escapeHtml(t)}</span><span class="n">${fmtInt(n)}</span>`;
+        chip.addEventListener("click", () => {
+          ACTIVE_TAG = (ACTIVE_TAG === t) ? "" : t;
+          applyFilters(true);
+        });
+        tagbar.appendChild(chip);
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
 
     function openVid(v){
-      pt.textContent = v.title || v.videoId;
-      player.src = embed(v.videoId);
+      pt.textContent = v.name || v.uuid || "playing…";
+      psub.textContent = `${fmtDate(v.publishedAt)} • ${fmtInt(v.views)} views`;
+      watchA.href = watchUrl(v);
+
+      player.src = embedUrl(v.uuid);
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
     }
@@ -154,49 +501,266 @@
       player.src = "about:blank";
     }
 
-    function render(){
-      const query = (q.value || "").toLowerCase().trim();
-      const list = TAMERS.filter(v => {
-        const hay = `${v.title||""} ${v.videoId||""}`.toLowerCase();
-        return !query || hay.includes(query);
+    function sortList(list){
+      const mode = sortSel.value;
+      const arr = list.slice();
+
+      const getTime = (x) => {
+        const t = new Date(x.publishedAt || x.createdAt || 0).getTime();
+        return isNaN(t) ? 0 : t;
+      };
+
+      arr.sort((a,b) => {
+        if (mode === "publishedAt_desc") return getTime(b) - getTime(a);
+        if (mode === "publishedAt_asc") return getTime(a) - getTime(b);
+        if (mode === "views_desc") return (b.views||0) - (a.views||0);
+        if (mode === "likes_desc") return (b.likes||0) - (a.likes||0);
+        if (mode === "name_asc") return String(a.name||"").localeCompare(String(b.name||""), undefined, {sensitivity:"base"});
+        return 0;
       });
 
-      count.textContent = `${list.length}/${TAMERS.length}`;
+      return arr;
+    }
 
+    function applyFilters(resetRender){
+      if (resetRender) RENDER_N = PAGE_SIZE;
+
+      const query = (q.value || "").toLowerCase().trim();
+      const tag = (ACTIVE_TAG || "").toLowerCase();
+
+      FILTERED = ALL.filter(v => {
+        if (tag){
+          const tags = (v.tags || []).map(x => String(x).toLowerCase());
+          if (!tags.includes(tag)) return false;
+        }
+        if (!query) return true;
+        const hay = `${v.name||""} ${(v.tags||[]).join(" ")} ${v.description||""} ${v.uuid||""} ${v.shortUUID||""}`.toLowerCase();
+        return hay.includes(query);
+      });
+
+      FILTERED = sortList(FILTERED);
+
+      count.textContent = `${fmtInt(FILTERED.length)}/${fmtInt(ALL.length)}`;
+      renderCards();
+      renderTagbar();
+
+      moreBtn.disabled = FILTERED.length <= RENDER_N;
+    }
+
+    function renderCards(){
+      const list = FILTERED.slice(0, RENDER_N);
       grid.innerHTML = "";
+
       for (const v of list){
         const card = document.createElement("div");
         card.className = "card";
+
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = fmtDate(v.publishedAt) || "???";
+        card.appendChild(badge);
 
         const btn = document.createElement("button");
         btn.className = "thumb";
         btn.type = "button";
         btn.title = "open";
-        btn.innerHTML = `<img loading="lazy" alt="" src="${thumb(v.videoId)}" />`;
+        const t = bestThumb(v);
+        btn.innerHTML = `<img loading="lazy" alt="" src="${escapeHtml(t)}" />`;
         btn.addEventListener("click", () => openVid(v));
 
         const meta = document.createElement("div");
         meta.className = "meta";
-        meta.innerHTML = `<div class="title">${v.title || v.videoId}</div><div class="small">${v.videoId}</div>`;
+
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = v.name || v.uuid;
+
+        const row = document.createElement("div");
+        row.className = "metaRow";
+        row.innerHTML = `<span class="small">${fmtInt(v.views)} views</span><span class="dot">•</span><span class="small">${fmtInt(v.likes)} likes</span>`;
+
+        const links = document.createElement("div");
+        links.className = "metaRow";
+        links.innerHTML = `<a href="${escapeHtml(watchUrl(v))}" target="_blank" rel="noopener">open on pony.tube</a>`;
+
+        meta.appendChild(title);
+        meta.appendChild(row);
+        meta.appendChild(links);
 
         card.appendChild(btn);
         card.appendChild(meta);
         grid.appendChild(card);
       }
+
+      if (!list.length){
+        const empty = document.createElement("div");
+        empty.className = "small";
+        empty.style.marginTop = "10px";
+        empty.innerHTML = `no matches. try another query or clear the tag filter. <span class="pulseText">>:3</span>`;
+        grid.appendChild(empty);
+      }
     }
 
+    // ===== API fetch =====
+    function readCache(){
+      try{
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (!obj || !obj.time || !Array.isArray(obj.data)) return null;
+        return obj;
+      }catch{ return null; }
+    }
+    function writeCache(videos){
+      try{
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          time: Date.now(),
+          data: videos
+        }));
+      }catch{}
+    }
+
+    async function fetchChannelVideos(force=false){
+      const cached = readCache();
+      if (!force && cached && (Date.now() - cached.time) < CACHE_TTL_MS){
+        setStatus("loaded from cache.");
+        setProgress(100);
+        return cached.data.map(normalize);
+      }
+
+      const base = INSTANCE.replace(/\/$/, "") + "/api/v1/video-channels/" + encodeURIComponent(CHANNEL_HANDLE) + "/videos";
+      const COUNT = 100; // PeerTube API count max is commonly 100
+      let start = 0;
+      let total = null;
+      let out = [];
+
+      setStatus("fetching from pony.tube api…");
+      setProgress(6);
+
+      while (true){
+        const url = new URL(base);
+        url.searchParams.set("count", String(COUNT));
+        url.searchParams.set("start", String(start));
+        url.searchParams.set("sort", "-publishedAt");
+
+        const res = await fetch(url.toString(), { mode:"cors" });
+        if (!res.ok) throw new Error("api failed: " + res.status + " " + res.statusText);
+        const json = await res.json();
+
+        const data = Array.isArray(json.data) ? json.data : [];
+        if (typeof json.total === "number") total = json.total;
+
+        out.push(...data);
+
+        // progress
+        if (total){
+          const pct = clamp((out.length / total) * 92, 6, 98);
+          setProgress(pct);
+          setStatus(`fetching… ${fmtInt(out.length)} / ${fmtInt(total)}`);
+        } else {
+          setProgress(clamp(10 + out.length * 0.3, 10, 90));
+          setStatus(`fetching… ${fmtInt(out.length)}`);
+        }
+
+        if (!data.length) break;
+        start += data.length;
+
+        if (total && out.length >= total) break;
+        if (data.length < COUNT) break;
+
+        // tiny nap to be polite with rate limits
+        await new Promise(r => setTimeout(r, 180));
+      }
+
+      setProgress(100);
+      setStatus(`synced ${fmtInt(out.length)} videos.`);
+
+      const norm = out.map(normalize);
+      writeCache(norm);
+      return norm;
+    }
+
+    async function boot(force=false){
+      refreshBtn.disabled = true;
+      moreBtn.disabled = true;
+      setProgress(0);
+      setStatus("starting…");
+
+      try{
+        const vids = await fetchChannelVideos(force);
+        ALL = vids;
+        if (!ALL.length) throw new Error("no videos returned");
+        setStatus("ready.");
+      }catch(err){
+        console.warn(err);
+        setStatus("api failed, using manual fallback list.");
+        toast("api failed, fallback mode.");
+        ALL = MANUAL.map(normalize);
+      }finally{
+        refreshBtn.disabled = false;
+        applyFilters(true);
+        moreBtn.disabled = FILTERED.length <= RENDER_N;
+        setProgress(100);
+      }
+    }
+
+    // ===== events =====
     $("close").addEventListener("click", closeVid);
     modal.addEventListener("click", (e) => { if (e.target === modal) closeVid(); });
-    addEventListener("keydown", (e) => { if ((e.key||"").toLowerCase() === "escape") closeVid(); });
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
 
-    $("rand").addEventListener("click", () => {
-      const list = TAMERS.slice();
-      if (!list.length) return;
-      openVid(list[Math.floor(Math.random() * list.length)]);
+      if (k === "escape") closeVid();
+
+      // "/" focuses search (unless user is typing in an input already)
+      if (k === "/" && document.activeElement !== q){
+        e.preventDefault();
+        q.focus();
+        q.select();
+      }
+
+      // "r" = random (avoid when typing)
+      if (k === "r" && document.activeElement !== q && !modal.classList.contains("open")){
+        e.preventDefault();
+        pickRandom();
+      }
     });
 
-    q.addEventListener("input", render);
-    render();
+    function pickRandom(){
+      const list = FILTERED.length ? FILTERED : ALL;
+      if (!list.length) return;
+      openVid(list[Math.floor(Math.random() * list.length)]);
+    }
+
+    $("rand").addEventListener("click", pickRandom);
+
+    $("refresh").addEventListener("click", async () => {
+      toast("refreshing…");
+      await boot(true);
+    });
+
+    $("copy").addEventListener("click", async () => {
+      const url = watchA.href;
+      try{
+        await navigator.clipboard.writeText(url);
+        toast("copied.");
+      }catch{
+        toast("couldn't copy (browser said no).");
+      }
+    });
+
+    q.addEventListener("input", () => applyFilters(true));
+    sortSel.addEventListener("change", () => applyFilters(false));
+
+    moreBtn.addEventListener("click", () => {
+      RENDER_N += PAGE_SIZE;
+      RENDER_N = Math.min(RENDER_N, FILTERED.length);
+      renderCards();
+      moreBtn.disabled = FILTERED.length <= RENDER_N;
+    });
+
+    // go
+    boot(false);
   </script>
 </body>
 </html>
