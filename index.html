@@ -23,930 +23,1734 @@
       --pink2:#ffb3e6;
       --pink3:#ff4db8;
 
-      --good:#72ffb0;
-      --bad:#ff6b8b;
-      --warn:#ffd36f;
-
-      --shadow: 0 14px 40px rgba(0,0,0,0.45);
-      --glow: 0 0 0 rgba(0,0,0,0);
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
-
-      --radius: 18px;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
     body{
       margin:0;
-      font-family: var(--sans);
-      color: var(--text);
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(255,120,200,0.10), transparent 55%),
-        radial-gradient(900px 600px at 80% 25%, rgba(255,120,200,0.07), transparent 55%),
-        radial-gradient(900px 700px at 50% 95%, rgba(255,255,255,0.05), transparent 60%),
+        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
         linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
       overflow-x:hidden;
     }
 
-    a{ color:inherit; text-decoration:none; }
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    /* shimmer text (white <-> pink) */
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
     .wrap{
-      width:min(1100px, 92vw);
-      margin: 22px auto 60px;
-      display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
-    }
-
-    @media (max-width: 980px){
-      .wrap{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      background: linear-gradient(180deg, var(--panel), var(--panel2));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      max-width:980px;
+      margin:0 auto;
+      padding:44px 16px 110px;
       position:relative;
-      overflow:hidden;
+      z-index:2;
     }
 
-    .card:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 200px at 20% 0%, rgba(255,120,200,0.18), transparent 65%),
-                  radial-gradient(500px 250px at 80% 15%, rgba(255,255,255,0.08), transparent 60%);
-      pointer-events:none;
-      opacity:0.75;
-      filter: blur(0.2px);
-    }
-
-    .card > *{ position:relative; z-index:1; }
-
-    header{
-      grid-column: 1 / -1;
-      padding: 18px 20px;
+    /* top */
+    .top{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap:14px;
+      margin-bottom:18px;
     }
-
-    .title{
-      display:flex; align-items:baseline; gap:10px;
-      font-family: var(--mono);
-      letter-spacing:0.3px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
     }
-    .title h1{
+    .badge{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;
+      place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .badge img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      image-rendering:auto;
+      filter: saturate(1.05) contrast(1.05);
+    }
+    .titlebox{min-width:0;}
+    h1{
       margin:0;
-      font-size: 20px;
-      font-weight: 800;
-    }
-    .title .tag{
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(255,120,200,0.12);
-      border: 1px solid rgba(255,120,200,0.22);
-      color: var(--pink2);
-    }
-
-    .mini{
-      color: var(--muted);
-      font-size: 12px;
-      font-family: var(--mono);
-      opacity:0.95;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      text-align:right;
-    }
-    .mini b{ color: var(--pink2); font-weight:700; }
-
-    .gridLeft{
-      display:grid;
-      gap: 18px;
-    }
-
-    .gridRight{
-      display:grid;
-      gap: 18px;
-      align-content:start;
-    }
-
-    .terminal{
-      padding: 18px;
-      font-family: var(--mono);
-      min-height: 420px;
-    }
-
-    .termTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom: 12px;
-    }
-
-    .dots{
-      display:flex; gap:6px; align-items:center;
-    }
-    .dot{ width:10px; height:10px; border-radius:50%; opacity:0.9; }
-    .dot.r{ background:#ff5c70; }
-    .dot.y{ background:#ffd36f; }
-    .dot.g{ background:#72ffb0; }
-
-    .termTitle{
-      font-size:12px;
-      color: var(--muted);
-      opacity:0.95;
-      overflow:hidden;
+      font-size:2rem;
+      letter-spacing:0.5px;
       white-space:nowrap;
+      overflow:hidden;
       text-overflow:ellipsis;
     }
-
-    .termBody{
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px 14px 10px;
-      background: rgba(0,0,0,0.18);
-      min-height: 330px;
-      position:relative;
+    .sub{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:0.98rem;
+      max-width:560px;
     }
-
-    .lines{
-      font-size: 12.5px;
-      line-height: 1.55;
-      white-space: pre-wrap;
-      color: #f0f0f7;
-      text-shadow: 0 0 10px rgba(255,120,200,0.08);
-    }
-
-    .promptLine{
+    .chips{
       display:flex;
-      align-items:center;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 12.5px;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
-    .prompt{
-      color: var(--pink2);
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--muted);
+      backdrop-filter: blur(6px);
     }
-    .input{
-      flex:1;
-      min-width: 80px;
-      outline:none;
-      border:none;
-      background: transparent;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 12.5px;
-    }
-
-    .blink{
-      width: 8px;
-      height: 15px;
-      background: rgba(255,120,200,0.85);
+    .chip strong{color:var(--text); font-weight:600;}
+    .chip .dot{
       display:inline-block;
-      border-radius: 2px;
-      box-shadow: 0 0 14px rgba(255,120,200,0.25);
-      animation: blink 1s steps(2,end) infinite;
-      transform: translateY(2px);
-    }
-    @keyframes blink{ 50%{ opacity:0; } }
-
-    .side{
-      padding: 18px;
+      width:6px;height:6px;
+      border-radius:999px;
+      margin-right:6px;
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
     }
 
-    .sectionTitle{
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing:0.3px;
-      color: var(--muted);
-      margin: 0 0 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .pillRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-    }
-    .pill{
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text);
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-      user-select:none;
-    }
-    .pill:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.28);
-      background: rgba(255,120,200,0.08);
-    }
-
-    .links{
+    /* layout */
+    .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap:14px;
+      margin-top:14px;
     }
-    @media (max-width: 980px){
-      .links{ grid-template-columns: 1fr; }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr;}
+      .chips{justify-content:flex-start;}
+      .sub{max-width:100%;}
     }
 
-    .linkBtn{
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panelInner{ padding:16px 16px; }
+    .panelTitle{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,0.14);
-      border: 1px solid rgba(255,255,255,0.10);
-      font-family: var(--mono);
-      font-size: 12.5px;
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
     }
-    .linkBtn:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.35);
-      background: rgba(255,120,200,0.06);
+    .panelTitle h2{
+      margin:0;
+      font-size:1.05rem;
+      color:var(--pink2);
+      letter-spacing:0.3px;
     }
-    .linkBtn small{
-      color: var(--muted);
-      font-size: 11px;
+    .small{
+      font-size:0.86rem;
+      color:var(--muted);
     }
 
-    .stickyRow{
+    /* buttons */
+    .btnRow{
       display:flex;
-      gap: 10px;
+      gap:10px;
       flex-wrap:wrap;
-      margin-top: 12px;
-    }
-    .sticker{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--muted);
-      position:relative;
-      overflow:hidden;
-    }
-    .sticker img{
-      width: 34px; height: 34px;
-      border-radius: 10px;
-      image-rendering:auto;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45));
-    }
-    .sticker b{ color: var(--text); font-weight:700; }
-
-    .music{
-      padding: 18px;
-      font-family: var(--mono);
-    }
-    .player{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap:wrap;
+      margin-top:10px;
     }
     .btn{
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.20);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 8px 10px;
       cursor:pointer;
-      font-family: var(--mono);
-      font-size: 12px;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
       user-select:none;
     }
     .btn:hover{
+      text-decoration:none;
       transform: translateY(-1px);
       border-color: rgba(255,120,200,0.35);
-      background: rgba(255,120,200,0.06);
+      background: rgba(255,120,200,0.10);
     }
-    .range{
-      flex:1;
-      min-width: 160px;
-      accent-color: var(--pink);
-    }
-    .muted{ color: var(--muted); }
-
-    .wave{
-      margin-top: 12px;
-      height: 54px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.20);
-      position:relative;
-      overflow:hidden;
-    }
-    canvas{ display:block; width:100%; height:100%; }
-
-    .floaties{
-      pointer-events:none;
-      position: fixed;
-      inset:0;
-      overflow:hidden;
-      z-index: 0;
-      opacity: 0.9;
-      mix-blend-mode: screen;
-    }
-    .floater{
-      position:absolute;
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{
       font-family: var(--mono);
-      color: rgba(255,120,200,0.20);
-      text-shadow: 0 0 18px rgba(255,120,200,0.10);
+      font-size:0.8rem;
+      color:var(--pink2);
+    }
+
+    /* divider label for button rows */
+    .dividerLabel{
+      width:100%;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px dashed rgba(255,255,255,0.10);
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+    }
+
+    /* terminal */
+    .terminal{
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
+                  rgba(0,0,0,0.35);
+      border-top:1px solid rgba(255,255,255,0.05);
+      font-family: var(--mono);
+      padding:14px 16px;
+      min-height:190px;
+    }
+    .termLine{
+      display:flex;
+      gap:8px;
+      margin:6px 0;
+      align-items:flex-start;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .prompt{color:var(--pink2);}
+    .cmd{color:var(--text);}
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.1em;
+      background: var(--pink);
+      margin-left:2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align:-2px;
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+    @keyframes blink{50%{opacity:0;}}
+
+    .asciiBox{
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      border-radius:14px;
+      padding:12px 12px;
+      margin-top:12px;
+    }
+    .ascii{
+      white-space:pre;
+      font-size:12px;
+      line-height:1.15;
+      margin:0;
+      color:rgba(255,255,255,0.92);
+      font-family: var(--mono);
+    }
+    .ascii .pink{
+      color:var(--pink2);
+      text-shadow:0 0 10px rgba(255,120,200,0.35);
+    }
+
+    /* lists */
+    ul.clean{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+    ul.clean li{
+      padding:10px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.10);
+    }
+    ul.clean li:last-child{border-bottom:none;}
+    .tag{
+      display:inline-block;
+      font-size:0.72rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.05);
+      color:var(--pink2);
+      margin-left:6px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    /* music widget */
+    .musicBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.25);
+      margin-top:10px;
+    }
+    .nowPlaying{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .nowPlaying .t{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:320px;
+    }
+    .bars{
+      width:46px;
+      height:18px;
+      display:flex;
+      gap:3px;
+      align-items:flex-end;
+    }
+    .bars span{
+      width:7px;
+      height:6px;
+      background: var(--pink);
+      border-radius:3px;
+      box-shadow:0 0 12px rgba(255,120,200,0.35);
+      animation: bounce 0.9s ease-in-out infinite;
+      transform-origin:bottom;
+      opacity:0.9;
+    }
+    .bars span:nth-child(2){animation-delay:0.12s;}
+    .bars span:nth-child(3){animation-delay:0.24s;}
+    .bars span:nth-child(4){animation-delay:0.36s;}
+    .bars span:nth-child(5){animation-delay:0.48s;}
+    @keyframes bounce{
+      0%,100%{transform:scaleY(0.35);}
+      50%{transform:scaleY(1.15);}
+    }
+    .paused .bars span{ animation-play-state:paused; opacity:0.35; }
+
+    #waveform{
+      width:100%;
+      height:48px;
+      display:block;
+      margin-top:8px;
+      opacity:0.88;
+    }
+
+    /* floating oneko */
+    .oneko{
+      position:fixed;
+      bottom:12px;
+      right:12px;
+      z-index:5;
+      opacity:0.95;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      transform: translateZ(0);
+      animation: floaty 3.6s ease-in-out infinite;
+      cursor:pointer;
       user-select:none;
-      white-space: pre;
-      animation: drift linear infinite;
     }
-    @keyframes drift{
-      0%{ transform: translate3d(0,0,0); opacity:0; }
-      15%{ opacity:1; }
-      80%{ opacity:1; }
-      100%{ transform: translate3d(var(--dx), var(--dy),0); opacity:0; }
+    @keyframes floaty{
+      0%{transform: translateY(0);}
+      50%{transform: translateY(-6px);}
+      100%{transform: translateY(0);}
     }
-
-    .onTop{
-      position:relative;
-      z-index: 1;
+    .oneko img{
+      width:52px;
+      image-rendering:pixelated;
     }
 
-    /* tiny easter egg tooltip */
-    .toast{
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 999;
-      background: rgba(0,0,0,0.72);
-      border: 1px solid rgba(255,255,255,0.10);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text);
-      box-shadow: var(--shadow);
-      opacity:0;
-      transform: translateY(8px);
-      pointer-events:none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .toast.show{
-      opacity:1;
-      transform: translateY(0);
-    }
-
-    /* intro video overlay */
-    .introOverlay{
+    /* wall images (random sprinkled) */
+    #wall{
       position:fixed;
       inset:0;
-      background: rgba(0,0,0,0.85);
-      display:none;
+      z-index:1;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .sticker{
+      position:absolute;
+      pointer-events:auto;
+      transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease;
+      opacity:0.50;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.45));
+      user-select:none;
+    }
+    .sticker:hover{
+      opacity:0.06; /* hover = basically disappears so you can read */
+      filter:none;
+    }
+    .sticker img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      border-radius:10px;
+    }
+
+    /* intro gate */
+    #introGate{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      background: #000;
+      display:flex;
       align-items:center;
       justify-content:center;
-      z-index: 9999;
-      padding: 18px;
+      flex-direction:column;
+      gap:12px;
     }
-    .introOverlay.show{ display:flex; }
-    .introBox{
-      width: min(900px, 92vw);
-      border-radius: 18px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.60);
-      box-shadow: var(--shadow);
-      position:relative;
-    }
-    .introBox video{
-      width:100%;
-      display:block;
+    #introGate.hidden{display:none;}
+    #introVideo{
+      width:min(980px, 92vw);
+      max-height:60vh;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.8);
       background:#000;
     }
-    .introClose{
-      position:absolute;
-      top: 10px;
-      right: 10px;
-      z-index:2;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.55);
-      color: var(--text);
+    .introAscii{
+      width:min(980px, 92vw);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background: rgba(255,255,255,0.04);
+      padding:12px 14px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.55);
+    }
+    .introHint{
+      color:var(--muted);
       font-family: var(--mono);
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      cursor:pointer;
+      font-size:0.82rem;
+      opacity:0.85;
+      text-align:center;
+      padding:0 12px;
+    }
+
+    /* footer */
+    .footer{
+      margin-top:22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:0.86rem;
+      z-index:2;
+      position:relative;
+    }
+
+    /* intel pretty view */
+    .intelGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 900px){
+      .intelGrid{grid-template-columns:1fr;}
+    }
+    .intelCard{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.25);
+      overflow:hidden;
+    }
+    .intelCardHead{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .intelCardHead .h{
+      font-family: var(--mono);
+      font-size:0.86rem;
+      color:var(--pink2);
+      letter-spacing:0.2px;
+    }
+    .intelCardBody{
+      padding:10px 12px;
+    }
+    .kvRow{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:6px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size:0.84rem;
+    }
+    .kvRow:last-child{border-bottom:none;}
+    .kvKey{color: rgba(255,255,255,0.72);}
+    .kvVal{
+      color: rgba(255,255,255,0.95);
+      text-align:right;
+      max-width:62%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .kvVal.monoWrap{
+      white-space:pre-wrap;
+      word-break:break-word;
+      text-align:left;
+      max-width:100%;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-family: var(--mono);
+      font-size:0.78rem;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+    }
+    .pill .dot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+
+    /* raw json */
+    .kv{
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.92);
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .warn{
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+      margin-top:10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="floaties" id="floaties"></div>
+  <!-- sprinkled stickers behind everything -->
+  <div id="wall" aria-hidden="true"></div>
 
-  <div class="wrap onTop">
-    <header class="card">
-      <div class="title">
-        <h1>bella cactus</h1>
-        <span class="tag">personal site • terminal-ish • vibes</span>
-      </div>
-      <div class="mini">
-        <span>status: <b id="statusText">idle</b></span>
-        <span>seed: <b id="seedText">0000</b></span>
-        <span>build: <b>gh-pages</b></span>
-      </div>
-    </header>
+  <!-- intro gate -->
+  <div id="introGate">
+    <video id="introVideo" autoplay muted playsinline>
+      <source src="media/hello-everypony-mlp-dexter.mp4" type="video/mp4" />
+    </video>
 
-    <div class="gridLeft">
-      <section class="card terminal">
-        <div class="termTop">
-          <div class="dots">
-            <span class="dot r"></span>
-            <span class="dot y"></span>
-            <span class="dot g"></span>
-          </div>
-          <div class="termTitle" id="termTitle">/home/bella :: boot</div>
-        </div>
-
-        <div class="termBody" id="termBody">
-          <div class="lines" id="lines"></div>
-
-          <div class="promptLine">
-            <span class="prompt">bella@cactus:~$</span>
-            <input class="input" id="cmd" autocomplete="off" spellcheck="false" placeholder="type 'help' or click a pill..." />
-            <span class="blink" aria-hidden="true"></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="card music">
-        <div class="sectionTitle">
-          <span>music / ambient noise</span>
-          <span class="muted" id="trackName">no track</span>
-        </div>
-
-        <div class="player">
-          <button class="btn" id="playBtn">play</button>
-          <button class="btn" id="nextBtn">next</button>
-          <button class="btn" id="muteBtn">mute</button>
-          <input class="range" id="vol" type="range" min="0" max="1" step="0.01" value="0.65" />
-          <span class="muted" id="timeText">0:00</span>
-        </div>
-
-        <div class="wave">
-          <canvas id="wave"></canvas>
-        </div>
-      </section>
+    <div class="introAscii">
+      <pre class="ascii" id="introAscii"></pre>
     </div>
 
-    <div class="gridRight">
-      <section class="card side">
-        <div class="sectionTitle">
-          <span>quick actions</span>
-          <span class="muted">click to run</span>
+    <div class="introHint">
+      if autoplay is blocked, click the video once. after it ends, the site spawns. (:3)
+    </div>
+
+    <button class="btn" id="skipIntro" type="button" style="pointer-events:auto;">
+      <span class="k">esc</span> skip intro
+    </button>
+  </div>
+
+  <!-- main -->
+  <div class="wrap" id="main" style="visibility:hidden;">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <img src="media/twi looking.png" alt="badge" />
         </div>
-        <div class="pillRow" id="pillRow">
-          <div class="pill" data-cmd="help">help</div>
-          <div class="pill" data-cmd="whoami">whoami</div>
-          <div class="pill" data-cmd="ls">ls</div>
-          <div class="pill" data-cmd="play">play</div>
-          <div class="pill" data-cmd="video">video</div>
-          <div class="pill" data-cmd="glitch">glitch</div>
-          <div class="pill" data-cmd="idle">idle</div>
-          <div class="pill" data-cmd="ascii">ascii</div>
-          <div class="pill" data-cmd="dreams">dreams</div>
-          <div class="pill" data-cmd="egg">egg</div>
+        <div class="titlebox">
+          <h1 class="pulseText">bella cactus</h1>
+          <div class="sub">coding, reverse engineering, servers, and whatever i’m obsessed with this week</div>
         </div>
+      </div>
 
-        <div class="sectionTitle" style="margin-top:16px;">
-          <span>pages / portals</span>
-          <span class="muted">click to jump</span>
-        </div>
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
+        <div class="chip">timezone: <strong>nz</strong></div>
+        <div class="chip">mode: <strong>building</strong></div>
+      </div>
+    </div>
 
-        <div class="links">
-          <a class="linkBtn" href="pages/limiter.html">
-            <span>limiter <small>(deep dive)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/os.html">
-            <span>fake os <small>(cli playground)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/ascii.html">
-            <span>ascii zoo <small>(creatures)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/idle.html">
-            <span>idle <small>(screensaver)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/glitch.html">
-            <span>glitch <small>(corruption)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/dreams.html">
-            <span>dreams <small>(log)</small></span>
-            <span>↗</span>
-          </a>
-
-          <!-- fixed these three -->
-          <a class="linkBtn" href="pages/tamers.html">
-            <span>tamers vault <small>(pony.tube archive)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/vault.html">
-            <span>vault <small>(random stash)</small></span>
-            <span>↗</span>
-          </a>
-
-          <a class="linkBtn" href="pages/tab-crypt.html">
-            <span>tab-crypt <small>(??)</small></span>
-            <span>↗</span>
-          </a>
+    <div class="grid">
+      <!-- left -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>links</h2>
+          <div class="small">last update: <span id="date"></span></div>
         </div>
 
-        <div class="sectionTitle" style="margin-top:16px;">
-          <span>stickers / little guys</span>
-          <span class="muted">they’re watching</span>
-        </div>
+        <div class="panelInner">
+          
+<div class="btnRow">
+  <a class="btn" href="pages/ascii.html"><span class="k">ascii</span> ascii zoo</a>
+  <a class="btn" href="pages/tamers.html"><span class="k">pony</span> tamers vault</a>
+  <a class="btn" href="pages/vault.html"><span class="k">vlt</span> vault</a>
+  <a class="btn" href="pages/audio-editor.html"><span class="k">wav</span> audio editor</a>
+  <a class="btn" href="pages/tab-crypt.html"><span class="k">tab</span> tab crypt</a>
+  <span class="dividerLabel">tools</span>
+  <a class="btn" href="pages/keyb.html"><span class="k">kbd</span> keyb tester</a>
+  <a class="btn" href="pages/limiter.html"><span class="k">lim</span> limiter</a>
+  <a class="btn" href="pages/epic-calc.html"><span class="k">calc</span> epic calc</a>
+  <a class="btn" href="pages/pokecap.html"><span class="k">db</span> pokecap</a>
+  <a class="btn" href="pages/shrines.html"><span class="k">♡</span> shrines</a>
+  <a class="btn" href="pages/os.html"><span class="k">os</span> os</a>
+  <a class="btn" href="pages/idle.html"><span class="k">zzz</span> idle</a>
+  <a class="btn" href="pages/glitch.html"><span class="k">fx</span> glitch</a>
+  <a class="btn" href="pages/dreams.html"><span class="k">log</span> dreams</a>
+</div>
 
-        <div class="stickyRow">
-          <div class="sticker" title="oneko lives here">
-            <img src="media/oneko.gif" alt="oneko"/>
-            <div><b>oneko</b><br/><span class="muted">cat.exe</span></div>
+          <!-- music -->
+          <div class="musicBar" id="musicBar">
+            <div class="nowPlaying">
+              <div class="t">soundtrack: <span class="pulseText" id="trackName">loading…</span></div>
+              <div class="t" id="trackMeta">click play if browser blocks autoplay</div>
+            </div>
+            <div class="bars" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
           </div>
 
-          <div class="sticker" title="twi is observing">
-            <img src="media/twi looking.png" alt="twi"/>
-            <div><b>twi</b><br/><span class="muted">judging gently</span></div>
+          <div class="btnRow">
+            <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
+            <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
+            <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
+          </div>
+
+          <canvas id="waveform" height="48"></canvas>
+
+          <!-- terminal -->
+          <div class="terminal" aria-label="terminal">
+            <div class="termLine">
+              <span class="prompt">bella@cactus</span><span class="cmd">:</span><span class="cmd">~</span><span class="cmd">$</span>
+              <span class="cmd" id="typed"></span><span class="cursor"></span>
+            </div>
+            <div id="termOut"></div>
+
+            <div class="asciiBox">
+              <pre class="ascii" id="asciiAnimal"></pre>
+            </div>
           </div>
         </div>
       </section>
+
+      <!-- right -->
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>about</h2>
+          <div class="small pulseText">hi :3</div>
+        </div>
+        <div class="panelInner">
+          <p>
+            i’m <span class="pulseText">bella</span>. i build stuff that’s useful, weird, or both.
+            i’m into <span class="pulseText">reverse engineering</span>, coding, software/hardware, and server nonsense.
+          </p>
+
+          <ul class="clean">
+            <li>
+              <strong class="pulseText">games</strong>
+              <span class="tag">destiny 2</span>
+              <span class="tag">geometry dash</span>
+              <span class="tag">minecraft (technical)</span>
+            </li>
+            <li>
+              <strong class="pulseText">studying</strong>
+              <span class="tag">level 6</span>
+              <span class="tag">computing</span>
+            </li>
+            <li>
+              <strong class="pulseText">passions</strong>
+              <span class="tag">reverse eng</span>
+              <span class="tag">tools</span>
+              <span class="tag">automation</span>
+              <span class="tag">servers</span>
+            </li>
+          </ul>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
+            <a class="btn" href="#apps"><span class="k">run</span> apps</a>
+            <a class="btn" href="#intel"><span class="k">scan</span> intel</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="panel" id="projects" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>projects</h2>
+        <div class="small">stuff i’m working on / polishing</div>
+      </div>
+      <div class="panelInner">
+        <ul class="clean">
+          <li>
+            <strong class="pulseText">bella limiter</strong>
+            <span class="tag">overlay</span>
+            <span class="tag">network-y</span>
+            <div class="small" style="margin-top:6px;">
+              repo: <a href="https://github.com/BellaCactus/bella-limiter-" target="_blank" rel="noreferrer">github.com/BellaCactus/bella-limiter-</a>
+            </div>
+          </li>
+          <li>
+            <strong class="pulseText">site</strong>
+            <span class="tag">github pages</span>
+            <span class="tag">terminal vibe</span>
+            <div class="small" style="margin-top:6px;">
+              placeholder now, will expand when your wamp pages land.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- apps/tools -->
+    <section class="panel" id="apps" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>apps / tools</h2>
+        <div class="small">local pages (static)</div>
+      </div>
+      <div class="panelInner">
+        
+<div class="btnRow">
+  <a class="appBtn" href="pages/audio-editor.html">audio editor</a>
+  <a class="appBtn" href="pages/tab-crypt.html">tab crypt</a>
+  <a class="appBtn" href="pages/tamers.html">tamers vault</a>
+  <a class="appBtn" href="pages/vault.html">vault</a>
+  <span class="dividerLabel">projects</span>
+  <a class="appBtn" href="pages/epic-calc.html">epic calc</a>
+  <a class="appBtn" href="pages/pokecap.html">pokecap</a>
+  <a class="appBtn" href="pages/legacy-home.html">legacy home</a>
+  <a class="appBtn" href="pages/sigmaness-basiclaly-epic.html">sigmaness</a>
+  <span class="dividerLabel">tools</span>
+  <a class="appBtn" href="pages/keyb.html">keyboard tester</a>
+  <a class="appBtn" href="pages/ascii-art-maker-type-shit.html">image/video → ascii</a>
+  <a class="appBtn" href="pages/encrypter.html">encrypter</a>
+  <a class="appBtn" href="pages/dungeoncrawler.html">dungeon</a>
+  <a class="appBtn" href="pages/snkaegame.html">snake</a>
+  <a class="appBtn" href="pages/controllar-test.html">controller</a>
+  <a class="appBtn" href="pages/ascii.html">ascii zoo</a>
+  <a class="appBtn" href="pages/idle.html">idle</a>
+  <a class="appBtn" href="pages/glitch.html">glitch</a>
+  <a class="appBtn" href="pages/dreams.html">dreams</a>
+  <a class="appBtn" href="pages/limiter.html">limiter</a>
+  <a class="appBtn" href="pages/boucnignlolgo.html">bouncing logo</a>
+  <a class="appBtn" href="pages/os.html">os</a>
+  <a class="appBtn" href="pages/shrines.html">shrines</a>
+</div>
+        <div class="small" style="margin-top:10px;">
+          if any filename here doesn’t match your repo, just rename either the file or the link label. ez.
+        </div>
+      </div>
+    </section>
+
+    <!-- spicy intel panel (consent / permission based) -->
+    <section class="panel" id="intel" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>intel (local)</h2>
+        <div class="small">readable view + raw json toggle</div>
+      </div>
+
+      <div class="panelInner">
+        <div class="btnRow" style="margin-top:0;">
+          <button class="btn" id="intelPrettyBtn" type="button"><span class="k">ui</span> pretty</button>
+          <button class="btn" id="intelJsonBtn" type="button"><span class="k">{}</span> raw json</button>
+          <span class="pill" id="intelStatus"><span class="dot"></span> ready</span>
+        </div>
+
+        <div id="intelPretty" class="intelGrid" aria-live="polite"></div>
+        <pre class="kv" id="intelOut" style="display:none;">loading…</pre>
+
+        <div class="btnRow">
+          <button class="btn" id="btnIP" type="button"><span class="k">net</span> reveal public ip</button>
+          <button class="btn" id="btnGeo" type="button"><span class="k">gps</span> request location</button>
+          <button class="btn" id="btnNotify" type="button"><span class="k">ping</span> request notifications</button>
+          <button class="btn" id="btnClipboard" type="button"><span class="k">clip</span> read clipboard</button>
+          <button class="btn" id="btnMedia" type="button"><span class="k">av</span> request mic/cam</button>
+          <button class="btn" id="btnDevices" type="button"><span class="k">ls</span> enumerate devices</button>
+          <button class="btn" id="btnStorage" type="button"><span class="k">df</span> storage estimate</button>
+          <button class="btn" id="btnBattery" type="button"><span class="k">bat</span> battery</button>
+          <button class="btn" id="btnWebGL" type="button"><span class="k">gpu</span> webgl renderer</button>
+        </div>
+
+        <div class="warn">
+          note: this page does <span class="pulseText">not</span> silently fingerprint or track people.
+          buttons trigger standard browser permission prompts. data stays on-page. ip lookup calls a public api when clicked.
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      © <span class="pulseText">bella cactus</span> • html + stubbornness
     </div>
   </div>
 
-  <div class="toast" id="toast">...</div>
-
-  <div class="introOverlay" id="intro">
-    <div class="introBox">
-      <button class="introClose" id="introClose">close</button>
-      <video id="introVid" src="media/intro.mp4" controls></video>
-    </div>
+  <!-- floating oneko -->
+  <div class="oneko" id="oneko" title="click me" aria-hidden="false">
+    <img id="onekoImg" src="media/oneko.gif" alt="oneko" />
   </div>
 
-  <audio id="audio" preload="metadata"></audio>
+  <!-- audio elements -->
+  <audio id="bgm" preload="auto" loop></audio>
+  <audio id="yeah" preload="auto" src="assests/lil-jon-yeah.mp3"></audio>
 
   <script>
-    const seed = Math.floor(Math.random()*9999).toString().padStart(4,"0");
-    document.getElementById("seedText").textContent = seed;
+    // --------- tiny helpers
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const rand = (a, b) => a + Math.random() * (b - a);
 
-    const statusText = document.getElementById("statusText");
-    const termTitle = document.getElementById("termTitle");
-    const linesEl = document.getElementById("lines");
-    const cmdEl = document.getElementById("cmd");
-    const toastEl = document.getElementById("toast");
+    // date
+    const d = new Date();
+    $("date").textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
-    const audio = document.getElementById("audio");
-    const playBtn = document.getElementById("playBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const muteBtn = document.getElementById("muteBtn");
-    const vol = document.getElementById("vol");
-    const timeText = document.getElementById("timeText");
-    const trackName = document.getElementById("trackName");
+    // oneko fallback filename
+    const onekoImg = $("onekoImg");
+    onekoImg.addEventListener("error", () => {
+      if (!onekoImg.dataset.tried) {
+        onekoImg.dataset.tried = "1";
+        onekoImg.src = "media/oneko.gif";
+      }
+    });
 
-    const intro = document.getElementById("intro");
-    const introVid = document.getElementById("introVid");
-    const introClose = document.getElementById("introClose");
+    // oneko easter egg: click -> play "yeah"
+    $("oneko").addEventListener("click", async () => {
+      try {
+        await yepResumeAudio();
+        const y = $("yeah");
+        y.currentTime = 0;
+        y.play().catch(()=>{});
+      } catch(e){}
+    });
 
-    const tracks = [
-      { name:"void hum", file:"assests/void-hum.mp3" },
-      { name:"pink noise", file:"assests/pink-noise.mp3" },
-      { name:"soft rain", file:"assests/soft-rain.mp3" },
-      { name:"computer room", file:"assests/computer-room.mp3" }
+    // --------- INTRO GATE (video then show site)
+    const introGate = $("introGate");
+    const introVideo = $("introVideo");
+    const main = $("main");
+    const skipIntro = $("skipIntro");
+
+    const introFrames = [
+`   <span class="pink">[ booting… ]</span>
+   hello everypony sequence armed
+   loading: terminal • music • stickers`,
+`   <span class="pink">[ handshake ]</span>
+   user: bella
+   theme: black/white/pink`,
+`   <span class="pink">[ ok ]</span>
+   press play if autoplay blocks
+   then we drop into the site :3`
     ];
 
-    let trackIndex = 0;
-    let playing = false;
+    function setIntroAscii(i){
+      $("introAscii").innerHTML = introFrames[i % introFrames.length];
+    }
+    let introAsciiTick = 0;
+    setIntroAscii(0);
+    const introInterval = setInterval(() => setIntroAscii(++introAsciiTick), 900);
 
-    function toast(msg){
-      toastEl.textContent = msg;
-      toastEl.classList.add("show");
-      clearTimeout(toastEl._t);
-      toastEl._t = setTimeout(()=>toastEl.classList.remove("show"), 1600);
+    function showSite(){
+      clearInterval(introInterval);
+      introGate.classList.add("hidden");
+      main.style.visibility = "visible";
+      // spawn stickers + start terminal + pick track + intel
+      rerollAll();
+      startTerminal();
+      refreshIntelBase();
     }
 
-    function writeLine(str){
-      linesEl.textContent += str + "\n";
-      linesEl.scrollTop = linesEl.scrollHeight;
+    skipIntro.addEventListener("click", () => {
+      try { introVideo.pause(); } catch(e){}
+      showSite();
+    });
+
+    introVideo.addEventListener("ended", showSite);
+
+    // safety nets so you never get stuck on the intro
+    introVideo.addEventListener("error", () => showSite());
+    introGate.addEventListener("click", (e) => {
+      if (e.target && e.target.id !== "skipIntro") showSite();
+    });
+    addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && introGate.style.display !== "none") showSite();
+    });
+    setTimeout(() => {
+      if (introGate.style.display !== "none") showSite();
+    }, 8000);
+
+
+    // if autoplay is blocked, clicking video should start it
+    introVideo.addEventListener("click", () => {
+      introVideo.play().catch(()=>{});
+    });
+
+    // --------- STICKERS (random wall images, NO OVERLAP)
+    const wall = $("wall");
+
+    // EDIT THIS LIST to match your actual filenames
+    const stickerFiles = [
+      "media/twi looking.png",
+      "media/twi and trixy.jpg",
+      "media/ponies in bed.jpg",
+      "media/yuri meme.png"
+    ];
+
+    function clearWall(){
+      while(wall.firstChild) wall.removeChild(wall.firstChild);
     }
 
-    function boot(){
-      const bootLines = [
-        "booting bella cactus... ok",
-        "loading modules: [terminal, stickers, ambient-audio, floaties]",
-        "mounting /pages as portals",
-        "running post-init hooks...",
-        "type 'help' for commands"
-      ];
-      linesEl.textContent = "";
-      let i=0;
-      const t = setInterval(()=>{
-        writeLine(bootLines[i]);
-        i++;
-        if(i>=bootLines.length){
-          clearInterval(t);
-          writeLine("");
-          statusText.textContent = "ready";
+    function rectsOverlap(a, b, pad=10){
+      return !(
+        a.x + a.w + pad < b.x ||
+        a.x > b.x + b.w + pad ||
+        a.y + a.h + pad < b.y ||
+        a.y > b.y + b.h + pad
+      );
+    }
+
+    function spawnStickers(){
+      clearWall();
+
+      const countTarget = window.innerWidth < 700 ? 7 : 12;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      // "safe zones" where stickers shouldn't spawn (avoid covering your readable content)
+      const safe = [];
+      const wrapEl = document.querySelector(".wrap");
+      if (wrapEl){
+        const r = wrapEl.getBoundingClientRect();
+        safe.push({
+          x: r.left - 30,
+          y: r.top - 40,
+          w: r.width + 60,
+          h: r.height + 80
+        });
+      } else {
+        safe.push({ x: w*0.10, y: 0, w: w*0.80, h: 520 });
+      }
+
+      const placed = [];
+
+      for (let i = 0; i < countTarget; i++){
+        const file = stickerFiles[i % stickerFiles.length];
+        const size = rand(120, window.innerWidth < 900 ? 220 : 260);
+        const box = { x:0, y:0, w:size, h:size };
+
+        let ok = false;
+        const tries = 120;
+        for (let t = 0; t < tries; t++){
+          const x = rand(10, Math.max(20, w - size - 10));
+          const y = rand(10, Math.max(20, h - size - 10));
+          box.x = x; box.y = y;
+
+          let inSafe = false;
+          for (const s of safe){
+            if (rectsOverlap(box, s, 0)){ inSafe = true; break; }
+          }
+          if (inSafe) continue;
+
+          let hit = false;
+          for (const p of placed){
+            if (rectsOverlap(box, p, 18)){ hit = true; break; }
+          }
+          if (hit) continue;
+
+          ok = true;
+          break;
         }
-      }, 220);
-    }
-    boot();
+        if (!ok) continue;
 
-    function setTrack(i){
+        placed.push({ ...box });
+
+        const div = document.createElement("div");
+        div.className = "sticker";
+
+        const img = document.createElement("img");
+        img.src = file;
+
+        div.style.width = `${size}px`;
+        div.style.height = `${size}px`;
+        div.style.left = `${box.x}px`;
+        div.style.top = `${box.y}px`;
+
+        const rot = rand(-22, 22);
+        div.style.transform = `rotate(${rot}deg)`;
+
+        div.style.pointerEvents = "auto";
+        div.addEventListener("click", (e) => {
+          e.stopPropagation();
+          window.open(img.src, "_blank", "noopener");
+        });
+
+        div.appendChild(img);
+        wall.appendChild(div);
+      }
+    }
+
+    window.addEventListener("resize", () => {
+      spawnStickers();
+    });
+
+    // --------- MUSIC (random soundtrack + waveform)
+    const tracks = [
+      { name: "lil-jon-yeah", file: "assests/lil-jon-yeah.mp3" },
+      { name: "530", file: "assests/530 0.mp3" },
+      { name: "bipolar", file: "assests/bipolar.mp3" },
+      { name: "bxmb threat", file: "assests/Bxmb Threat.mp3" },
+      { name: "endless sea", file: "assests/FREDDIE DREDD - ENDLESS SEA.mp3" },
+      { name: "i hope that you think of me", file: "assests/I hope that you think of me 0.mp3" },
+      { name: "intergalactic tv show", file: "assests/Intergalactic TV Show.mp3" },
+      { name: "mobile suit woe", file: "assests/Mobile Suit Woe 0.mp3" },
+      { name: "tinashe - nasty", file: "assests/Tinashe - Nasty (Official Video) 0.mp3" },
+      { name: "who i smoke", file: "assests/Who I Smoke (Official Music Video).mp3" },
+      { name: "tay-k - dat way", file: "assests/Tay-K - Dat Way [Official Audio] 4.mp3" },
+      { name: "tay-k - i love my choppa", file: "assests/Tay-K - I Love My Choppa [Official Audio] 4.mp3" }
+    ];
+
+    const bgm = $("bgm");
+    const musicBar = $("musicBar");
+    const trackName = $("trackName");
+    const trackMeta = $("trackMeta");
+
+    let trackIndex = Math.floor(Math.random() * tracks.length);
+    let muted = false;
+
+    async function yepResumeAudio(){
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+    }
+
+    function loadTrack(i){
       trackIndex = (i + tracks.length) % tracks.length;
-      audio.src = tracks[trackIndex].file;
-      trackName.textContent = tracks[trackIndex].name;
+      const t = tracks[trackIndex];
+      bgm.src = t.file;
+      trackName.textContent = t.label;
+      trackMeta.textContent = `file: ${t.file}`;
     }
 
-    setTrack(0);
-    vol.addEventListener("input", ()=> audio.volume = parseFloat(vol.value));
-    audio.volume = parseFloat(vol.value);
-
-    function play(){
-      audio.play().then(()=>{
-        playing = true;
-        statusText.textContent = "playing";
-        playBtn.textContent = "pause";
-      }).catch(()=>{
-        toast("audio refused (browser says no) :(");
-      });
-    }
-    function pause(){
-      audio.pause();
-      playing = false;
-      statusText.textContent = "ready";
-      playBtn.textContent = "play";
-    }
-
-    playBtn.addEventListener("click", ()=>{
-      if(!playing) play(); else pause();
+    $("playPause").addEventListener("click", async () => {
+      await yepResumeAudio();
+      if (bgm.paused) {
+        bgm.play().catch(()=>{});
+        musicBar.classList.remove("paused");
+        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+      } else {
+        bgm.pause();
+        musicBar.classList.add("paused");
+        $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
+      }
     });
 
-    nextBtn.addEventListener("click", ()=>{
-      setTrack(trackIndex+1);
-      if(playing) play();
-      toast("next track");
+    $("nextTrack").addEventListener("click", async () => {
+      await yepResumeAudio();
+      loadTrack(trackIndex + 1);
+      bgm.play().catch(()=>{});
+      musicBar.classList.remove("paused");
+      $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
     });
 
-    muteBtn.addEventListener("click", ()=>{
-      audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted ? "unmute" : "mute";
-      toast(audio.muted ? "muted" : "unmuted");
-    });
-
-    audio.addEventListener("timeupdate", ()=>{
-      const t = Math.floor(audio.currentTime || 0);
-      const m = Math.floor(t/60);
-      const s = (t%60).toString().padStart(2,"0");
-      timeText.textContent = `${m}:${s}`;
+    $("mute").addEventListener("click", () => {
+      muted = !muted;
+      bgm.muted = muted;
+      $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
     });
 
     // waveform
-    const c = document.getElementById("wave");
-    const ctx = c.getContext("2d");
-    let raf;
+    const waveformCanvas = $("waveform");
+    const wf = waveformCanvas.getContext("2d");
 
-    function resizeCanvas(){
-      const r = c.getBoundingClientRect();
-      c.width = Math.floor(r.width * devicePixelRatio);
-      c.height = Math.floor(r.height * devicePixelRatio);
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+    let audioCtx = null;
+    let analyser = null;
+    let data = null;
+    let srcNode = null;
 
-    let analyser, data;
-    try{
-      const actx = new (window.AudioContext || window.webkitAudioContext)();
-      const src = actx.createMediaElementSource(audio);
-      analyser = actx.createAnalyser();
+    function setupWaveform(){
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      srcNode = audioCtx.createMediaElementSource(bgm);
+      analyser = audioCtx.createAnalyser();
       analyser.fftSize = 512;
       data = new Uint8Array(analyser.frequencyBinCount);
-      src.connect(analyser);
-      analyser.connect(actx.destination);
 
-      document.addEventListener("click", ()=>{ if(actx.state==="suspended") actx.resume(); }, { once:false });
-    }catch(e){
-      analyser = null;
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      drawWave();
     }
 
     function drawWave(){
-      raf = requestAnimationFrame(drawWave);
-      ctx.clearRect(0,0,c.width,c.height);
+      requestAnimationFrame(drawWave);
+      if (!analyser) return;
 
-      const w = c.width, h = c.height;
-      ctx.globalAlpha = 0.95;
+      const rect = waveformCanvas.getBoundingClientRect();
+      const cw = Math.floor(rect.width * devicePixelRatio);
+      const ch = Math.floor(rect.height * devicePixelRatio);
+      if (waveformCanvas.width !== cw || waveformCanvas.height !== ch){
+        waveformCanvas.width = cw;
+        waveformCanvas.height = ch;
+      }
 
-      // background tint
-      ctx.fillStyle = "rgba(255,120,200,0.06)";
-      ctx.fillRect(0,0,w,h);
+      analyser.getByteTimeDomainData(data);
 
-      if(!analyser){
-        ctx.fillStyle = "rgba(255,255,255,0.35)";
-        ctx.font = `${Math.floor(12*devicePixelRatio)}px ${getComputedStyle(document.body).fontFamily}`;
-        ctx.fillText("waveform unavailable", 12*devicePixelRatio, 30*devicePixelRatio);
+      wf.clearRect(0,0,cw,ch);
+
+      wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
+      wf.strokeStyle = "#ff78c8";
+      wf.shadowColor = "#ff78c8";
+      wf.shadowBlur = 16;
+
+      wf.beginPath();
+      for (let i = 0; i < data.length; i++){
+        const x = (i / (data.length - 1)) * cw;
+        const y = (data[i] / 255) * ch;
+        if (i === 0) wf.moveTo(x, y);
+        else wf.lineTo(x, y);
+      }
+      wf.stroke();
+
+      wf.shadowBlur = 0;
+      wf.globalAlpha = 0.22;
+      wf.beginPath();
+      wf.moveTo(0, ch/2);
+      wf.lineTo(cw, ch/2);
+      wf.strokeStyle = "#ffffff";
+      wf.stroke();
+      wf.globalAlpha = 1;
+    }
+
+    loadTrack(trackIndex);
+    musicBar.classList.add("paused");
+    document.addEventListener("click", () => setupWaveform(), { once:true });
+
+    // --------- TERMINAL (types script, stops growing, then idles)
+    const typedEl = $("typed");
+    const outEl = $("termOut");
+
+    // updated: includes your new pages too
+    const terminalScript = [
+      { cmd: "whoami", out: "bella (aka BellaCactus)" },
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
+      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams" },
+      { cmd: "open glitch", out: "pages/glitch.html" },
+      { cmd: "open dreams", out: "pages/dreams.html" },
+      { cmd: "open idle", out: "pages/idle.html" },
+      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
+      { cmd: "run apps", out: "apps panel loaded (scroll a bit)  ->  /#apps" },
+      { cmd: "scan --local", out: "intel panel loaded (scroll a bit)  ->  /#intel" }
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typing = false;
+    let idle = false;
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function pushOutputLine(text){
+      const div = document.createElement("div");
+      div.className = "termLine";
+      div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
+      outEl.appendChild(div);
+
+      const maxLines = 6;
+      while(outEl.children.length > maxLines){
+        outEl.removeChild(outEl.firstChild);
+      }
+    }
+
+    function startTerminal(){
+      if (typing) return;
+      typing = true;
+      idle = false;
+      lineIndex = 0;
+      charIndex = 0;
+      typedEl.textContent = "";
+      tickType();
+    }
+
+    function tickType(){
+      if (!typing) return;
+
+      if (lineIndex >= terminalScript.length){
+        typing = false;
+        idle = true;
+        idleType();
         return;
       }
 
-      analyser.getByteFrequencyData(data);
-      const bars = data.length;
-      const step = w / bars;
+      const current = terminalScript[lineIndex].cmd;
+      typedEl.textContent = current.slice(0, charIndex);
+      charIndex++;
 
-      for(let i=0;i<bars;i++){
-        const v = data[i] / 255;
-        const barH = v * (h*0.9);
-        const x = i*step;
-        const y = h - barH;
-        ctx.fillStyle = `rgba(255,120,200,${0.12 + v*0.45})`;
-        ctx.fillRect(x, y, step*0.85, barH);
+      if (charIndex > current.length){
+        pushOutputLine(`$ ${terminalScript[lineIndex].cmd}`);
+        pushOutputLine(terminalScript[lineIndex].out);
+
+        lineIndex++;
+        charIndex = 0;
+        typedEl.textContent = "";
+        setTimeout(tickType, 520);
+      } else {
+        setTimeout(tickType, 34 + Math.random()*22);
       }
     }
-    drawWave();
 
-    // commands
-    const commands = {
-      help(){
-        writeLine("commands:");
-        writeLine("  help        - show this");
-        writeLine("  whoami      - identity ping");
-        writeLine("  ls          - list portals");
-        writeLine("  play        - toggle music");
-        writeLine("  video       - open intro video");
-        writeLine("  glitch      - go glitch");
-        writeLine("  idle        - go idle");
-        writeLine("  ascii       - go ascii zoo");
-        writeLine("  dreams      - go dreams log");
-        writeLine("  egg         - ???");
-      },
-      whoami(){
-        writeLine("bella (probably) :: human-ish :: online");
-        writeLine("mood: soft-dark / pink-lit / terminal-brained");
-      },
-      ls(){
-        writeLine("portals:");
-        writeLine("  pages/limiter.html");
-        writeLine("  pages/os.html");
-        writeLine("  pages/ascii.html");
-        writeLine("  pages/idle.html");
-        writeLine("  pages/glitch.html");
-        writeLine("  pages/dreams.html");
-        writeLine("  pages/tamers.html");
-        writeLine("  pages/vault.html");
-        writeLine("  pages/tab-crypt.html");
-      },
-      play(){
-        if(!playing) play(); else pause();
-      },
-      video(){
-        intro.classList.add("show");
-        introVid.currentTime = 0;
-        introVid.play().catch(()=>{});
-        toast("video opened");
-      },
-      glitch(){ window.location.href = "pages/glitch.html"; },
-      idle(){ window.location.href = "pages/idle.html"; },
-      ascii(){ window.location.href = "pages/ascii.html"; },
-      dreams(){ window.location.href = "pages/dreams.html"; },
-      egg(){
-        const msg = (seed.endsWith("13") ? "seed is cursed. you are chosen." : "you found an egg. it’s warm. it purrs.");
-        writeLine(msg);
-        toast("egg acquired");
-      }
-    };
-
-    function run(raw){
-      const c = raw.trim();
-      if(!c) return;
-
-      statusText.textContent = "thinking";
-      termTitle.textContent = `/home/bella :: ${c}`;
-      writeLine(`bella@cactus:~$ ${c}`);
-
-      const k = c.split(/\s+/)[0].toLowerCase();
-      if(commands[k]){
-        commands[k]();
-      }else{
-        writeLine(`command not found: ${k}`);
-        writeLine(`try: help`);
-      }
-      writeLine("");
-      statusText.textContent = playing ? "playing" : "ready";
+    function idleType(){
+      if (!idle) return;
+      const pool = ["_", " ", ".", "..", "...", " ", "_"];
+      let i = 0;
+      const loop = () => {
+        if (!idle) return;
+        typedEl.textContent = pool[i++ % pool.length];
+        setTimeout(loop, 280);
+      };
+      loop();
     }
 
-    cmdEl.addEventListener("keydown", (e)=>{
-      if(e.key==="Enter"){
-        run(cmdEl.value);
-        cmdEl.value = "";
-      }
-    });
-
-    document.getElementById("pillRow").addEventListener("click", (e)=>{
-      const pill = e.target.closest(".pill");
-      if(!pill) return;
-      run(pill.dataset.cmd);
-    });
-
-    introClose.addEventListener("click", ()=>{
-      intro.classList.remove("show");
-      introVid.pause();
-    });
-    intro.addEventListener("click", (e)=>{
-      if(e.target===intro){
-        intro.classList.remove("show");
-        introVid.pause();
-      }
-    });
-
-    // floaties
-    const floaties = document.getElementById("floaties");
-    const glyphs = [
-      "⟡", "✶", "✷", "✸", "✹", "✺",
-      "0101", "deadbeef", "cactus", "pink", "void", "sleep",
-      "(=^･ω･^=)", "<>_<>" , "[[]]" , "{??}"
+    // --------- ASCII ANIMALS
+    const animals = [
+` /\\_/\\
+( o.o )
+ > ^ <`,
+` (\\_/)
+ ( •_•)
+ / >🍪`,
+`  /\\_/\\
+ (=^.^=)
+ (")(")`,
+`  /\\_/\\
+ ( >.< )
+  >🍓<`,
+`   /\\_/\\
+  ( •ω• )
+  /    \\`
     ];
 
-    function spawnFloater(){
-      const d = document.createElement("div");
-      d.className = "floater";
-      d.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    let animalIndex = Math.floor(Math.random()*animals.length);
+    function setAnimal(i){
+      $("asciiAnimal").textContent = animals[(i + animals.length) % animals.length];
+    }
+    setAnimal(animalIndex);
+    setInterval(() => setAnimal(++animalIndex), 6500);
 
-      const x = Math.random()*100;
-      const y = Math.random()*100;
+    // --------- REROLL
+    function rerollAll(){
+      spawnStickers();
+      loadTrack(Math.floor(Math.random() * tracks.length));
+      musicBar.classList.add("paused");
+      $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
+    }
+    $("reroll").addEventListener("click", rerollAll);
 
-      const dx = (Math.random()*2-1) * (40 + Math.random()*120);
-      const dy = (Math.random()*2-1) * (40 + Math.random()*160);
+    // --------- INTEL PANEL (pretty + raw)
+    const intelOut = $("intelOut");
+    const intelPretty = $("intelPretty");
+    const intelPrettyBtn = $("intelPrettyBtn");
+    const intelJsonBtn = $("intelJsonBtn");
+    const intelStatus = $("intelStatus");
 
-      const dur = 8 + Math.random()*10;
-      const size = 10 + Math.random()*18;
+    let intelMode = "pretty"; // pretty | json
 
-      d.style.left = x + "vw";
-      d.style.top  = y + "vh";
-      d.style.fontSize = size + "px";
-      d.style.setProperty("--dx", dx + "px");
-      d.style.setProperty("--dy", dy + "px");
-      d.style.animationDuration = dur + "s";
+    const intel = {
+      base: {},
+      ip: null,
+      geo: null,
+      notify: null,
+      clipboard: null,
+      media: null,
+      devices: null,
+      storage: null,
+      battery: null,
+      webgl: null
+    };
 
-      floaties.appendChild(d);
-      setTimeout(()=> d.remove(), (dur*1000)+200);
+    function fmt(obj){
+      return JSON.stringify(obj, null, 2);
     }
 
-    setInterval(spawnFloater, 700);
+    function setIntelStatus(text){
+      intelStatus.innerHTML = `<span class="dot"></span> ${escapeHtml(text)}`;
+    }
 
-    // little easter egg: triple click title
-    let clicks = 0;
-    document.querySelector(".title").addEventListener("click", ()=>{
-      clicks++;
-      clearTimeout(window._ct);
-      window._ct = setTimeout(()=>clicks=0, 600);
-      if(clicks>=3){
-        toast("secret: press / to focus terminal");
-        writeLine("tip: press / to focus the terminal input");
-        clicks=0;
+    function toHumanBytes(n){
+      if (typeof n !== "number" || !isFinite(n)) return "n/a";
+      const units = ["B","KB","MB","GB","TB"];
+      let i = 0, v = n;
+      while (v >= 1024 && i < units.length-1){ v /= 1024; i++; }
+      return `${v.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
+    }
+
+    function kvRows(obj){
+      const rows = [];
+      for (const [k,v] of Object.entries(obj || {})){
+        let val = v;
+        if (val === null || val === undefined) val = "null";
+        if (Array.isArray(val)) val = val.join(", ");
+        if (typeof val === "object") val = fmt(val);
+        rows.push({ k, v: String(val) });
       }
+      return rows;
+    }
+
+    function card(title, rightText, rows){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody"></div>
+      `;
+      const body = div.querySelector(".intelCardBody");
+      for (const r of rows){
+        const row = document.createElement("div");
+        row.className = "kvRow";
+        row.innerHTML = `
+          <div class="kvKey">${escapeHtml(r.k)}</div>
+          <div class="kvVal">${escapeHtml(r.v)}</div>
+        `;
+        body.appendChild(row);
+      }
+      return div;
+    }
+
+    function cardWrap(title, rightText, text){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody">
+          <div class="kvVal monoWrap">${escapeHtml(text || "")}</div>
+        </div>
+      `;
+      return div;
+    }
+
+    function renderIntel(){
+      const out = {
+        base: intel.base,
+        ip: intel.ip,
+        geo: intel.geo,
+        notifications: intel.notify,
+        clipboard: intel.clipboard,
+        media: intel.media,
+        devices: intel.devices,
+        storage: intel.storage,
+        battery: intel.battery,
+        webgl: intel.webgl
+      };
+
+      intelOut.textContent = fmt(out);
+      intelPretty.innerHTML = "";
+
+      const base = intel.base || {};
+      const loc = base.location || {};
+      const br = base.browser || {};
+      const scr = base.screen || {};
+      const hw = base.hardware || {};
+      const net = base.network || {};
+      const perms = base.permissions || {};
+
+      intelPretty.appendChild(card("time / locale", "", [
+        { k:"time", v: base.time || "n/a" },
+        { k:"timezone", v: loc.timezone || "n/a" },
+        { k:"locale", v: loc.locale || "n/a" },
+        { k:"languages", v: (loc.languages || []).join(", ") || "n/a" }
+      ]));
+
+      intelPretty.appendChild(card("browser", "", [
+        { k:"platform", v: br.platform || "n/a" },
+        { k:"vendor", v: br.vendor || "n/a" },
+        { k:"cookies", v: String(!!br.cookieEnabled) },
+        { k:"do not track", v: String(br.doNotTrack ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(cardWrap("user agent", "", br.userAgent || "n/a"));
+
+      intelPretty.appendChild(card("screen", "", [
+        { k:"resolution", v: `${scr.width || "?"} × ${scr.height || "?"}` },
+        { k:"available", v: `${scr.availWidth || "?"} × ${scr.availHeight || "?"}` },
+        { k:"color depth", v: String(scr.colorDepth ?? "n/a") },
+        { k:"pixel ratio", v: String(scr.pixelRatio ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("hardware", "", [
+        { k:"cores", v: String(hw.cores ?? "n/a") },
+        { k:"memory", v: hw.memoryGB ? `${hw.memoryGB} GB` : "n/a" },
+        { k:"touch points", v: String(hw.touchPoints ?? "n/a") },
+        { k:"online", v: String(net.online ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("network", "", [
+        { k:"effectiveType", v: net.connection?.effectiveType ?? "n/a" },
+        { k:"downlink", v: net.connection?.downlink ?? "n/a" },
+        { k:"rtt", v: net.connection?.rtt ?? "n/a" },
+        { k:"saveData", v: String(net.connection?.saveData ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("permissions", "", [
+        { k:"notifications", v: perms.notifications ?? "n/a" }
+      ]));
+
+      if (intel.ip) intelPretty.appendChild(card("public ip", "(click fetched)", kvRows(intel.ip)));
+      if (intel.geo) intelPretty.appendChild(card("geolocation", "(permission)", kvRows(intel.geo)));
+      if (intel.notify) intelPretty.appendChild(card("notifications", "(permission)", kvRows(intel.notify)));
+      if (intel.clipboard) intelPretty.appendChild(card("clipboard", "(permission)", kvRows(intel.clipboard)));
+      if (intel.media) intelPretty.appendChild(card("mic/cam", "(permission)", kvRows(intel.media)));
+      if (intel.devices){
+        const d = intel.devices;
+        const summary = { count: d.count ?? null, kinds: d.kinds ?? null };
+        intelPretty.appendChild(card("devices summary", "(permission helps labels)", kvRows(summary)));
+      }
+      if (intel.storage){
+        const s = intel.storage || {};
+        intelPretty.appendChild(card("storage", "", [
+          { k:"quota", v: toHumanBytes(s.quotaBytes) },
+          { k:"usage", v: toHumanBytes(s.usageBytes) }
+        ]));
+      }
+      if (intel.battery) intelPretty.appendChild(card("battery", "", kvRows(intel.battery)));
+      if (intel.webgl) intelPretty.appendChild(card("webgl", "", kvRows(intel.webgl)));
+
+      if (intelMode === "pretty"){
+        intelPretty.style.display = "";
+        intelOut.style.display = "none";
+      } else {
+        intelPretty.style.display = "none";
+        intelOut.style.display = "";
+      }
+    }
+
+    function refreshIntelBase(){
+      const nav = navigator;
+
+      intel.base = {
+        time: new Date().toString(),
+        location: {
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
+          locale: nav.language || "unknown",
+          languages: nav.languages || []
+        },
+        browser: {
+          userAgent: nav.userAgent,
+          platform: nav.platform || "unknown",
+          vendor: nav.vendor || "unknown",
+          cookieEnabled: nav.cookieEnabled,
+          doNotTrack: nav.doNotTrack || null
+        },
+        screen: {
+          width: screen.width,
+          height: screen.height,
+          availWidth: screen.availWidth,
+          availHeight: screen.availHeight,
+          colorDepth: screen.colorDepth,
+          pixelRatio: devicePixelRatio
+        },
+        hardware: {
+          cores: nav.hardwareConcurrency || null,
+          memoryGB: nav.deviceMemory || null,
+          touchPoints: nav.maxTouchPoints || 0
+        },
+        network: {
+          online: nav.onLine,
+          connection: (nav.connection || nav.mozConnection || nav.webkitConnection) ? {
+            effectiveType: (nav.connection || {}).effectiveType || null,
+            downlink: (nav.connection || {}).downlink || null,
+            rtt: (nav.connection || {}).rtt || null,
+            saveData: (nav.connection || {}).saveData || null
+          } : null
+        },
+        permissions: {
+          notifications: (typeof Notification !== "undefined") ? Notification.permission : "unsupported"
+        }
+      };
+
+      setIntelStatus("base refreshed");
+      renderIntel();
+    }
+
+    intelPrettyBtn.addEventListener("click", () => {
+      intelMode = "pretty";
+      setIntelStatus("pretty view");
+      renderIntel();
     });
 
-    // slash focuses terminal
-    window.addEventListener("keydown", (e)=>{
-      if(e.key==="/" && document.activeElement !== cmdEl){
-        e.preventDefault();
-        cmdEl.focus();
-      }
+    intelJsonBtn.addEventListener("click", () => {
+      intelMode = "json";
+      setIntelStatus("raw json");
+      renderIntel();
     });
+
+    // IP (explicit click)
+    $("btnIP").addEventListener("click", async () => {
+      try{
+        setIntelStatus("fetching ip…");
+        intel.ip = { status: "fetching…" };
+        renderIntel();
+        const res = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+        const j = await res.json();
+        intel.ip = { publicIP: j.ip };
+        setIntelStatus("ip loaded");
+      }catch(e){
+        intel.ip = { error: String(e) };
+        setIntelStatus("ip error");
+      }
+      renderIntel();
+    });
+
+    // GEO (permission prompt)
+    $("btnGeo").addEventListener("click", async () => {
+      if (!navigator.geolocation){
+        intel.geo = { error: "geolocation unsupported" };
+        setIntelStatus("geo unsupported");
+        renderIntel();
+        return;
+      }
+      setIntelStatus("requesting geo…");
+      intel.geo = { status: "requesting…" };
+      renderIntel();
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          intel.geo = {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            accuracyMeters: pos.coords.accuracy,
+            heading: pos.coords.heading,
+            speed: pos.coords.speed,
+            timestamp: new Date(pos.timestamp).toString()
+          };
+          setIntelStatus("geo loaded");
+          renderIntel();
+        },
+        (err) => {
+          intel.geo = { error: err.message || String(err) };
+          setIntelStatus("geo denied/error");
+          renderIntel();
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    });
+
+    // Notifications (permission prompt)
+    $("btnNotify").addEventListener("click", async () => {
+      try{
+        if (typeof Notification === "undefined"){
+          intel.notify = { error: "notifications unsupported" };
+          setIntelStatus("notifications unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("requesting notifications…");
+        const perm = await Notification.requestPermission();
+        intel.notify = { permission: perm };
+        setIntelStatus(`notifications: ${perm}`);
+      }catch(e){
+        intel.notify = { error: String(e) };
+        setIntelStatus("notifications error");
+      }
+      renderIntel();
+    });
+
+    // Clipboard read
+    $("btnClipboard").addEventListener("click", async () => {
+      try{
+        if (!navigator.clipboard || !navigator.clipboard.readText){
+          intel.clipboard = { error: "clipboard API unsupported (or blocked)" };
+          setIntelStatus("clipboard unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("reading clipboard…");
+        const txt = await navigator.clipboard.readText();
+        intel.clipboard = { textPreview: txt.slice(0, 200), length: txt.length };
+        setIntelStatus("clipboard read");
+      }catch(e){
+        intel.clipboard = { error: String(e) };
+        setIntelStatus("clipboard denied/error");
+      }
+      renderIntel();
+    });
+
+    // Mic/Cam permission
+    $("btnMedia").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+          intel.media = { error: "mediaDevices unsupported" };
+          setIntelStatus("media unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("requesting mic/cam…");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:true });
+        stream.getTracks().forEach(t => t.stop());
+        intel.media = { permission: "granted (stream opened then stopped)" };
+        setIntelStatus("mic/cam granted");
+      }catch(e){
+        intel.media = { error: String(e) };
+        setIntelStatus("mic/cam denied/error");
+      }
+      renderIntel();
+    });
+
+    // Enumerate devices
+    $("btnDevices").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){
+          intel.devices = { error: "enumerateDevices unsupported" };
+          setIntelStatus("devices unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("enumerating devices…");
+        const list = await navigator.mediaDevices.enumerateDevices();
+        intel.devices = {
+          count: list.length,
+          kinds: list.reduce((acc, d) => {
+            acc[d.kind] = (acc[d.kind] || 0) + 1;
+            return acc;
+          }, {}),
+          devices: list.map(d => ({
+            kind: d.kind,
+            label: d.label || "(label hidden until permission)",
+            deviceId: d.deviceId ? "(present)" : "(none)",
+            groupId: d.groupId ? "(present)" : "(none)"
+          }))
+        };
+        setIntelStatus("devices loaded");
+      }catch(e){
+        intel.devices = { error: String(e) };
+        setIntelStatus("devices error");
+      }
+      renderIntel();
+    });
+
+    // Storage estimate
+    $("btnStorage").addEventListener("click", async () => {
+      try{
+        if (!navigator.storage || !navigator.storage.estimate){
+          intel.storage = { error: "storage estimate unsupported" };
+          setIntelStatus("storage unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("estimating storage…");
+        const est = await navigator.storage.estimate();
+        intel.storage = {
+          quotaBytes: est.quota ?? null,
+          usageBytes: est.usage ?? null,
+          usageDetails: est.usageDetails ?? null
+        };
+        setIntelStatus("storage loaded");
+      }catch(e){
+        intel.storage = { error: String(e) };
+        setIntelStatus("storage error");
+      }
+      renderIntel();
+    });
+
+    // Battery
+    $("btnBattery").addEventListener("click", async () => {
+      try{
+        if (!navigator.getBattery){
+          intel.battery = { error: "battery API unsupported" };
+          setIntelStatus("battery unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("reading battery…");
+        const b = await navigator.getBattery();
+        intel.battery = {
+          charging: b.charging,
+          level: b.level,
+          chargingTime: b.chargingTime,
+          dischargingTime: b.dischargingTime
+        };
+        setIntelStatus("battery loaded");
+      }catch(e){
+        intel.battery = { error: String(e) };
+        setIntelStatus("battery error");
+      }
+      renderIntel();
+    });
+
+    // WebGL renderer/vendor
+    $("btnWebGL").addEventListener("click", async () => {
+      try{
+        setIntelStatus("probing gpu…");
+        const c = document.createElement("canvas");
+        const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+        if (!gl){
+          intel.webgl = { error: "webgl unavailable" };
+          setIntelStatus("webgl unavailable");
+          renderIntel();
+          return;
+        }
+        const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+        const vendor = dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+        const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+        intel.webgl = {
+          vendor,
+          renderer,
+          version: gl.getParameter(gl.VERSION),
+          shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        };
+        setIntelStatus("gpu loaded");
+      }catch(e){
+        intel.webgl = { error: String(e) };
+        setIntelStatus("gpu error");
+      }
+      renderIntel();
+    });
+
+    window.addEventListener("online", refreshIntelBase);
+    window.addEventListener("offline", refreshIntelBase);
+
+    // --------- start
+    // show site will be triggered by video end or skip
   </script>
 </body>
 </html>
