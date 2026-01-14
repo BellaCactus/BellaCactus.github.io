@@ -139,5 +139,4 @@ built as a living weird website, not a portfolio.
 
 ```
 
-if u want, i can also tweak it to include a **real live link line** (like `https://bellacactus.github.io/`) and a tiny “site map” section with clickable links, but this version is already copy-paste ready (:3)
 ```
