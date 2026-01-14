@@ -650,7 +650,117 @@ input.vol{
   input.vol{ width:120px; }
   .volWrap{ width:100%; justify-content:space-between; }
 }
-  </style>
+  
+
+/* ---------------- palette modal + command bar ---------------- */
+.btn.mini{ padding:8px 10px; border-radius:12px; font-size:0.9rem; }
+.modalBack, .cmdBack{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.62);
+  backdrop-filter: blur(8px);
+  z-index:9999;
+  padding:16px;
+}
+.modalBack.open, .cmdBack.open{ display:flex; }
+
+.modal{
+  width:min(760px, 100%);
+  background: linear-gradient(180deg, rgba(20,20,22,0.92), rgba(10,10,12,0.92));
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:20px;
+  box-shadow: 0 30px 120px rgba(0,0,0,0.66);
+  overflow:hidden;
+}
+.modalTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.18);
+}
+.modalTitle{ font-family: var(--mono); color:var(--pink2); font-weight:800; letter-spacing:0.3px; }
+.modalSub{ margin-top:4px; color:var(--muted); font-size:0.9rem; }
+.modalFoot{
+  padding:12px 16px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.10);
+}
+.palGrid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:10px;
+  padding:14px 16px;
+}
+@media (max-width:520px){ .palGrid{ grid-template-columns:1fr; } }
+.palBtn{
+  cursor:pointer;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  padding:12px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  transition: transform 0.08s ease, border 0.2s ease, background 0.2s ease;
+}
+.palBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
+.palName{ font-family: var(--mono); font-size:0.92rem; color:var(--text); }
+.palDots{ display:flex; gap:6px; align-items:center; }
+.palDots i{
+  width:12px; height:12px; border-radius:999px;
+  display:inline-block;
+  box-shadow: 0 0 14px rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.16);
+}
+
+/* cmd bar */
+.cmdBox{
+  width:min(760px, 100%);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(180deg, rgba(12,12,14,0.92), rgba(0,0,0,0.86));
+  box-shadow: 0 30px 120px rgba(0,0,0,0.66);
+  overflow:hidden;
+}
+.cmdInput{
+  width:100%;
+  padding:14px 16px;
+  border:none;
+  outline:none;
+  background: transparent;
+  color:var(--text);
+  font-family: var(--mono);
+  font-size:1rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.cmdInput::placeholder{ color: rgba(185,185,194,0.7); }
+.cmdList{ max-height: 300px; overflow:auto; }
+.cmdItem{
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+}
+.cmdItem:last-child{ border-bottom:none; }
+.cmdItem:hover, .cmdItem.active{
+  background: rgba(255,255,255,0.06);
+}
+.cmdLeft{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.cmdLabel{ font-family: var(--mono); color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cmdDesc{ color:var(--muted); font-size:0.86rem; }
+.cmdKey{ font-family: var(--mono); color:var(--pink2); font-size:0.84rem; white-space:nowrap; }
+</style>
 </head>
 
 <body>
@@ -719,7 +829,9 @@ input.vol{
             <a class="btn" href="glitch.html"><span class="k">open</span> glitch</a>
             <a class="btn" href="dreams.html"><span class="k">open</span> dreams</a>
 
-            <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
+            
+            <a class="btn" href="tamers.html"><span class="k">open</span> tamers vault</a>
+<a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
               <span class="k">yt</span> @BellaCactusYT
             </a>
 
@@ -854,7 +966,9 @@ input.vol{
           <a class="btn" href="glitch.html"><span class="k">fx</span> glitch gallery</a>
           <a class="btn" href="dreams.html"><span class="k">log</span> dream log</a>
 
-          <!-- existing -->
+          
+          <a class="btn" href="tamers.html"><span class="k">vid</span> tamers archive</a>
+<!-- existing -->
           <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
           <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
           <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
@@ -917,6 +1031,35 @@ input.vol{
   <div class="oneko" id="oneko" title="click me" aria-hidden="false">
     <img id="onekoImg" src="oneko.gif" alt="oneko" />
   </div>
+
+
+
+<!-- palette modal -->
+<div class="modalBack" id="paletteBack" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="palTitle">
+    <div class="modalTop">
+      <div>
+        <div id="palTitle" class="modalTitle">palette</div>
+        <div class="modalSub">pick a vibe. red = evil. ctrl+k opens command bar.</div>
+      </div>
+      <button class="btn mini" id="palClose" type="button"><span class="k">esc</span> close</button>
+    </div>
+
+    <div class="palGrid" id="palGrid"></div>
+
+    <div class="modalFoot">
+      <div class="small">tip: theme is saved. red forces <span class="pulseText">bxmb threat</span>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- command bar (ctrl+k) -->
+<div class="cmdBack" id="cmdBack" aria-hidden="true">
+  <div class="cmdBox" role="dialog" aria-modal="true" aria-label="command bar">
+    <input class="cmdInput" id="cmdInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a command… (try: theme red, play, next, open tamers)" />
+    <div class="cmdList" id="cmdList" role="listbox"></div>
+  </div>
+</div>
 
   <!-- audio elements -->
   <audio id="bgm" preload="auto" loop></audio>
@@ -1199,7 +1342,7 @@ if (volEl){
 
 // --------- THEME (pink / white / red) + evil mode hook
 const THEME_KEY = "bella_theme";
-const THEMES = ["pink","white","violet","cyan","lime","red"]; // red = evil
+const THEMES = ["pink","white","violet","cyan","lime","amber","ice","peach","graphite","red"]; // red = evil
 let currentTheme = localStorage.getItem(THEME_KEY) || "pink";
 
 
@@ -1210,17 +1353,33 @@ function setCssThemeVars(mode){
     document.documentElement.style.setProperty("--pink2", "#d6d6dc");
     document.documentElement.style.setProperty("--pink3", "#ffffff");
   } else if (mode === "violet"){
-    document.documentElement.style.setProperty("--pink", "#b66cff");
-    document.documentElement.style.setProperty("--pink2", "#e0c2ff");
-    document.documentElement.style.setProperty("--pink3", "#7a2dff");
+    document.documentElement.style.setProperty("--pink", "#b884ff");
+    document.documentElement.style.setProperty("--pink2", "#e1c7ff");
+    document.documentElement.style.setProperty("--pink3", "#6f2dff");
   } else if (mode === "cyan"){
-    document.documentElement.style.setProperty("--pink", "#40fff0");
-    document.documentElement.style.setProperty("--pink2", "#b8fffb");
-    document.documentElement.style.setProperty("--pink3", "#00b6ff");
+    document.documentElement.style.setProperty("--pink", "#3cf3ff");
+    document.documentElement.style.setProperty("--pink2", "#b8fbff");
+    document.documentElement.style.setProperty("--pink3", "#00b7c4");
   } else if (mode === "lime"){
-    document.documentElement.style.setProperty("--pink", "#a6ff4d");
-    document.documentElement.style.setProperty("--pink2", "#d7ffad");
-    document.documentElement.style.setProperty("--pink3", "#34d11a");
+    document.documentElement.style.setProperty("--pink", "#a7ff3c");
+    document.documentElement.style.setProperty("--pink2", "#ddffb8");
+    document.documentElement.style.setProperty("--pink3", "#49c400");
+  } else if (mode === "amber"){
+    document.documentElement.style.setProperty("--pink", "#ffb12a");
+    document.documentElement.style.setProperty("--pink2", "#ffe1a8");
+    document.documentElement.style.setProperty("--pink3", "#ff6a00");
+  } else if (mode === "ice"){
+    document.documentElement.style.setProperty("--pink", "#9ad7ff");
+    document.documentElement.style.setProperty("--pink2", "#e6f5ff");
+    document.documentElement.style.setProperty("--pink3", "#3aa0ff");
+  } else if (mode === "peach"){
+    document.documentElement.style.setProperty("--pink", "#ff8a6a");
+    document.documentElement.style.setProperty("--pink2", "#ffd2c6");
+    document.documentElement.style.setProperty("--pink3", "#ff3d7a");
+  } else if (mode === "graphite"){
+    document.documentElement.style.setProperty("--pink", "#bdbdc7");
+    document.documentElement.style.setProperty("--pink2", "#f1f1f6");
+    document.documentElement.style.setProperty("--pink3", "#8b8b96");
   } else if (mode === "red"){
     document.documentElement.style.setProperty("--pink", "#ff2a2a");
     document.documentElement.style.setProperty("--pink2", "#ff7a7a");
@@ -1231,6 +1390,7 @@ function setCssThemeVars(mode){
     document.documentElement.style.setProperty("--pink3", "#ff4db8");
   }
 }
+
 
 function isEvil(){ return currentTheme === "red"; }
 
@@ -1289,6 +1449,218 @@ function cycleTheme(){
   const next = THEMES[(i + 1) % THEMES.length];
   applyTheme(next, { autoplay: true });
 }
+
+// --------- palette modal + command bar
+const paletteBack = $("paletteBack");
+const palGrid = $("palGrid");
+const palClose = $("palClose");
+
+const THEME_PREVIEWS = {
+  pink:     ["#ff78c8","#ffb3e6","#ff4db8"],
+  white:    ["#ffffff","#d6d6dc","#ffffff"],
+  violet:   ["#b884ff","#e1c7ff","#6f2dff"],
+  cyan:     ["#3cf3ff","#b8fbff","#00b7c4"],
+  lime:     ["#a7ff3c","#ddffb8","#49c400"],
+  amber:    ["#ffb12a","#ffe1a8","#ff6a00"],
+  ice:      ["#9ad7ff","#e6f5ff","#3aa0ff"],
+  peach:    ["#ff8a6a","#ffd2c6","#ff3d7a"],
+  graphite: ["#bdbdc7","#f1f1f6","#8b8b96"],
+  red:      ["#ff2a2a","#ff7a7a","#b00000"]
+};
+
+function openPalette(){
+  paletteBack.classList.add("open");
+  paletteBack.setAttribute("aria-hidden","false");
+  renderPalette();
+}
+function closePalette(){
+  paletteBack.classList.remove("open");
+  paletteBack.setAttribute("aria-hidden","true");
+}
+
+function renderPalette(){
+  palGrid.innerHTML = "";
+  for (const t of THEMES){
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "palBtn";
+    btn.addEventListener("click", async () => {
+      await applyTheme(t, { autoplay: true });
+      closePalette();
+    });
+
+    const left = document.createElement("div");
+    left.className = "palName";
+    left.textContent = (t === "red") ? "red (evil)" : t;
+
+    const dots = document.createElement("div");
+    dots.className = "palDots";
+    const colors = THEME_PREVIEWS[t] || THEME_PREVIEWS.pink;
+    for (const c of colors){
+      const i = document.createElement("i");
+      i.style.background = c;
+      dots.appendChild(i);
+    }
+
+    btn.appendChild(left);
+    btn.appendChild(dots);
+    palGrid.appendChild(btn);
+  }
+}
+
+cycleTheme();
+    return;
+  }
+  openPalette();
+});
+palClose.addEventListener("click", closePalette);
+paletteBack.addEventListener("click", (e) => { if (e.target === paletteBack) closePalette(); });
+
+// command bar
+const cmdBack = $("cmdBack");
+const cmdInput = $("cmdInput");
+const cmdList = $("cmdList");
+let cmdItems = [];
+let cmdActive = 0;
+
+function openCmd(){
+  cmdBack.classList.add("open");
+  cmdBack.setAttribute("aria-hidden","false");
+  cmdInput.value = "";
+  cmdActive = 0;
+  renderCmd();
+  setTimeout(() => cmdInput.focus(), 0);
+}
+function closeCmd(){
+  cmdBack.classList.remove("open");
+  cmdBack.setAttribute("aria-hidden","true");
+}
+
+function addCmd(label, desc, key, run){
+  cmdItems.push({ label, desc, key, run });
+}
+
+function filteredCmd(){
+  const q = (cmdInput.value || "").trim().toLowerCase();
+  if (!q) return cmdItems.slice(0, 12);
+  return cmdItems
+    .map(it => {
+      const hay = (it.label + " " + it.desc + " " + it.key).toLowerCase();
+      const score = hay.includes(q) ? 2 : (it.label.toLowerCase().includes(q) ? 3 : 0);
+      return { it, score };
+    })
+    .filter(x => x.score > 0 || q.length < 2)
+    .sort((a,b) => b.score - a.score)
+    .map(x => x.it)
+    .slice(0, 12);
+}
+
+function renderCmd(){
+  const list = filteredCmd();
+  cmdList.innerHTML = "";
+  list.forEach((it, i) => {
+    const row = document.createElement("div");
+    row.className = "cmdItem" + (i === cmdActive ? " active" : "");
+    row.addEventListener("click", async () => { await it.run(); closeCmd(); });
+
+    const left = document.createElement("div");
+    left.className = "cmdLeft";
+    const l = document.createElement("div"); l.className = "cmdLabel"; l.textContent = it.label;
+    const d = document.createElement("div"); d.className = "cmdDesc"; d.textContent = it.desc;
+    left.appendChild(l); left.appendChild(d);
+
+    const k = document.createElement("div");
+    k.className = "cmdKey";
+    k.textContent = it.key || "";
+
+    row.appendChild(left);
+    row.appendChild(k);
+    cmdList.appendChild(row);
+  });
+}
+
+function execTypedCommand(){
+  const raw = (cmdInput.value || "").trim();
+  const q = raw.toLowerCase();
+  if (!q) return;
+  // "theme X"
+  if (q.startsWith("theme ")){
+    const pick = q.slice(6).trim();
+    if (THEMES.includes(pick)){
+      applyTheme(pick, { autoplay: true });
+      closeCmd();
+      return;
+    }
+  }
+  // basic aliases
+  if (q === "play" || q === "pause" || q === "play/pause"){
+    $("playPause").click(); closeCmd(); return;
+  }
+  if (q === "next"){
+    $("nextTrack").click(); closeCmd(); return;
+  }
+  if (q === "mute" || q === "unmute"){
+    $("mute").click(); closeCmd(); return;
+  }
+  if (q.startsWith("open ")){
+    const page = q.slice(5).trim();
+    const map = {
+      "idle":"idle.html",
+      "glitch":"glitch.html",
+      "dreams":"dreams.html",
+      "tamers":"tamers.html",
+      "limiter":"limiter.html"
+    };
+    if (map[page]){
+      location.href = map[page];
+      return;
+    }
+  }
+}
+
+// register commands
+addCmd("open tamers vault", "all tamers12345 stuff in one place", "open tamers", () => { location.href = "tamers.html"; });
+addCmd("open idle", "screensaver page", "open idle", () => { location.href = "idle.html"; });
+addCmd("open glitch", "glitch gallery", "open glitch", () => { location.href = "glitch.html"; });
+addCmd("open dreams", "dream log", "open dreams", () => { location.href = "dreams.html"; });
+
+addCmd("theme picker", "open palette grid", "palette", () => { openPalette(); });
+for (const t of THEMES){
+  addCmd(`theme: ${t === "red" ? "red (evil)" : t}`, "swap site accent", `theme ${t}`, () => applyTheme(t, { autoplay: true }));
+}
+
+addCmd("play / pause", "toggle soundtrack", "play", () => $("playPause").click());
+addCmd("next track", "skip to next song", "next", () => $("nextTrack").click());
+addCmd("mute", "toggle mute", "mute", () => $("mute").click());
+
+// hotkeys
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape"){
+    if (cmdBack.classList.contains("open")) { closeCmd(); return; }
+    if (paletteBack.classList.contains("open")) { closePalette(); return; }
+  }
+  if ((e.ctrlKey || e.metaKey) && (e.key || "").toLowerCase() === "k"){
+    e.preventDefault();
+    openCmd();
+  }
+  if (!cmdBack.classList.contains("open")) return;
+
+  if (e.key === "ArrowDown"){ e.preventDefault(); cmdActive = Math.min(cmdActive + 1, filteredCmd().length - 1); renderCmd(); }
+  if (e.key === "ArrowUp"){ e.preventDefault(); cmdActive = Math.max(cmdActive - 1, 0); renderCmd(); }
+  if (e.key === "Enter"){
+    e.preventDefault();
+    const list = filteredCmd();
+    if (cmdInput.value.trim()){
+      execTypedCommand();
+    } else if (list[cmdActive]){
+      Promise.resolve(list[cmdActive].run()).finally(closeCmd);
+    }
+  }
+});
+
+cmdInput.addEventListener("input", () => { cmdActive = 0; renderCmd(); });
+cmdBack.addEventListener("click", (e) => { if (e.target === cmdBack) closeCmd(); });
+
     $("playPause").addEventListener("click", async () => {
       await yepResumeAudio();
       if (bgm.paused) {
