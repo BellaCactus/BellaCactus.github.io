@@ -1,6 +1,4 @@
-from pathlib import Path, PurePosixPath
-
-html = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -38,6 +36,13 @@ html = r"""<!DOCTYPE html>
       animation: shimmer 4.8s ease-in-out infinite;
     }
     @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @media (prefers-reduced-motion: reduce){
+      .pulseText{animation:none;}
+      .btn{transition:none;}
+      .chip{transition:none;}
+      .bar > i{transition:none;}
+      .toast.show{animation:none;}
+    }
 
     .wrap{max-width:1150px; margin:0 auto; padding:34px 16px 110px;}
     .panel{
@@ -170,7 +175,14 @@ html = r"""<!DOCTYPE html>
 
     .card{border:1px solid rgba(255,255,255,0.10); border-radius:16px; overflow:hidden; background: rgba(0,0,0,0.20); position:relative;}
     .thumb{aspect-ratio:16/9; width:100%; display:block; border:0; padding:0; background:transparent; cursor:pointer;}
-    .thumb img{width:100%; height:100%; object-fit:cover; filter:saturate(1.05) contrast(1.05);}
+    .thumb img{
+      width:100%; height:100%; object-fit:cover;
+      filter:saturate(1.05) contrast(1.05);
+      background:
+        radial-gradient(380px 200px at 20% 20%, rgba(255,120,200,0.22), transparent 60%),
+        radial-gradient(380px 200px at 80% 35%, rgba(255,179,230,0.18), transparent 60%),
+        rgba(0,0,0,0.30);
+    }
     .meta{padding:12px; display:flex; flex-direction:column; gap:6px;}
     .title{font-family:var(--mono); font-size:0.92rem; line-height:1.35; color:rgba(255,255,255,0.95);}
     .metaRow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
@@ -324,25 +336,42 @@ html = r"""<!DOCTYPE html>
 
     // ===== settings =====
     const INSTANCE = "https://pony.tube";
-    const CHANNEL_HANDLE = "tamersarchive"; // <- matches /c/tamersarchive/videos
+    const CHANNEL_HANDLE = "tamersarchive"; // matches /c/tamersarchive/videos
     const CACHE_KEY = "tamers_vault_cache_v1";
     const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
     const PAGE_SIZE = 48; // how many cards render at once (keeps it snappy on big lists)
 
     // fallback manual list (only used if API fetch fails)
     const MANUAL = [
-      // { uuid: "ad395c9b-9702-4060-ac05-4c94b64956ab", shortUUID: "", name: "example", url: "https://pony.tube/videos/watch/..." }
+      // { uuid: "ad395c9b-9702-4060-ac05-4c94b64956ab", shortUUID: "", name: "example", url: "https://pony.tube/w/<shortUUID>" }
     ];
+
+    const LOCALE = "en-NZ"; // change if you want
+    const BROKEN_THUMB = "data:image/svg+xml;utf8," + encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'>
+        <defs>
+          <linearGradient id='g' x1='0' x2='1' y1='0' y2='1'>
+            <stop offset='0' stop-color='#101010'/><stop offset='1' stop-color='#1a0f17'/>
+          </linearGradient>
+        </defs>
+        <rect width='100%' height='100%' fill='url(#g)'/>
+        <text x='50%' y='50%' fill='rgba(255,255,255,0.75)' font-family='monospace' font-size='34' text-anchor='middle' dominant-baseline='middle'>
+          no thumb :3
+        </text>
+      </svg>`
+    );
 
     function fmtInt(n){
       n = Number(n || 0);
-      return n.toLocaleString("en-NZ");
+      try { return n.toLocaleString(LOCALE); }
+      catch { return String(n); }
     }
     function fmtDate(iso){
       if (!iso) return "";
       const d = new Date(iso);
       if (isNaN(d.getTime())) return "";
-      return d.toLocaleDateString("en-NZ", { year:"numeric", month:"short", day:"2-digit" });
+      try { return d.toLocaleDateString(LOCALE, { year:"numeric", month:"short", day:"2-digit" }); }
+      catch { return d.toDateString(); }
     }
     function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
@@ -352,7 +381,7 @@ html = r"""<!DOCTYPE html>
       return INSTANCE.replace(/\/$/, "") + (p.startsWith("/") ? p : "/" + p);
     }
 
-    // PeerTube embed URLs look like: /videos/embed/<uuid> (can add params like autoplay, start, etc)
+    // PeerTube embed URLs look like: /videos/embed/<uuid>
     function embedUrl(uuid){
       const u = new URL(INSTANCE.replace(/\/$/, "") + "/videos/embed/" + uuid);
       u.searchParams.set("autoplay", "1");
@@ -416,7 +445,6 @@ html = r"""<!DOCTYPE html>
     }
 
     function normalize(v){
-      // keep fields consistent even if we’re using MANUAL fallback
       return {
         uuid: v.uuid || "",
         shortUUID: v.shortUUID || "",
@@ -443,8 +471,7 @@ html = r"""<!DOCTYPE html>
           map.set(k, (map.get(k) || 0) + 1);
         }
       }
-      const sorted = [...map.entries()].sort((a,b) => b[1]-a[1]).slice(0, 18);
-      return sorted;
+      return [...map.entries()].sort((a,b) => b[1]-a[1]).slice(0, 18);
     }
 
     function renderTagbar(){
@@ -490,6 +517,11 @@ html = r"""<!DOCTYPE html>
       pt.textContent = v.name || v.uuid || "playing…";
       psub.textContent = `${fmtDate(v.publishedAt)} • ${fmtInt(v.views)} views`;
       watchA.href = watchUrl(v);
+
+      if (!v.uuid){
+        toast("this item has no uuid (manual list issue)");
+        return;
+      }
 
       player.src = embedUrl(v.uuid);
       modal.classList.add("open");
@@ -564,8 +596,12 @@ html = r"""<!DOCTYPE html>
         btn.className = "thumb";
         btn.type = "button";
         btn.title = "open";
+
         const t = bestThumb(v);
-        btn.innerHTML = `<img loading="lazy" alt="" src="${escapeHtml(t)}" />`;
+        btn.innerHTML = `<img loading="lazy" alt="" src="${escapeHtml(t || BROKEN_THUMB)}" />`;
+        const img = btn.querySelector("img");
+        img.addEventListener("error", () => { img.src = BROKEN_THUMB; }, { once:true });
+
         btn.addEventListener("click", () => openVid(v));
 
         const meta = document.createElement("div");
@@ -613,10 +649,7 @@ html = r"""<!DOCTYPE html>
     }
     function writeCache(videos){
       try{
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
-          time: Date.now(),
-          data: videos
-        }));
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), data: videos }));
       }catch{}
     }
 
@@ -628,8 +661,10 @@ html = r"""<!DOCTYPE html>
         return cached.data.map(normalize);
       }
 
+      // PeerTube endpoint:
+      //   /api/v1/video-channels/{channelHandle}/videos
       const base = INSTANCE.replace(/\/$/, "") + "/api/v1/video-channels/" + encodeURIComponent(CHANNEL_HANDLE) + "/videos";
-      const COUNT = 100; // PeerTube API count max is commonly 100
+      const COUNT = 100; // common max
       let start = 0;
       let total = null;
       let out = [];
@@ -652,7 +687,6 @@ html = r"""<!DOCTYPE html>
 
         out.push(...data);
 
-        // progress
         if (total){
           const pct = clamp((out.length / total) * 92, 6, 98);
           setProgress(pct);
@@ -668,7 +702,6 @@ html = r"""<!DOCTYPE html>
         if (total && out.length >= total) break;
         if (data.length < COUNT) break;
 
-        // tiny nap to be polite with rate limits
         await new Promise(r => setTimeout(r, 180));
       }
 
@@ -712,14 +745,12 @@ html = r"""<!DOCTYPE html>
 
       if (k === "escape") closeVid();
 
-      // "/" focuses search (unless user is typing in an input already)
       if (k === "/" && document.activeElement !== q){
         e.preventDefault();
         q.focus();
         q.select();
       }
 
-      // "r" = random (avoid when typing)
       if (k === "r" && document.activeElement !== q && !modal.classList.contains("open")){
         e.preventDefault();
         pickRandom();
@@ -759,7 +790,6 @@ html = r"""<!DOCTYPE html>
       moreBtn.disabled = FILTERED.length <= RENDER_N;
     });
 
-    // go
     boot(false);
   </script>
 </body>
