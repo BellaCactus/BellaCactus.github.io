@@ -961,38 +961,67 @@
     const rand = (a, b) => a + Math.random() * (b - a);
 
     // --- audio loader w/ fallback paths (tries multiple filenames/folders)
-    function tryLoadAudio(el, candidates, timeoutMs = 2200){
-      const list = (candidates || []).filter(Boolean).map(s => encodeURI(s));
-      return new Promise((resolve, reject) => {
+    function tryLoadAudio(el, candidates, timeoutMs = 9000){
+      // tries a list of urls until one actually loads.
+      // github pages can be a lil slow, so we treat loadedmetadata as "exists" and give it a sane timeout.
+      return new Promise((resolve) => {
         let i = 0;
-        let timer = null;
 
-        const cleanup = () => {
-          if (timer) clearTimeout(timer);
-          el.removeEventListener("canplay", onOk);
-          el.removeEventListener("loadeddata", onOk);
-          el.removeEventListener("error", onErr);
+        const attempt = () => {
+          if (i >= candidates.length) return resolve(null);
+
+          const raw = candidates[i++];
+          const url = encodeURI(raw);
+
+          let done = false;
+          let timer = null;
+
+          const cleanup = () => {
+            clearTimeout(timer);
+            el.removeEventListener("loadedmetadata", onOk);
+            el.removeEventListener("canplay", onOk);
+            el.removeEventListener("loadeddata", onOk);
+            el.removeEventListener("error", onErr);
+          };
+
+          const onOk = () => {
+            if (done) return;
+            done = true;
+            cleanup();
+            resolve(url);
+          };
+
+          const onErr = () => {
+            if (done) return;
+            done = true;
+            cleanup();
+            attempt();
+          };
+
+          try{
+            // load metadata fast; we still can play normally later
+            el.preload = "metadata";
+            el.src = url;
+
+            el.addEventListener("loadedmetadata", onOk, { once:true });
+            el.addEventListener("canplay", onOk, { once:true });
+            el.addEventListener("loadeddata", onOk, { once:true });
+            el.addEventListener("error", onErr, { once:true });
+
+            timer = setTimeout(() => {
+              if (done) return;
+              done = true;
+              cleanup();
+              attempt();
+            }, timeoutMs);
+
+            el.load();
+          }catch(e){
+            onErr();
+          }
         };
 
-        const onOk = () => { cleanup(); resolve(el.currentSrc || el.src); };
-        const onErr = () => { cleanup(); next(); };
-
-        const next = () => {
-          if (i >= list.length) return reject(new Error("no working audio source"));
-          const src = list[i++];
-
-          try{ el.pause(); }catch(e){}
-          el.src = src;
-          el.load();
-
-          el.addEventListener("canplay", onOk, { once:true });
-          el.addEventListener("loadeddata", onOk, { once:true });
-          el.addEventListener("error", onErr, { once:true });
-
-          timer = setTimeout(() => { cleanup(); next(); }, timeoutMs);
-        };
-
-        next();
+        attempt();
       });
     }
 
