@@ -16,7 +16,7 @@ terminal-core personal website.
 
 ---
 
-## 🌙 what is this?
+## what is this?
 
 **bella cactus** is my personal **terminal-themed website playground**.  
 it’s made to feel like a fake OS / interactive terminal hub rather than a normal portfolio.
@@ -30,7 +30,7 @@ it’s a place for:
 
 ---
 
-## 🖤 vibe
+##  vibe
 
 - fake-os / terminal playground aesthetic  
 - black / white / pink default palette  
@@ -40,7 +40,7 @@ it’s a place for:
 
 ---
 
-## ✨ highlights
+##  highlights
 
 - **intro gate**: auto-playing video (if browser allows)  
 - **music bar + waveform**: random track picker + lil waveform line  
@@ -51,7 +51,7 @@ it’s a place for:
 
 ---
 
-## 🗺️ pages
+## pages
 
 ### main pages
 core pages that match the “site world” vibe:
@@ -82,7 +82,7 @@ little side quests:
 
 ---
 
-## 🎮 controls (good to know)
+##  controls (good to know)
 
 ### index.html
 - **ctrl + k** (or **/**) opens the command palette  
@@ -102,7 +102,7 @@ the palette understands stuff like:
 
 ---
 
-## 🧪 customization
+##  customization
 
 this site is built to be reskinned + remixed without needing any backend stuff.
 
@@ -131,7 +131,7 @@ so if you flip into red mode once… it sticks until you change it 😈
 
 ---
 
-## 🖥️ run locally
+## run locally
 
 quick + dirty:
 - double click `index.html` and it will *mostly* work
