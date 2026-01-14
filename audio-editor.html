@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>audio editor • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="twi looking.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0; color:var(--text); font-family:var(--sans); line-height:1.55;
+      background:
+        radial-gradient(800px 520px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{max-width:1180px; margin:0 auto; padding:34px 16px 110px;}
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow:hidden; backdrop-filter: blur(6px);
+      position:relative;
+    }
+    .panel::before{
+      content:""; position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(900px 220px at 20% 0%, rgba(255,120,200,0.12), transparent 55%),
+        radial-gradient(900px 240px at 80% 0%, rgba(255,179,230,0.08), transparent 60%);
+      filter: blur(10px); opacity:0.8;
+    }
+    .panelTitle{
+      position:relative;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h1{
+      margin:0; font-size:1.05rem; font-family:var(--mono); color:var(--pink2);
+      letter-spacing:0.3px;
+    }
+    .panelInner{position:relative; padding:14px 16px 16px;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.24);
+      font-family:var(--mono); font-size:0.82rem; color:var(--muted);
+      max-width:100%;
+    }
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .left,.right{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .btn{
+      cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05); color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none; user-select:none; font-family:var(--sans); font-size:0.95rem;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,120,200,0.35); background: rgba(255,120,200,0.10);}
+    .btn:active{transform: translateY(0); opacity:0.95;}
+    .btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
+    .btn .k{font-family:var(--mono); font-size:0.8rem; color:var(--pink2);}
+    .btn.ghost{background: rgba(0,0,0,0.18);}
+    .btn.bad{border-color: rgba(255,77,184,0.25);}
+    .btn.bad:hover{background: rgba(255,77,184,0.10); border-color: rgba(255,77,184,0.45);}
+
+    .small{font-family:var(--mono); font-size:0.82rem; color:var(--muted);}
+    .hint{
+      margin-top:12px;
+      border:1px dashed rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+
+    .file{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.20);
+    }
+    input[type="file"]{color:var(--muted); font-family:var(--mono); font-size:0.85rem;}
+    input[type="file"]::file-selector-button{
+      margin-right:10px;
+      cursor:pointer;
+      padding:9px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text); font-family:var(--sans);
+    }
+    input[type="file"]::file-selector-button:hover{
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+
+    .waveBox{
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background: rgba(0,0,0,0.22);
+      overflow:hidden;
+    }
+    canvas{display:block; width:100%; height:180px;}
+    .waveMeta{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-top:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap:12px;
+      margin-top:12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background: rgba(0,0,0,0.20);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+      font-family:var(--mono);
+      font-size:0.86rem;
+      color: rgba(255,255,255,0.9);
+    }
+    .cardInner{padding:12px;}
+
+    .control{
+      display:grid;
+      grid-template-columns: 160px 1fr 80px;
+      gap:10px;
+      align-items:center;
+      margin:10px 0;
+    }
+    @media (max-width: 520px){
+      .control{grid-template-columns: 1fr; }
+      .control .label{margin-bottom:-6px;}
+    }
+    .label{font-family:var(--mono); font-size:0.85rem; color: rgba(255,255,255,0.9);}
+    input[type="range"]{width:100%;}
+    .val{
+      font-family:var(--mono);
+      font-size:0.85rem;
+      color: rgba(255,255,255,0.85);
+      text-align:right;
+    }
+    .num{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.28);
+      color: var(--text);
+      font-family: var(--mono);
+      outline:none;
+    }
+
+    .toast{
+      position:fixed; left:50%; bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.65);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:14px;
+      padding:10px 12px;
+      font-family: var(--mono);
+      font-size:0.84rem;
+      color: rgba(255,255,255,0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      display:none;
+      z-index:80;
+      max-width:min(820px, 92vw);
+      white-space:pre-wrap;
+    }
+    .toast.show{display:block; animation: toastIn .18s ease-out;}
+    @keyframes toastIn{from{transform: translateX(-50%) translateY(6px); opacity:0}to{transform: translateX(-50%) translateY(0); opacity:1}}
+
+    .badges{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+    .badge{
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      font-family: var(--mono);
+      font-size:0.78rem;
+      color: rgba(255,255,255,0.88);
+    }
+    .badge strong{color:var(--pink2); font-weight:700;}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="panel">
+      <div class="panelTitle">
+        <h1>audio editor <span class="pulseText">(:3)</span></h1>
+        <span class="pill" id="metaPill">no audio loaded</span>
+      </div>
+
+      <div class="panelInner">
+        <div class="row">
+          <div class="left">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <button class="btn ghost" id="demo" type="button" title="generates a tiny test tone"><span class="k">+</span> demo tone</button>
+          </div>
+          <div class="right">
+            <button class="btn" id="play" type="button" disabled><span class="k">▶</span> play</button>
+            <button class="btn ghost" id="stop" type="button" disabled><span class="k">■</span> stop</button>
+            <button class="btn ghost" id="loop" type="button" disabled><span class="k">∞</span> loop: off</button>
+            <button class="btn bad" id="export" type="button" disabled><span class="k">⇣</span> export wav</button>
+          </div>
+        </div>
+
+        <div class="file" style="margin-top:12px;">
+          <input id="file" type="file" accept="audio/*" />
+          <div class="small">
+            loads local files only. nothing uploads anywhere.
+          </div>
+        </div>
+
+        <div class="waveBox" aria-label="waveform">
+          <canvas id="wave" width="1600" height="360"></canvas>
+          <div class="waveMeta">
+            <div class="badges">
+              <span class="badge">sel: <strong id="selLabel">0.00</strong>s</span>
+              <span class="badge">start: <strong id="startLabel">0.00</strong>s</span>
+              <span class="badge">end: <strong id="endLabel">0.00</strong>s</span>
+              <span class="badge">rate: <strong id="rateLabel">1.00</strong>x</span>
+            </div>
+            <div class="small" id="hintLabel">tip: drag the pink handles on the waveform</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="cardHead">selection</div>
+            <div class="cardInner">
+              <div class="control">
+                <div class="label">start (s)</div>
+                <input id="start" type="range" min="0" max="1" step="0.001" value="0" disabled />
+                <div class="val"><input class="num" id="startNum" type="number" min="0" step="0.01" value="0" disabled /></div>
+              </div>
+              <div class="control">
+                <div class="label">end (s)</div>
+                <input id="end" type="range" min="0" max="1" step="0.001" value="1" disabled />
+                <div class="val"><input class="num" id="endNum" type="number" min="0" step="0.01" value="1" disabled /></div>
+              </div>
+              <div class="control">
+                <div class="label">fade in (s)</div>
+                <input id="fadeIn" type="range" min="0" max="5" step="0.01" value="0" disabled />
+                <div class="val" id="fadeInVal">0.00</div>
+              </div>
+              <div class="control">
+                <div class="label">fade out (s)</div>
+                <input id="fadeOut" type="range" min="0" max="5" step="0.01" value="0" disabled />
+                <div class="val" id="fadeOutVal">0.00</div>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="left">
+                  <button class="btn ghost" id="normalize" type="button" disabled><span class="k">+</span> normalize</button>
+                  <button class="btn ghost" id="reverse" type="button" disabled><span class="k">↺</span> reverse: off</button>
+                </div>
+                <div class="right">
+                  <span class="small">export uses the selected region + effects</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardHead">effects</div>
+            <div class="cardInner">
+              <div class="control">
+                <div class="label">volume</div>
+                <input id="gain" type="range" min="0" max="2" step="0.01" value="1" disabled />
+                <div class="val" id="gainVal">100%</div>
+              </div>
+              <div class="control">
+                <div class="label">speed</div>
+                <input id="rate" type="range" min="0.5" max="2" step="0.01" value="1" disabled />
+                <div class="val" id="rateVal">1.00x</div>
+              </div>
+              <div class="control">
+                <div class="label">pan</div>
+                <input id="pan" type="range" min="-1" max="1" step="0.01" value="0" disabled />
+                <div class="val" id="panVal">0.00</div>
+              </div>
+              <div class="control">
+                <div class="label">bass</div>
+                <input id="bass" type="range" min="-15" max="15" step="0.1" value="0" disabled />
+                <div class="val" id="bassVal">0.0 dB</div>
+              </div>
+              <div class="control">
+                <div class="label">treble</div>
+                <input id="treble" type="range" min="-15" max="15" step="0.1" value="0" disabled />
+                <div class="val" id="trebleVal">0.0 dB</div>
+              </div>
+              <div class="control">
+                <div class="label">lowcut (hz)</div>
+                <input id="hp" type="range" min="10" max="1000" step="1" value="10" disabled />
+                <div class="val" id="hpVal">10</div>
+              </div>
+              <div class="control">
+                <div class="label">highcut (hz)</div>
+                <input id="lp" type="range" min="1000" max="20000" step="10" value="20000" disabled />
+                <div class="val" id="lpVal">20000</div>
+              </div>
+              <div class="control">
+                <div class="label">compress</div>
+                <input id="comp" type="range" min="0" max="1" step="0.01" value="0" disabled />
+                <div class="val" id="compVal">off</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint small">
+          notes: speed changes pitch too (classic tape vibes). real “stem separation” (vocals/drums/etc) needs heavy ML and can’t run cleanly offline in one tiny html file yet. but you can still do cuts, fades, EQ-ish stuff, normalize, reverse, and export as wav.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const toastEl = $("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => toastEl.classList.remove("show"), 2200);
+    }
+
+    const fileIn = $("file");
+    const wave = $("wave");
+    const ctx2d = wave.getContext("2d");
+
+    const metaPill = $("metaPill");
+    const selLabel = $("selLabel");
+    const startLabel = $("startLabel");
+    const endLabel = $("endLabel");
+    const rateLabel = $("rateLabel");
+    const hintLabel = $("hintLabel");
+
+    const startR = $("start");
+    const endR = $("end");
+    const startNum = $("startNum");
+    const endNum = $("endNum");
+
+    const fadeInR = $("fadeIn");
+    const fadeOutR = $("fadeOut");
+    const fadeInVal = $("fadeInVal");
+    const fadeOutVal = $("fadeOutVal");
+
+    const gainR = $("gain");
+    const rateR = $("rate");
+    const panR = $("pan");
+    const bassR = $("bass");
+    const trebleR = $("treble");
+    const hpR = $("hp");
+    const lpR = $("lp");
+    const compR = $("comp");
+
+    const gainVal = $("gainVal");
+    const rateVal = $("rateVal");
+    const panVal = $("panVal");
+    const bassVal = $("bassVal");
+    const trebleVal = $("trebleVal");
+    const hpVal = $("hpVal");
+    const lpVal = $("lpVal");
+    const compVal = $("compVal");
+
+    const btnPlay = $("play");
+    const btnStop = $("stop");
+    const btnLoop = $("loop");
+    const btnExport = $("export");
+    const btnNormalize = $("normalize");
+    const btnReverse = $("reverse");
+    const btnDemo = $("demo");
+
+    let audioCtx = null;
+    let buffer = null;
+    let playing = null;
+    let loopOn = false;
+    let reversed = false;
+    let normalized = false;
+
+    // selection state (seconds)
+    let selStart = 0;
+    let selEnd = 0;
+
+    // waveform drag
+    let dragMode = null; // "start" | "end" | "move"
+    let dragOffset = 0;
+
+    function ensureCtx(){
+      if (!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended"){
+        audioCtx.resume().catch(()=>{});
+      }
+    }
+
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function fmt(n){ return (Math.round(n * 100) / 100).toFixed(2); }
+
+    function enableUI(on){
+      for (const el of [startR,endR,startNum,endNum,fadeInR,fadeOutR,gainR,rateR,panR,bassR,trebleR,hpR,lpR,compR]){
+        el.disabled = !on;
+      }
+      for (const el of [btnPlay,btnStop,btnLoop,btnExport,btnNormalize,btnReverse]){
+        el.disabled = !on;
+      }
+    }
+
+    function setDurationUI(d){
+      startR.max = String(d);
+      endR.max = String(d);
+      startNum.max = String(d);
+      endNum.max = String(d);
+    }
+
+    function setSel(a,b){
+      if (!buffer) return;
+      const d = buffer.duration;
+      a = clamp(a, 0, d);
+      b = clamp(b, 0, d);
+      if (b < a){ const t = a; a = b; b = t; }
+      // avoid zero-length selection
+      if (b - a < 0.005){
+        b = clamp(a + 0.005, 0, d);
+      }
+      selStart = a;
+      selEnd = b;
+
+      startR.value = String(selStart);
+      endR.value = String(selEnd);
+      startNum.value = fmt(selStart);
+      endNum.value = fmt(selEnd);
+
+      startLabel.textContent = fmt(selStart);
+      endLabel.textContent = fmt(selEnd);
+      selLabel.textContent = fmt(selEnd - selStart);
+
+      drawWave();
+    }
+
+    function getParams(){
+      return {
+        gain: Number(gainR.value),
+        rate: Number(rateR.value),
+        pan: Number(panR.value),
+        bass: Number(bassR.value),
+        treble: Number(trebleR.value),
+        hp: Number(hpR.value),
+        lp: Number(lpR.value),
+        comp: Number(compR.value),
+        fadeIn: Number(fadeInR.value),
+        fadeOut: Number(fadeOutR.value)
+      };
+    }
+
+    function updateVals(){
+      const p = getParams();
+      gainVal.textContent = Math.round(p.gain * 100) + "%";
+      rateVal.textContent = p.rate.toFixed(2) + "x";
+      rateLabel.textContent = p.rate.toFixed(2);
+      panVal.textContent = p.pan.toFixed(2);
+      bassVal.textContent = p.bass.toFixed(1) + " dB";
+      trebleVal.textContent = p.treble.toFixed(1) + " dB";
+      hpVal.textContent = String(Math.round(p.hp));
+      lpVal.textContent = String(Math.round(p.lp));
+      fadeInVal.textContent = p.fadeIn.toFixed(2);
+      fadeOutVal.textContent = p.fadeOut.toFixed(2);
+      compVal.textContent = p.comp <= 0.001 ? "off" : Math.round(p.comp * 100) + "%";
+    }
+
+    function drawWave(){
+      const w = wave.width, h = wave.height;
+      ctx2d.clearRect(0,0,w,h);
+
+      // background
+      ctx2d.fillStyle = "rgba(0,0,0,0.35)";
+      ctx2d.fillRect(0,0,w,h);
+
+      if (!buffer){
+        ctx2d.fillStyle = "rgba(255,255,255,0.70)";
+        ctx2d.font = "22px ui-monospace, Menlo, Consolas, monospace";
+        ctx2d.fillText("drop an audio file here", 30, 60);
+        ctx2d.font = "14px ui-monospace, Menlo, Consolas, monospace";
+        ctx2d.fillStyle = "rgba(255,255,255,0.50)";
+        ctx2d.fillText("or click the file picker. demo tone is also there. (:3)", 30, 90);
+        return;
+      }
+
+      const data = buffer.getChannelData(0);
+      const step = Math.max(1, Math.floor(data.length / w));
+      const amp = h * 0.45;
+      const mid = h / 2;
+
+      // waveform lines
+      ctx2d.strokeStyle = "rgba(255,255,255,0.65)";
+      ctx2d.lineWidth = 1;
+      ctx2d.beginPath();
+      for (let x = 0; x < w; x++){
+        const i = x * step;
+        let min = 1, max = -1;
+        for (let j=0; j<step; j++){
+          const v = data[i + j] ?? 0;
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+        ctx2d.moveTo(x, mid + min * amp);
+        ctx2d.lineTo(x, mid + max * amp);
+      }
+      ctx2d.stroke();
+
+      // selection overlay
+      const d = buffer.duration;
+      const x1 = (selStart / d) * w;
+      const x2 = (selEnd / d) * w;
+
+      ctx2d.fillStyle = "rgba(255,120,200,0.16)";
+      ctx2d.fillRect(x1, 0, x2-x1, h);
+
+      // handles
+      ctx2d.fillStyle = "rgba(255,120,200,0.85)";
+      ctx2d.fillRect(x1-2, 0, 4, h);
+      ctx2d.fillRect(x2-2, 0, 4, h);
+
+      // hints
+      ctx2d.fillStyle = "rgba(255,255,255,0.60)";
+      ctx2d.font = "14px ui-monospace, Menlo, Consolas, monospace";
+      ctx2d.fillText("start", Math.max(6, x1+6), 20);
+      ctx2d.fillText("end", Math.max(6, x2+6), 20);
+    }
+
+    function pickHandle(x){
+      if (!buffer) return null;
+      const w = wave.width;
+      const d = buffer.duration;
+      const x1 = (selStart / d) * w;
+      const x2 = (selEnd / d) * w;
+      const near = 12;
+
+      if (Math.abs(x - x1) <= near) return "start";
+      if (Math.abs(x - x2) <= near) return "end";
+      if (x > x1 && x < x2) return "move";
+      return null;
+    }
+
+    function xToTime(x){
+      const w = wave.width;
+      const t = (x / w) * buffer.duration;
+      return clamp(t, 0, buffer.duration);
+    }
+
+    function stop(){
+      if (playing){
+        try{ playing.stop(); }catch{}
+        playing = null;
+      }
+      btnPlay.disabled = !buffer;
+    }
+
+    function buildChain(context, dest){
+      const p = getParams();
+
+      // filters
+      const hp = context.createBiquadFilter();
+      hp.type = "highpass";
+      hp.frequency.value = p.hp;
+
+      const lp = context.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = p.lp;
+
+      const bass = context.createBiquadFilter();
+      bass.type = "lowshelf";
+      bass.frequency.value = 140;
+      bass.gain.value = p.bass;
+
+      const treble = context.createBiquadFilter();
+      treble.type = "highshelf";
+      treble.frequency.value = 4200;
+      treble.gain.value = p.treble;
+
+      const pan = context.createStereoPanner();
+      pan.pan.value = p.pan;
+
+      const comp = context.createDynamicsCompressor();
+      // comp mix with p.comp by mapping to threshold/ratio
+      if (p.comp > 0.001){
+        comp.threshold.value = -24 - (p.comp * 24);  // -24..-48
+        comp.ratio.value = 2 + (p.comp * 14);        // 2..16
+        comp.attack.value = 0.003;
+        comp.release.value = 0.18;
+      } else {
+        comp.threshold.value = 0; // effectively no-op-ish
+        comp.ratio.value = 1;
+      }
+
+      const gain = context.createGain();
+      gain.gain.value = p.gain;
+
+      // connect chain
+      hp.connect(lp);
+      lp.connect(bass);
+      bass.connect(treble);
+      treble.connect(comp);
+      comp.connect(pan);
+      pan.connect(gain);
+      gain.connect(dest);
+
+      return { hp, lp, bass, treble, comp, pan, gain };
+    }
+
+    function sliceBuffer(src, startSec, endSec){
+      const sr = src.sampleRate;
+      const a = Math.floor(startSec * sr);
+      const b = Math.floor(endSec * sr);
+      const frames = Math.max(1, b - a);
+
+      const out = new AudioBuffer({
+        length: frames,
+        numberOfChannels: src.numberOfChannels,
+        sampleRate: sr
+      });
+
+      for (let ch = 0; ch < src.numberOfChannels; ch++){
+        const data = src.getChannelData(ch);
+        const slice = data.subarray(a, a + frames);
+        out.copyToChannel(slice, ch, 0);
+      }
+      return out;
+    }
+
+    function reverseInPlace(buf){
+      for (let ch=0; ch<buf.numberOfChannels; ch++){
+        buf.getChannelData(ch).reverse();
+      }
+      return buf;
+    }
+
+    function normalizeInPlace(buf){
+      let peak = 0;
+      for (let ch=0; ch<buf.numberOfChannels; ch++){
+        const d = buf.getChannelData(ch);
+        for (let i=0; i<d.length; i++){
+          const v = Math.abs(d[i]);
+          if (v > peak) peak = v;
+        }
+      }
+      if (peak < 1e-6) return buf;
+      const g = 0.99 / peak;
+      for (let ch=0; ch<buf.numberOfChannels; ch++){
+        const d = buf.getChannelData(ch);
+        for (let i=0; i<d.length; i++) d[i] *= g;
+      }
+      return buf;
+    }
+
+    async function play(){
+      if (!buffer) return;
+      ensureCtx();
+      stop();
+
+      const p = getParams();
+
+      const raw = sliceBuffer(buffer, selStart, selEnd);
+      if (reversed) reverseInPlace(raw);
+      if (normalized) normalizeInPlace(raw);
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = raw;
+      source.playbackRate.value = p.rate;
+
+      const chain = buildChain(audioCtx, audioCtx.destination);
+      source.connect(chain.hp);
+
+      const t0 = audioCtx.currentTime + 0.02;
+
+      // fades (work in output time, which changes w/ rate)
+      const outDur = raw.duration / p.rate;
+      const fin = clamp(p.fadeIn, 0, outDur);
+      const fout = clamp(p.fadeOut, 0, outDur);
+
+      chain.gain.gain.cancelScheduledValues(t0);
+      chain.gain.gain.setValueAtTime(chain.gain.gain.value, t0);
+
+      if (fin > 0){
+        chain.gain.gain.setValueAtTime(0.0001, t0);
+        chain.gain.gain.linearRampToValueAtTime(p.gain, t0 + fin);
+      }
+      if (fout > 0){
+        chain.gain.gain.setValueAtTime(p.gain, t0 + Math.max(0, outDur - fout));
+        chain.gain.gain.linearRampToValueAtTime(0.0001, t0 + outDur);
+      }
+
+      source.loop = loopOn;
+      source.loopStart = 0;
+      source.loopEnd = raw.duration;
+
+      source.start(t0);
+      playing = source;
+
+      btnPlay.disabled = true;
+
+      source.onended = () => {
+        if (playing === source) playing = null;
+        if (!loopOn) btnPlay.disabled = !buffer;
+      };
+    }
+
+    function buildWav(buffer, sampleRate){
+      // 16-bit PCM WAV
+      const numCh = buffer.numberOfChannels;
+      const length = buffer.length;
+      const bytesPerSample = 2;
+      const blockAlign = numCh * bytesPerSample;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = length * blockAlign;
+      const out = new ArrayBuffer(44 + dataSize);
+      const dv = new DataView(out);
+
+      function writeStr(off, s){
+        for (let i=0;i<s.length;i++) dv.setUint8(off+i, s.charCodeAt(i));
+      }
+
+      writeStr(0, "RIFF");
+      dv.setUint32(4, 36 + dataSize, true);
+      writeStr(8, "WAVE");
+      writeStr(12, "fmt ");
+      dv.setUint32(16, 16, true);
+      dv.setUint16(20, 1, true); // PCM
+      dv.setUint16(22, numCh, true);
+      dv.setUint32(24, sampleRate, true);
+      dv.setUint32(28, byteRate, true);
+      dv.setUint16(32, blockAlign, true);
+      dv.setUint16(34, 16, true);
+      writeStr(36, "data");
+      dv.setUint32(40, dataSize, true);
+
+      // interleave
+      const chData = [];
+      for (let ch=0; ch<numCh; ch++) chData.push(buffer.getChannelData(ch));
+
+      let offset = 44;
+      for (let i=0; i<length; i++){
+        for (let ch=0; ch<numCh; ch++){
+          let v = chData[ch][i] ?? 0;
+          v = Math.max(-1, Math.min(1, v));
+          const s = v < 0 ? v * 0x8000 : v * 0x7FFF;
+          dv.setInt16(offset, s, true);
+          offset += 2;
+        }
+      }
+      return out;
+    }
+
+    async function exportWav(){
+      if (!buffer) return;
+      ensureCtx();
+
+      const p = getParams();
+      const raw = sliceBuffer(buffer, selStart, selEnd);
+      if (reversed) reverseInPlace(raw);
+      if (normalized) normalizeInPlace(raw);
+
+      const outDur = raw.duration / p.rate;
+      const sr = raw.sampleRate;
+
+      toast("rendering… (offline)");
+      btnExport.disabled = true;
+
+      try{
+        const offline = new OfflineAudioContext(raw.numberOfChannels, Math.ceil(outDur * sr), sr);
+
+        const source = offline.createBufferSource();
+        source.buffer = raw;
+        source.playbackRate.value = p.rate;
+
+        const chain = buildChain(offline, offline.destination);
+        source.connect(chain.hp);
+
+        // fades in offline time
+        const fin = clamp(p.fadeIn, 0, outDur);
+        const fout = clamp(p.fadeOut, 0, outDur);
+
+        chain.gain.gain.cancelScheduledValues(0);
+        chain.gain.gain.setValueAtTime(p.gain, 0);
+
+        if (fin > 0){
+          chain.gain.gain.setValueAtTime(0.0001, 0);
+          chain.gain.gain.linearRampToValueAtTime(p.gain, fin);
+        }
+        if (fout > 0){
+          chain.gain.gain.setValueAtTime(p.gain, Math.max(0, outDur - fout));
+          chain.gain.gain.linearRampToValueAtTime(0.0001, outDur);
+        }
+
+        source.start(0);
+
+        const rendered = await offline.startRendering();
+        const wav = buildWav(rendered, sr);
+
+        const blob = new Blob([wav], { type:"audio/wav" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        const stamp = new Date().toISOString().replaceAll(":","-").slice(0,19);
+        a.href = url;
+        a.download = `bella_audio_${stamp}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        toast("exported wav. >:3");
+      }catch(err){
+        console.error(err);
+        toast("export failed. open console for details.");
+      }finally{
+        btnExport.disabled = false;
+      }
+    }
+
+    async function loadArrayBuffer(ab, name="audio"){
+      ensureCtx();
+      metaPill.textContent = "decoding…";
+      try{
+        const decoded = await audioCtx.decodeAudioData(ab);
+        buffer = decoded;
+        selStart = 0;
+        selEnd = decoded.duration;
+
+        setDurationUI(decoded.duration);
+        enableUI(true);
+        setSel(0, decoded.duration);
+
+        const sr = decoded.sampleRate;
+        metaPill.textContent = `${name} • ${decoded.numberOfChannels}ch • ${Math.round(sr)}hz • ${decoded.duration.toFixed(2)}s`;
+        toast("loaded. (:3)");
+      }catch(err){
+        console.error(err);
+        toast("couldn't decode this file.");
+        metaPill.textContent = "decode failed";
+        buffer = null;
+        enableUI(false);
+        drawWave();
+      }
+    }
+
+    fileIn.addEventListener("change", async () => {
+      const f = fileIn.files && fileIn.files[0];
+      if (!f) return;
+      const ab = await f.arrayBuffer();
+      normalized = false;
+      reversed = false;
+      btnReverse.textContent = "reverse: off";
+      btnNormalize.textContent = "normalize";
+      await loadArrayBuffer(ab, f.name);
+    });
+
+    // demo tone
+    btnDemo.addEventListener("click", async () => {
+      ensureCtx();
+      const sr = 44100;
+      const dur = 3.5;
+      const b = new AudioBuffer({ length: Math.floor(sr*dur), numberOfChannels: 1, sampleRate: sr });
+      const d = b.getChannelData(0);
+      for (let i=0; i<d.length; i++){
+        const t = i/sr;
+        const f = 180 + Math.sin(t*2*Math.PI*0.5)*120;
+        d[i] = Math.sin(2*Math.PI*f*t) * 0.35 * (1 - Math.exp(-t*6));
+      }
+      // encode to wav-ish via offline path: we just play + allow edits anyway
+      buffer = b;
+      normalized = false; reversed = false;
+      enableUI(true);
+      setDurationUI(b.duration);
+      setSel(0, b.duration);
+      metaPill.textContent = `demo tone • 1ch • ${sr}hz • ${b.duration.toFixed(2)}s`;
+      toast("demo loaded.");
+    });
+
+    // controls
+    btnPlay.addEventListener("click", play);
+    btnStop.addEventListener("click", () => { stop(); toast("stopped."); });
+
+    btnLoop.addEventListener("click", () => {
+      loopOn = !loopOn;
+      btnLoop.textContent = "loop: " + (loopOn ? "on" : "off");
+      if (playing && !loopOn){
+        // if currently looping, stopping is clearer
+        stop();
+      }
+    });
+
+    btnExport.addEventListener("click", exportWav);
+
+    btnNormalize.addEventListener("click", () => {
+      normalized = !normalized;
+      btnNormalize.textContent = normalized ? "normalize: on" : "normalize";
+      toast(normalized ? "normalize armed." : "normalize off.");
+    });
+
+    btnReverse.addEventListener("click", () => {
+      reversed = !reversed;
+      btnReverse.textContent = "reverse: " + (reversed ? "on" : "off");
+      toast(reversed ? "reverse armed." : "reverse off.");
+    });
+
+    // slider value updates
+    for (const el of [gainR,rateR,panR,bassR,trebleR,hpR,lpR,compR,fadeInR,fadeOutR]){
+      el.addEventListener("input", updateVals);
+    }
+
+    startR.addEventListener("input", () => setSel(Number(startR.value), selEnd));
+    endR.addEventListener("input", () => setSel(selStart, Number(endR.value)));
+    startNum.addEventListener("change", () => setSel(Number(startNum.value), selEnd));
+    endNum.addEventListener("change", () => setSel(selStart, Number(endNum.value)));
+
+    // waveform drag to set selection
+    function getMouseX(e){
+      const r = wave.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width * wave.width;
+      return clamp(x, 0, wave.width);
+    }
+
+    wave.addEventListener("mousedown", (e) => {
+      if (!buffer) return;
+      const x = getMouseX(e);
+      const mode = pickHandle(x);
+      if (!mode) return;
+
+      dragMode = mode;
+      hintLabel.textContent = mode === "move" ? "drag selection" : ("drag " + mode + " handle");
+      const t = xToTime(x);
+
+      if (mode === "start"){
+        dragOffset = selStart - t;
+      } else if (mode === "end"){
+        dragOffset = selEnd - t;
+      } else {
+        dragOffset = t - selStart; // where inside the selection we grabbed
+      }
+      e.preventDefault();
+    });
+
+    addEventListener("mousemove", (e) => {
+      if (!dragMode || !buffer) return;
+      const r = wave.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width * wave.width;
+      const t = xToTime(clamp(x,0,wave.width));
+
+      if (dragMode === "start"){
+        setSel(t + dragOffset, selEnd);
+      } else if (dragMode === "end"){
+        setSel(selStart, t + dragOffset);
+      } else if (dragMode === "move"){
+        const len = selEnd - selStart;
+        let newStart = (t - dragOffset);
+        newStart = clamp(newStart, 0, buffer.duration - len);
+        setSel(newStart, newStart + len);
+      }
+    });
+
+    addEventListener("mouseup", () => {
+      if (dragMode){
+        dragMode = null;
+        hintLabel.textContent = "tip: drag the pink handles on the waveform";
+      }
+    });
+
+    // keyboard goodies
+    addEventListener("keydown", (e) => {
+      if (!buffer) return;
+      const k = (e.key || "").toLowerCase();
+      if (k === " "){
+        e.preventDefault();
+        if (playing) stop(); else play();
+      }
+      if (k === "l"){
+        loopOn = !loopOn;
+        btnLoop.textContent = "loop: " + (loopOn ? "on" : "off");
+      }
+      if (k === "e"){
+        exportWav();
+      }
+      if (k === "escape"){
+        stop();
+      }
+    });
+
+    // init
+    enableUI(false);
+    updateVals();
+    setSel(0,1);
+    drawWave();
+  </script>
+</body>
+</html>

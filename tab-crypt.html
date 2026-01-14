@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>tab crypt • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0; color:var(--text); font-family:var(--sans); line-height:1.55;
+      background:
+        radial-gradient(800px 520px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{max-width:1100px; margin:0 auto; padding:34px 16px 110px;}
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow:hidden; backdrop-filter: blur(6px);
+      position:relative;
+    }
+    .panel::before{
+      content:""; position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(900px 220px at 20% 0%, rgba(255,120,200,0.12), transparent 55%),
+        radial-gradient(900px 240px at 80% 0%, rgba(255,179,230,0.08), transparent 60%);
+      filter: blur(10px); opacity:0.8;
+    }
+    .panelTitle{
+      position:relative;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:14px 16px; border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h1{margin:0; font-size:1.05rem; font-family:var(--mono); color:var(--pink2);}
+    .panelInner{position:relative; padding:14px 16px;}
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .left,.right{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .btn{
+      cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05); color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none; user-select:none; font-family:var(--sans); font-size:0.95rem;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,120,200,0.35); background: rgba(255,120,200,0.10);}
+    .btn:active{transform: translateY(0); opacity:0.95;}
+    .btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
+    .btn .k{font-family:var(--mono); font-size:0.8rem; color:var(--pink2);}
+    .btn.ghost{background: rgba(0,0,0,0.18);}
+    .btn.bad{border-color: rgba(255,77,184,0.25);}
+    .btn.bad:hover{background: rgba(255,77,184,0.10); border-color: rgba(255,77,184,0.45);}
+
+    .small{font-family:var(--mono); font-size:0.82rem; color:var(--muted);}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.24);
+      font-family:var(--mono); font-size:0.82rem; color:var(--muted);
+      max-width:100%;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background: rgba(0,0,0,0.20);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+      font-family:var(--mono);
+      font-size:0.86rem;
+      color: rgba(255,255,255,0.9);
+    }
+    .cardInner{padding:12px;}
+
+    .input, .textarea, select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.28);
+      color: var(--text);
+      font-family: var(--mono);
+      outline:none;
+    }
+    .textarea{min-height:110px; resize:vertical;}
+    .input::placeholder, .textarea::placeholder{color: rgba(185,185,194,0.75);}
+
+    .list{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.22);
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .itemTop{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .itemTitle{
+      font-family: var(--mono);
+      font-size:0.90rem;
+      color: rgba(255,255,255,0.95);
+      max-width: 100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .tags{display:flex; gap:6px; flex-wrap:wrap;}
+    .tag{
+      font-family:var(--mono);
+      font-size:0.78rem;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+    }
+    .tag.pink{border-color: rgba(255,120,200,0.35); background: rgba(255,120,200,0.10);}
+    .itemNote{color: rgba(185,185,194,0.9); font-family:var(--sans); font-size:0.95rem;}
+
+    .toast{
+      position:fixed; left:50%; bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.65);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:14px;
+      padding:10px 12px;
+      font-family: var(--mono);
+      font-size:0.84rem;
+      color: rgba(255,255,255,0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      display:none;
+      z-index:80;
+      max-width:min(860px, 92vw);
+      white-space:pre-wrap;
+    }
+    .toast.show{display:block; animation: toastIn .18s ease-out;}
+    @keyframes toastIn{from{transform: translateX(-50%) translateY(6px); opacity:0}to{transform: translateX(-50%) translateY(0); opacity:1}}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="panel">
+      <div class="panelTitle">
+        <h1>tab crypt <span class="pulseText">(:3)</span></h1>
+        <span class="pill" id="count">0</span>
+      </div>
+
+      <div class="panelInner">
+        <div class="row">
+          <div class="left">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <button class="btn ghost" id="export" type="button"><span class="k">⇣</span> export json</button>
+            <label class="btn ghost" style="cursor:pointer;">
+              <span class="k">⇡</span> import json
+              <input id="import" type="file" accept="application/json" style="display:none;" />
+            </label>
+            <button class="btn bad" id="wipe" type="button"><span class="k">xx</span> wipe</button>
+          </div>
+          <div class="right" style="flex:1; justify-content:flex-end;">
+            <input class="input" id="search" placeholder="search title / url / tags / note..." />
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="cardHead">add a thing</div>
+            <div class="cardInner">
+              <div class="small">paste a url, give it a name, slap tags on it, throw it into storage. all local. no cloud. no witnesses.</div>
+
+              <div style="margin-top:10px;">
+                <input class="input" id="url" placeholder="url (https://...)" />
+              </div>
+              <div style="margin-top:10px;">
+                <input class="input" id="title" placeholder="title (optional)" />
+              </div>
+              <div style="margin-top:10px;">
+                <input class="input" id="tags" placeholder="tags (comma separated) e.g. destiny2, build, silly" />
+              </div>
+              <div style="margin-top:10px;">
+                <textarea class="textarea" id="note" placeholder="note (optional)"></textarea>
+              </div>
+
+              <div class="row" style="margin-top:10px;">
+                <div class="left">
+                  <button class="btn" id="add" type="button"><span class="k">+</span> add</button>
+                  <button class="btn ghost" id="paste" type="button"><span class="k">cp</span> paste url</button>
+                </div>
+                <div class="right">
+                  <span class="small">shortcut: <span class="pulseText">ctrl+enter</span> to add</span>
+                </div>
+              </div>
+
+              <div class="small" style="margin-top:10px;">
+                pro-tip: tag with <span class="pulseText">#</span> vibes like <span class="pulseText">#reference</span>, <span class="pulseText">#music</span>, <span class="pulseText">#mlp</span> etc.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardHead">filters</div>
+            <div class="cardInner">
+              <div class="small">quick slice-n-dice. click tags to filter.</div>
+
+              <div style="margin-top:10px;">
+                <select id="sort">
+                  <option value="new">newest</option>
+                  <option value="old">oldest</option>
+                  <option value="az">a → z</option>
+                </select>
+              </div>
+
+              <div style="margin-top:10px;">
+                <div class="small">active tag:</div>
+                <div class="pill" id="activeTag">#all</div>
+              </div>
+
+              <div style="margin-top:10px;">
+                <div class="small">tag cloud:</div>
+                <div id="tagCloud" class="tags" style="margin-top:8px;"></div>
+              </div>
+
+              <div style="margin-top:12px;" class="small">
+                storage key: <span class="pulseText">tab_crypt_v1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <div class="cardHead">your stash</div>
+          <div class="cardInner">
+            <div class="list" id="list"></div>
+            <div class="small" id="empty" style="display:none; margin-top:10px;">empty… add something and feed the crypt (:3)</div>
+          </div>
+        </div>
+
+        <div class="small" style="margin-top:12px;">
+          hotkeys: <span class="pulseText">/</span> focus search • <span class="pulseText">esc</span> clear tag • <span class="pulseText">del</span> delete focused item
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const KEY = "tab_crypt_v1";
+
+    const listEl = $("list");
+    const emptyEl = $("empty");
+    const countEl = $("count");
+    const tagCloud = $("tagCloud");
+    const activeTagEl = $("activeTag");
+
+    const inUrl = $("url");
+    const inTitle = $("title");
+    const inTags = $("tags");
+    const inNote = $("note");
+    const inSearch = $("search");
+    const sortSel = $("sort");
+
+    const toastEl = $("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => toastEl.classList.remove("show"), 2000);
+    }
+
+    let ALL = [];
+    let ACTIVE_TAG = "";
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        ALL = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(ALL)) ALL = [];
+      }catch{
+        ALL = [];
+      }
+    }
+    function save(){
+      try{ localStorage.setItem(KEY, JSON.stringify(ALL)); }catch{}
+    }
+
+    function normTags(s){
+      return String(s || "")
+        .split(",")
+        .map(t => t.trim())
+        .filter(Boolean)
+        .map(t => t.startsWith("#") ? t : "#" + t)
+        .map(t => t.toLowerCase());
+    }
+
+    function prettyHost(url){
+      try{
+        const u = new URL(url);
+        return u.host;
+      }catch{ return ""; }
+    }
+
+    function addItem(item){
+      ALL.unshift(item);
+      save();
+      render();
+    }
+
+    function delItem(id){
+      const idx = ALL.findIndex(x => x.id === id);
+      if (idx >= 0){
+        ALL.splice(idx,1);
+        save();
+        render();
+      }
+    }
+
+    function updateItem(id, patch){
+      const it = ALL.find(x => x.id === id);
+      if (!it) return;
+      Object.assign(it, patch);
+      save();
+      render();
+    }
+
+    function computeTags(items){
+      const map = new Map();
+      for (const it of items){
+        for (const t of (it.tags || [])){
+          map.set(t, (map.get(t) || 0) + 1);
+        }
+      }
+      return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0, 24);
+    }
+
+    function sortItems(items){
+      const mode = sortSel.value;
+      const arr = items.slice();
+      arr.sort((a,b) => {
+        if (mode === "new") return (b.time||0) - (a.time||0);
+        if (mode === "old") return (a.time||0) - (b.time||0);
+        if (mode === "az") return String(a.title||"").localeCompare(String(b.title||""), undefined, {sensitivity:"base"});
+        return 0;
+      });
+      return arr;
+    }
+
+    function escHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    function renderTagCloud(){
+      tagCloud.innerHTML = "";
+
+      const tags = computeTags(ALL);
+      if (!tags.length){
+        const t = document.createElement("div");
+        t.className = "small";
+        t.textContent = "no tags yet.";
+        tagCloud.appendChild(t);
+        return;
+      }
+
+      const allBtn = document.createElement("button");
+      allBtn.type = "button";
+      allBtn.className = "btn ghost";
+      allBtn.textContent = "#all";
+      allBtn.addEventListener("click", () => { ACTIVE_TAG = ""; render(); });
+      tagCloud.appendChild(allBtn);
+
+      for (const [tag, n] of tags){
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn ghost";
+        b.textContent = `${tag} (${n})`;
+        b.addEventListener("click", () => {
+          ACTIVE_TAG = (ACTIVE_TAG === tag) ? "" : tag;
+          render();
+        });
+        tagCloud.appendChild(b);
+      }
+    }
+
+    function render(){
+      renderTagCloud();
+
+      const q = (inSearch.value || "").trim().toLowerCase();
+
+      let items = ALL.filter(it => {
+        if (ACTIVE_TAG){
+          const ts = (it.tags||[]);
+          if (!ts.includes(ACTIVE_TAG)) return false;
+        }
+        if (!q) return true;
+        const hay = `${it.title||""} ${it.url||""} ${(it.tags||[]).join(" ")} ${it.note||""}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      items = sortItems(items);
+
+      activeTagEl.textContent = ACTIVE_TAG || "#all";
+      countEl.textContent = `${items.length}/${ALL.length}`;
+
+      listEl.innerHTML = "";
+      emptyEl.style.display = (items.length ? "none" : "block");
+
+      for (const it of items){
+        const div = document.createElement("div");
+        div.className = "item";
+        div.tabIndex = 0;
+        div.dataset.id = it.id;
+
+        const title = escHtml(it.title || it.url || "untitled");
+        const host = escHtml(prettyHost(it.url));
+        const url = escHtml(it.url || "#");
+        const note = escHtml(it.note || "");
+        const tags = (it.tags || []).map(t => `<span class="tag pink">${escHtml(t)}</span>`).join("");
+
+        div.innerHTML = `
+          <div class="itemTop">
+            <div style="min-width:240px; flex:1;">
+              <div class="itemTitle">${title}</div>
+              <div class="small">${host ? host + " • " : ""}${new Date(it.time||0).toLocaleString()}</div>
+            </div>
+            <div class="right">
+              <a class="btn ghost" href="${url}" target="_blank" rel="noopener"><span class="k">↗</span> open</a>
+              <button class="btn ghost" data-act="copy"><span class="k">cp</span> copy</button>
+              <button class="btn bad" data-act="del"><span class="k">del</span> delete</button>
+            </div>
+          </div>
+          <div class="tags">${tags}</div>
+          ${note ? `<div class="itemNote">${note}</div>` : ``}
+        `;
+
+        div.addEventListener("click", async (e) => {
+          const act = e.target && e.target.dataset && e.target.dataset.act;
+          if (!act) return;
+          if (act === "del"){
+            delItem(it.id);
+            toast("deleted.");
+          }
+          if (act === "copy"){
+            try{
+              await navigator.clipboard.writeText(it.url || "");
+              toast("copied url.");
+            }catch{
+              toast("couldn't copy (browser said no).");
+            }
+          }
+        });
+
+        div.addEventListener("keydown", (e) => {
+          if (e.key === "Delete"){
+            delItem(it.id);
+            toast("deleted.");
+          }
+        });
+
+        listEl.appendChild(div);
+      }
+    }
+
+    $("add").addEventListener("click", () => {
+      const url = (inUrl.value || "").trim();
+      if (!url){
+        toast("need a url.");
+        return;
+      }
+      // basic url normalization
+      let u = url;
+      if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+
+      const title = (inTitle.value || "").trim() || u;
+      const tags = normTags(inTags.value);
+      const note = (inNote.value || "").trim();
+
+      const item = {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+        time: Date.now(),
+        url: u,
+        title,
+        tags,
+        note
+      };
+
+      addItem(item);
+      inUrl.value = "";
+      inTitle.value = "";
+      inTags.value = "";
+      inNote.value = "";
+      toast("added. (:3)");
+      inUrl.focus();
+    });
+
+    $("paste").addEventListener("click", async () => {
+      try{
+        const t = await navigator.clipboard.readText();
+        if (t) inUrl.value = t.trim();
+        toast("pasted.");
+      }catch{
+        toast("can't read clipboard here.");
+      }
+    });
+
+    inSearch.addEventListener("input", render);
+    sortSel.addEventListener("change", render);
+
+    // export/import
+    $("export").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(ALL, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "tab-crypt.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast("exported.");
+    });
+
+    $("import").addEventListener("change", async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      try{
+        const raw = await f.text();
+        const obj = JSON.parse(raw);
+        if (!Array.isArray(obj)) throw new Error("not array");
+        // merge (new items first)
+        const seen = new Set(ALL.map(x => x.id));
+        for (const it of obj){
+          if (!it || !it.id || seen.has(it.id)) continue;
+          ALL.push(it);
+        }
+        ALL.sort((a,b)=>(b.time||0)-(a.time||0));
+        save();
+        render();
+        toast("imported.");
+      }catch{
+        toast("import failed.");
+      }finally{
+        e.target.value = "";
+      }
+    });
+
+    $("wipe").addEventListener("click", () => {
+      const ok = confirm("wipe the whole tab crypt? (cannot undo)");
+      if (!ok) return;
+      ALL = [];
+      save();
+      render();
+      toast("wiped.");
+    });
+
+    // hotkeys
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k === "/" && document.activeElement !== inSearch){
+        e.preventDefault();
+        inSearch.focus();
+        inSearch.select();
+      }
+      if (k === "escape"){
+        ACTIVE_TAG = "";
+        render();
+      }
+      if (k === "enter" && (e.ctrlKey || e.metaKey)){
+        $("add").click();
+      }
+    });
+
+    // boot
+    load();
+    render();
+  </script>
+</body>
+</html>
