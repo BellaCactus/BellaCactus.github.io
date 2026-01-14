@@ -5,6 +5,7 @@
   <title>bella cactus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- favicon (tab icon) -->
   <link rel="icon" type="image/png" href="twi looking.png" />
 
   <style>
@@ -27,11 +28,6 @@
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-
-      /* palette system */
-      --accent: var(--pink);
-      --accent2: var(--pink2);
-      --accent3: var(--pink3);
     }
 
     *{box-sizing:border-box;}
@@ -39,9 +35,9 @@
     body{
       margin:0;
       background:
-        radial-gradient(800px 500px at 15% 10%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 55%),
-        radial-gradient(900px 600px at 90% 30%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 55%),
-        radial-gradient(1000px 700px at 40% 95%, color-mix(in srgb, var(--accent3) 10%, transparent), transparent 55%),
+        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
         linear-gradient(180deg, var(--bg), var(--bg2));
       color:var(--text);
       font-family: var(--sans);
@@ -49,11 +45,12 @@
       overflow-x:hidden;
     }
 
-    a{color:var(--accent); text-decoration:none;}
+    a{color:var(--pink); text-decoration:none;}
     a:hover{text-decoration:underline;}
 
+    /* shimmer text (white <-> pink) */
     .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
       background-size: 260% 100%;
       -webkit-background-clip:text;
       background-clip:text;
@@ -74,6 +71,7 @@
       z-index:2;
     }
 
+    /* top */
     .top{
       display:flex;
       align-items:center;
@@ -91,8 +89,8 @@
       width:56px;
       height:56px;
       border-radius:14px;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 6%, transparent));
-      border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
       display:grid;
       place-items:center;
       box-shadow: var(--shadow);
@@ -102,6 +100,7 @@
       width:100%;
       height:100%;
       object-fit:cover;
+      image-rendering:auto;
       filter: saturate(1.05) contrast(1.05);
     }
     .titlebox{min-width:0;}
@@ -119,7 +118,6 @@
       font-size:0.98rem;
       max-width:560px;
     }
-
     .chips{
       display:flex;
       gap:8px;
@@ -141,10 +139,11 @@
       width:6px;height:6px;
       border-radius:999px;
       margin-right:6px;
-      background:var(--accent);
-      box-shadow:0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
     }
 
+    /* layout */
     .grid{
       display:grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -178,7 +177,7 @@
     .panelTitle h2{
       margin:0;
       font-size:1.05rem;
-      color:var(--accent2);
+      color:var(--pink2);
       letter-spacing:0.3px;
     }
     .small{
@@ -186,6 +185,7 @@
       color:var(--muted);
     }
 
+    /* buttons */
     .btnRow{
       display:flex;
       gap:10px;
@@ -205,21 +205,21 @@
       transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
       text-decoration:none;
       user-select:none;
-      font-family: var(--sans);
     }
     .btn:hover{
       text-decoration:none;
       transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
     }
     .btn:active{ transform: translateY(0); opacity:0.95; }
     .btn .k{
       font-family: var(--mono);
       font-size:0.8rem;
-      color:var(--accent2);
+      color:var(--pink2);
     }
 
+    /* divider label for button rows */
     .dividerLabel{
       width:100%;
       margin-top:10px;
@@ -227,12 +227,13 @@
       border-top:1px dashed rgba(255,255,255,0.10);
       font-family: var(--mono);
       font-size:0.82rem;
-      color: color-mix(in srgb, var(--accent2) 92%, transparent);
+      color: rgba(255,179,230,0.92);
       opacity:0.95;
     }
 
+    /* terminal */
     .terminal{
-      background: radial-gradient(900px 300px at 20% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
                   rgba(0,0,0,0.35);
       border-top:1px solid rgba(255,255,255,0.05);
       font-family: var(--mono);
@@ -247,17 +248,17 @@
       white-space:pre-wrap;
       word-break:break-word;
     }
-    .prompt{color:var(--accent2);}
+    .prompt{color:var(--pink2);}
     .cmd{color:var(--text);}
     .cursor{
       display:inline-block;
       width:9px;
       height:1.1em;
-      background: var(--accent);
+      background: var(--pink);
       margin-left:2px;
       animation: blink 1s steps(1) infinite;
       vertical-align:-2px;
-      box-shadow:0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
     }
     @keyframes blink{50%{opacity:0;}}
 
@@ -277,10 +278,11 @@
       font-family: var(--mono);
     }
     .ascii .pink{
-      color:var(--accent2);
-      text-shadow:0 0 10px color-mix(in srgb, var(--accent) 35%, transparent);
+      color:var(--pink2);
+      text-shadow:0 0 10px rgba(255,120,200,0.35);
     }
 
+    /* lists */
     ul.clean{
       list-style:none;
       padding:0;
@@ -297,7 +299,7 @@
       padding:2px 8px;
       border-radius:999px;
       background: rgba(255,255,255,0.05);
-      color:var(--accent2);
+      color:var(--pink2);
       margin-left:6px;
       border:1px solid rgba(255,255,255,0.08);
     }
@@ -339,9 +341,9 @@
     .bars span{
       width:7px;
       height:6px;
-      background: var(--accent);
+      background: var(--pink);
       border-radius:3px;
-      box-shadow:0 0 12px color-mix(in srgb, var(--accent) 35%, transparent);
+      box-shadow:0 0 12px rgba(255,120,200,0.35);
       animation: bounce 0.9s ease-in-out infinite;
       transform-origin:bottom;
       opacity:0.9;
@@ -369,7 +371,7 @@
       position:fixed;
       bottom:12px;
       right:12px;
-      z-index:6;
+      z-index:5;
       opacity:0.95;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
       transform: translateZ(0);
@@ -385,10 +387,9 @@
     .oneko img{
       width:52px;
       image-rendering:pixelated;
-      display:block;
     }
 
-    /* wall images behind everything */
+    /* wall images (random sprinkled) */
     #wall{
       position:fixed;
       inset:0;
@@ -405,7 +406,7 @@
       user-select:none;
     }
     .sticker:hover{
-      opacity:0.06;
+      opacity:0.06; /* hover = basically disappears so you can read */
       filter:none;
     }
     .sticker img{
@@ -464,293 +465,167 @@
       position:relative;
     }
 
-    /* command palette */
-    #paletteGate{
-      position:fixed;
-      inset:0;
-      z-index:1000;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,0.62);
-      backdrop-filter: blur(6px);
+    /* intel pretty view */
+    .intelGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:10px;
     }
-    #paletteGate.on{ display:flex; }
-    .palBox{
-      width:min(780px, 92vw);
-      border:1px solid rgba(255,255,255,0.12);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      border-radius:18px;
-      box-shadow: 0 25px 90px rgba(0,0,0,0.75);
+    @media (max-width: 900px){
+      .intelGrid{grid-template-columns:1fr;}
+    }
+    .intelCard{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      background: rgba(0,0,0,0.25);
       overflow:hidden;
     }
-    .palHead{
-      padding:12px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+    .intelCardHead{
+      padding:10px 12px;
       border-bottom:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.20);
-      font-family: var(--mono);
-      color: rgba(255,255,255,0.88);
-      font-size:0.86rem;
-    }
-    .palHead .hint{ color: var(--muted); font-size:0.82rem; }
-    .palInputRow{
-      padding:12px 14px;
       display:flex;
-      gap:10px;
+      justify-content:space-between;
       align-items:center;
+      gap:10px;
     }
-    #palInput{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.35);
-      color: rgba(255,255,255,0.92);
+    .intelCardHead .h{
       font-family: var(--mono);
-      font-size:0.95rem;
-      outline:none;
+      font-size:0.86rem;
+      color:var(--pink2);
+      letter-spacing:0.2px;
     }
-    #palInput:focus{
-      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
+    .intelCardBody{
+      padding:10px 12px;
     }
-    .palList{
-      padding:0 14px 14px;
+    .kvRow{
       display:flex;
-      flex-direction:column;
-      gap:8px;
+      justify-content:space-between;
+      gap:12px;
+      padding:6px 0;
+      border-bottom:1px dashed rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size:0.84rem;
     }
-    .palItem{
+    .kvRow:last-child{border-bottom:none;}
+    .kvKey{color: rgba(255,255,255,0.72);}
+    .kvVal{
+      color: rgba(255,255,255,0.95);
+      text-align:right;
+      max-width:62%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .kvVal.monoWrap{
+      white-space:pre-wrap;
+      word-break:break-word;
+      text-align:left;
+      max-width:100%;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-family: var(--mono);
+      font-size:0.78rem;
+      padding:5px 9px;
+      border-radius:999px;
       border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.26);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+    }
+    .pill .dot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+
+    /* raw json */
+    .kv{
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.92);
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
       border-radius:14px;
       padding:10px 12px;
-      font-family: var(--mono);
-      font-size:0.86rem;
-      color: rgba(255,255,255,0.90);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
     }
-    .palItem .k{
-      color: var(--accent2);
-    }
-
-    /* secret “golden cookie” */
-    #cookie{
-      position:fixed;
-      left: -9999px;
-      top: -9999px;
-      z-index:8;
-      width:44px;
-      height:44px;
-      border-radius:999px;
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      user-select:none;
-      background: rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 18px 60px rgba(0,0,0,0.65);
-      backdrop-filter: blur(6px);
-      opacity:0.92;
-      transition: transform 0.12s ease, opacity 0.18s ease;
-    }
-    #cookie:hover{ transform: translateY(-1px) scale(1.03); opacity:1; }
-    #cookie:active{ transform: translateY(0) scale(0.99); }
-    #cookie span{ font-size:22px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); }
-
-    /* secret modal */
-    #secretGate{
-      position:fixed;
-      inset:0;
-      z-index:1001;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,0.68);
-      backdrop-filter: blur(6px);
-    }
-    #secretGate.on{ display:flex; }
-    .secretBox{
-      width:min(520px, 92vw);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      box-shadow: 0 25px 90px rgba(0,0,0,0.75);
-      overflow:hidden;
-    }
-    .secretHead{
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.20);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      font-family: var(--mono);
-      font-size:0.88rem;
-      color: rgba(255,255,255,0.90);
-    }
-    .secretBody{
-      padding:12px 14px 14px;
-      font-family: var(--mono);
-      color: rgba(255,255,255,0.88);
-      font-size:0.88rem;
-    }
-    .secretBody .muted{ color: var(--muted); font-size:0.82rem; margin-top:8px; }
-    .secretRow{
-      margin-top:10px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    #secretInput{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.35);
-      color: rgba(255,255,255,0.92);
-      font-family: var(--mono);
-      font-size:0.95rem;
-      outline:none;
-    }
-    #secretInput:focus{
-      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
-    }
-
-    /* hidden password hint */
-    #hintGhost{
-      position:fixed;
-      right:12px;
-      bottom:12px;
-      z-index:0;
-      font-family: var(--mono);
-      font-size:12px;
-      color: rgba(255,255,255,0.10);
-      pointer-events:none;
-      user-select:none;
-      letter-spacing:0.6px;
-      text-transform: lowercase;
-    }
-
-    /* crash screen */
-    #crash{
-      position:fixed;
-      inset:0;
-      z-index:2000;
-      display:none;
-      background: #050509;
-      color: #fff;
-      font-family: var(--mono);
-      align-items:center;
-      justify-content:center;
-      text-align:left;
-      padding:24px;
-    }
-    #crash.on{ display:flex; }
-    .crashCard{
-      width:min(920px, 94vw);
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius:18px;
-      background: rgba(255,255,255,0.04);
-      box-shadow: 0 30px 120px rgba(0,0,0,0.9);
-      padding:18px 18px;
-      position:relative;
-      overflow:hidden;
-    }
-    .crashTitle{ font-size:20px; color: rgba(255,255,255,0.96); }
-    .crashSub{ margin-top:8px; color: rgba(255,255,255,0.75); font-size:13px; line-height:1.55; }
-    .crashProg{
-      margin-top:14px;
-      height:10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.35);
-      overflow:hidden;
-    }
-    .crashProg > div{
-      width:0%;
-      height:100%;
-      background: rgba(255,255,255,0.70);
-      border-radius:999px;
-      transition: width 0.35s ease;
-    }
-    .scanlines{
-      pointer-events:none;
-      position:absolute;
-      inset:-20%;
-      opacity:0.14;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(255,255,255,0.06) 0px,
-          rgba(255,255,255,0.06) 1px,
-          rgba(0,0,0,0) 3px,
-          rgba(0,0,0,0) 6px
-        );
-      animation: drift 6s linear infinite;
-    }
-    @keyframes drift{
-      0%{ transform: translateY(0); }
-      100%{ transform: translateY(18px); }
-    }
-
-    /* evil mode */
-    body.evil{
-      --accent:#ff3b3b;
-      --accent2:#ff8b8b;
-      --accent3:#ff1f6b;
-      filter: saturate(1.05) contrast(1.02);
-    }
-    body.evil .pulseText{
-      background: linear-gradient(90deg, #ffffff, var(--accent), #ffffff, var(--accent2), #ffffff);
-      background-size: 220% 100%;
-      animation: shimmer 3.2s ease-in-out infinite;
-    }
-
-    /* ambient whisper toast */
-    #toast{
-      position:fixed;
-      left:12px;
-      bottom:12px;
-      z-index:7;
+    .warn{
       font-family: var(--mono);
       font-size:0.82rem;
-      color: rgba(255,255,255,0.82);
-      background: rgba(0,0,0,0.26);
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius:12px;
-      padding:8px 10px;
-      backdrop-filter: blur(6px);
-      opacity:0;
-      transform: translateY(8px);
-      pointer-events:none;
-      transition: opacity 0.22s ease, transform 0.22s ease;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+      margin-top:10px;
     }
-    #toast.on{ opacity:1; transform: translateY(0); }
+  
 
-    /* reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .pulseText{ animation:none; }
-      .oneko{ animation:none; }
-      .bars span{ animation:none; }
-      .scanlines{ animation:none; }
-    }
+/* ---------------- THEME + EVIL MODE (red) ---------------- */
+body.evil{
+  filter: contrast(1.12) saturate(1.22) hue-rotate(-6deg);
+}
+body.evil .panel,
+body.evil .btn,
+body.evil .chip,
+body.evil .terminal,
+body.evil .musicBar{
+  animation: evilJitter 2.6s infinite steps(1);
+  will-change: transform, filter;
+}
+@keyframes evilJitter{
+  0%, 92%{ transform:none; filter:none; }
+  94%{ transform: translate(-1px, 1px) skewX(-0.2deg); filter: saturate(1.1); }
+  96%{ transform: translate(1px, -1px) skewX(0.2deg); }
+  98%{ transform: translate(-2px, 0px) skewY(0.2deg); }
+}
+body.evil::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,0,0,0.08) 0px,
+      rgba(255,0,0,0.08) 1px,
+      transparent 3px,
+      transparent 6px
+    );
+  mix-blend-mode: screen;
+  opacity:0.38;
+  animation: evilScan 6.2s linear infinite;
+}
+@keyframes evilScan{
+  from{ background-position-y:0; }
+  to{ background-position-y:28px; }
+}
+body.evil::before{
+  content:"";
+  position:fixed;
+  inset:-20px;
+  pointer-events:none;
+  z-index:9998;
+  background:
+    radial-gradient(1200px 800px at 30% 25%, rgba(255,0,60,0.22), transparent 60%),
+    radial-gradient(1200px 800px at 70% 70%, rgba(255,60,60,0.14), transparent 60%);
+  filter: blur(8px);
+  opacity:0.65;
+  animation: evilPulse 3.8s ease-in-out infinite;
+}
+@keyframes evilPulse{
+  0%,100%{ opacity:0.55; transform: translateY(0); }
+  50%{ opacity:0.75; transform: translateY(-2px); }
+}
   </style>
 </head>
 
 <body>
+  <!-- sprinkled stickers behind everything -->
   <div id="wall" aria-hidden="true"></div>
-
-  <!-- hidden hint (password appears here very faintly) -->
-  <div id="hintGhost" aria-hidden="true"></div>
 
   <!-- intro gate -->
   <div id="introGate">
@@ -771,59 +646,6 @@
     </button>
   </div>
 
-  <!-- command palette -->
-  <div id="paletteGate" aria-hidden="true">
-    <div class="palBox" role="dialog" aria-modal="true" aria-label="command palette">
-      <div class="palHead">
-        <div><span class="pulseText">command palette</span> <span class="hint">/ or ctrl+k</span></div>
-        <div class="hint">enter to run • esc to close</div>
-      </div>
-      <div class="palInputRow">
-        <input id="palInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a command: open dreams, theme red, crash, reroll..." />
-      </div>
-      <div class="palList" id="palList"></div>
-    </div>
-  </div>
-
-  <!-- secret door modal -->
-  <div id="secretGate" aria-hidden="true">
-    <div class="secretBox" role="dialog" aria-modal="true" aria-label="secret door">
-      <div class="secretHead">
-        <div><span class="pulseText">secret door</span> • enter the password</div>
-        <button class="btn" id="secretClose" type="button"><span class="k">esc</span> close</button>
-      </div>
-      <div class="secretBody">
-        <div>the site is asking for a phrase. it’s <span class="pulseText">hidden on the screen</span>… somewhere.</div>
-        <div class="muted">hint: it’s not in a popup. it’s just… quietly existing.</div>
-        <div class="secretRow">
-          <input id="secretInput" type="password" autocomplete="off" spellcheck="false" placeholder="password..." />
-          <button class="btn" id="secretGo" type="button"><span class="k">open</span> enter</button>
-        </div>
-        <div class="muted" id="secretMsg"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- fake crash -->
-  <div id="crash" aria-hidden="true">
-    <div class="crashCard">
-      <div class="scanlines"></div>
-      <div class="crashTitle"><span class="pulseText">system exception</span> • bellaOS kernel panic</div>
-      <div class="crashSub" id="crashText">
-        a fatal error has occurred. do not close the tab. the tab is already cursed.<br>
-        collecting sadness… (0%)<br>
-        <span style="opacity:0.7;">press esc to reboot</span>
-      </div>
-      <div class="crashProg"><div id="crashBar"></div></div>
-    </div>
-  </div>
-
-  <!-- golden cookie -->
-  <div id="cookie" title="suspiciously clickable" aria-hidden="false"><span>🍓</span></div>
-
-  <!-- ambient toast -->
-  <div id="toast" aria-hidden="true"></div>
-
   <!-- main -->
   <div class="wrap" id="main" style="visibility:hidden;">
     <div class="top">
@@ -838,9 +660,9 @@
       </div>
 
       <div class="chips">
-        <div class="chip" id="chipTheme"><span class="dot"></span><strong class="pulseText">pink mode</strong></div>
+        <div class="chip"><span class="dot"></span><strong class="pulseText">black / white / pink</strong></div>
         <div class="chip">timezone: <strong>nz</strong></div>
-        <div class="chip">mode: <strong id="chipMode">building</strong></div>
+        <div class="chip">mode: <strong>building</strong></div>
       </div>
     </div>
 
@@ -861,11 +683,11 @@
             <a class="btn" href="limiter.html"><span class="k">open</span> limiter</a>
             <a class="btn" href="os.html"><span class="k">open</span> os</a>
             <a class="btn" href="ascii.html"><span class="k">open</span> ascii zoo</a>
+
+            <!-- NEW PAGES -->
             <a class="btn" href="idle.html"><span class="k">open</span> idle</a>
             <a class="btn" href="glitch.html"><span class="k">open</span> glitch</a>
             <a class="btn" href="dreams.html"><span class="k">open</span> dreams</a>
-
-            <a class="btn" href="shrines.html"><span class="k">open</span> shrines</a>
 
             <a class="btn" href="https://www.youtube.com/@BellaCactusYT" target="_blank" rel="noreferrer">
               <span class="k">yt</span> @BellaCactusYT
@@ -875,12 +697,8 @@
               <span class="k">rng</span> reroll wall + track
             </button>
 
-            <button class="btn" id="btnPal" type="button" title="/ or ctrl+k">
-              <span class="k">/</span> command
-            </button>
-
-            <button class="btn" id="btnThemeCycle" type="button" title="pink -> white -> red">
-              <span class="k">pal</span> theme
+            <button class="btn" id="themeBtn" type="button">
+              <span class="k">pal</span> palette
             </button>
           </div>
 
@@ -899,7 +717,6 @@
             <button class="btn" id="playPause" type="button"><span class="k">▶</span> play/pause</button>
             <button class="btn" id="nextTrack" type="button"><span class="k">>>></span> next</button>
             <button class="btn" id="mute" type="button"><span class="k">vol</span> mute</button>
-            <button class="btn" id="btnCrash" type="button" title="rare on reroll too"><span class="k">!</span> crash</button>
           </div>
 
           <canvas id="waveform" height="48"></canvas>
@@ -955,11 +772,7 @@
           <div class="btnRow" style="margin-top:14px;">
             <a class="btn" href="#projects"><span class="k">cd</span> projects</a>
             <a class="btn" href="#apps"><span class="k">run</span> apps</a>
-            <button class="btn" type="button" id="btnSecret"><span class="k">???</span> secret</button>
-          </div>
-
-          <div class="small" style="margin-top:10px;">
-            tip: press <span class="pulseText">/</span> for commands • try <span class="pulseText">theme red</span> if you want the site to get weird.
+            <a class="btn" href="#intel"><span class="k">scan</span> intel</a>
           </div>
         </div>
       </aside>
@@ -985,13 +798,14 @@
             <span class="tag">github pages</span>
             <span class="tag">terminal vibe</span>
             <div class="small" style="margin-top:6px;">
-              living art-tech project. it bites sometimes.
+              placeholder now, will expand when your wamp pages land.
             </div>
           </li>
         </ul>
       </div>
     </section>
 
+    <!-- apps/tools -->
     <section class="panel" id="apps" style="margin-top:14px;">
       <div class="panelTitle">
         <h2>apps / tools</h2>
@@ -999,11 +813,12 @@
       </div>
       <div class="panelInner">
         <div class="btnRow">
+          <!-- NEW STUFF (added) -->
           <a class="btn" href="idle.html"><span class="k">idle</span> screensaver</a>
           <a class="btn" href="glitch.html"><span class="k">fx</span> glitch gallery</a>
           <a class="btn" href="dreams.html"><span class="k">log</span> dream log</a>
-          <a class="btn" href="shrines.html"><span class="k">dir</span> shrines</a>
 
+          <!-- existing -->
           <a class="btn" href="encrypter.html"><span class="k">exe</span> encrypter</a>
           <a class="btn" href="ascii-art-maker-type-shit.html"><span class="k">art</span> ascii maker</a>
           <a class="btn" href="keyb.html"><span class="k">kbd</span> keyb</a>
@@ -1016,7 +831,43 @@
           <a class="btn" href="legacy-home.html"><span class="k">old</span> legacy home</a>
         </div>
         <div class="small" style="margin-top:10px;">
-          if any filename here doesn’t match your repo, rename the file or the link. ez.
+          if any filename here doesn’t match your repo, just rename either the file or the link label. ez.
+        </div>
+      </div>
+    </section>
+
+    <!-- spicy intel panel (consent / permission based) -->
+    <section class="panel" id="intel" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>intel (local)</h2>
+        <div class="small">readable view + raw json toggle</div>
+      </div>
+
+      <div class="panelInner">
+        <div class="btnRow" style="margin-top:0;">
+          <button class="btn" id="intelPrettyBtn" type="button"><span class="k">ui</span> pretty</button>
+          <button class="btn" id="intelJsonBtn" type="button"><span class="k">{}</span> raw json</button>
+          <span class="pill" id="intelStatus"><span class="dot"></span> ready</span>
+        </div>
+
+        <div id="intelPretty" class="intelGrid" aria-live="polite"></div>
+        <pre class="kv" id="intelOut" style="display:none;">loading…</pre>
+
+        <div class="btnRow">
+          <button class="btn" id="btnIP" type="button"><span class="k">net</span> reveal public ip</button>
+          <button class="btn" id="btnGeo" type="button"><span class="k">gps</span> request location</button>
+          <button class="btn" id="btnNotify" type="button"><span class="k">ping</span> request notifications</button>
+          <button class="btn" id="btnClipboard" type="button"><span class="k">clip</span> read clipboard</button>
+          <button class="btn" id="btnMedia" type="button"><span class="k">av</span> request mic/cam</button>
+          <button class="btn" id="btnDevices" type="button"><span class="k">ls</span> enumerate devices</button>
+          <button class="btn" id="btnStorage" type="button"><span class="k">df</span> storage estimate</button>
+          <button class="btn" id="btnBattery" type="button"><span class="k">bat</span> battery</button>
+          <button class="btn" id="btnWebGL" type="button"><span class="k">gpu</span> webgl renderer</button>
+        </div>
+
+        <div class="warn">
+          note: this page does <span class="pulseText">not</span> silently fingerprint or track people.
+          buttons trigger standard browser permission prompts. data stays on-page. ip lookup calls a public api when clicked.
         </div>
       </div>
     </section>
@@ -1026,22 +877,24 @@
     </div>
   </div>
 
-  <div class="oneko" id="oneko" title="click me">
+  <!-- floating oneko -->
+  <div class="oneko" id="oneko" title="click me" aria-hidden="false">
     <img id="onekoImg" src="oneko.gif" alt="oneko" />
   </div>
 
+  <!-- audio elements -->
   <audio id="bgm" preload="auto" loop></audio>
-  <audio id="yeah" preload="auto">
-    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
-  </audio>
+  <audio id="yeah" preload="auto" src="lil-jon-yeah.mp3"></audio>
 
   <script>
+    // --------- tiny helpers
     const $ = (id) => document.getElementById(id);
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
     const rand = (a, b) => a + Math.random() * (b - a);
 
     // date
-    $("date").textContent = new Date().toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
+    const d = new Date();
+    $("date").textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
 
     // oneko fallback filename
     const onekoImg = $("onekoImg");
@@ -1052,15 +905,17 @@
       }
     });
 
-    // oneko click: play "yeah"
+    // oneko easter egg: click -> play "yeah"
     $("oneko").addEventListener("click", async () => {
-      try { await resumeAudioContext(); } catch(e){}
-      const y = $("yeah");
-      y.currentTime = 0;
-      y.play().catch(()=>{});
+      try {
+        await yepResumeAudio();
+        const y = $("yeah");
+        y.currentTime = 0;
+        y.play().catch(()=>{});
+      } catch(e){}
     });
 
-    // intro gate
+    // --------- INTRO GATE (video then show site)
     const introGate = $("introGate");
     const introVideo = $("introVideo");
     const main = $("main");
@@ -1089,21 +944,57 @@
       clearInterval(introInterval);
       introGate.classList.add("hidden");
       main.style.visibility = "visible";
+      // spawn stickers + start terminal + pick track + intel
       rerollAll();
       startTerminal();
-      spawnCookieLater();
-      startAmbientWhispers();
+      refreshIntelBase();
+
+
+// try autoplay (best effort; browsers may require a gesture)
+(async () => {
+  try{
+    setupWaveform();
+    await yepResumeAudio();
+    await bgm.play();
+    musicBar.classList.remove("paused");
+    $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+    trackMeta.textContent = "autoplay engaged";
+  }catch(e){
+    trackMeta.textContent = "tap play if audio is blocked";
+    const poke = async () => {
+      try{
+        setupWaveform();
+        await yepResumeAudio();
+        await bgm.play();
+        musicBar.classList.remove("paused");
+        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+        trackMeta.textContent = "audio enabled";
+      }catch(e2){}
+      window.removeEventListener('pointerdown', poke, true);
+      window.removeEventListener('keydown', poke, true);
+    };
+    window.addEventListener('pointerdown', poke, true);
+    window.addEventListener('keydown', poke, true);
+  }
+})();
     }
 
     skipIntro.addEventListener("click", () => {
       try { introVideo.pause(); } catch(e){}
       showSite();
     });
-    introVideo.addEventListener("ended", showSite);
-    introVideo.addEventListener("click", () => introVideo.play().catch(()=>{}));
 
-    // stickers
+    introVideo.addEventListener("ended", showSite);
+
+    // if autoplay is blocked, clicking video should start it
+    introVideo.addEventListener("click", () => {
+      introVideo.play().catch(()=>{});
+    });
+
+    // --------- STICKERS (random wall images, NO OVERLAP)
     const wall = $("wall");
+
+    // EDIT THIS LIST to match your actual filenames
     const stickerFiles = [
       "twi looking.png",
       "twi and trixy.jpg",
@@ -1114,6 +1005,7 @@
     function clearWall(){
       while(wall.firstChild) wall.removeChild(wall.firstChild);
     }
+
     function rectsOverlap(a, b, pad=10){
       return !(
         a.x + a.w + pad < b.x ||
@@ -1130,33 +1022,45 @@
       const w = window.innerWidth;
       const h = window.innerHeight;
 
+      // "safe zones" where stickers shouldn't spawn (avoid covering your readable content)
       const safe = [];
       const wrapEl = document.querySelector(".wrap");
       if (wrapEl){
         const r = wrapEl.getBoundingClientRect();
-        safe.push({ x:r.left-30, y:r.top-40, w:r.width+60, h:r.height+80 });
+        safe.push({
+          x: r.left - 30,
+          y: r.top - 40,
+          w: r.width + 60,
+          h: r.height + 80
+        });
       } else {
-        safe.push({ x:w*0.10, y:0, w:w*0.80, h:520 });
+        safe.push({ x: w*0.10, y: 0, w: w*0.80, h: 520 });
       }
 
       const placed = [];
 
-      for (let i=0;i<countTarget;i++){
+      for (let i = 0; i < countTarget; i++){
         const file = stickerFiles[i % stickerFiles.length];
         const size = rand(120, window.innerWidth < 900 ? 220 : 260);
         const box = { x:0, y:0, w:size, h:size };
 
         let ok = false;
-        for (let t=0;t<140;t++){
-          box.x = rand(10, Math.max(20, w - size - 10));
-          box.y = rand(10, Math.max(20, h - size - 10));
+        const tries = 120;
+        for (let t = 0; t < tries; t++){
+          const x = rand(10, Math.max(20, w - size - 10));
+          const y = rand(10, Math.max(20, h - size - 10));
+          box.x = x; box.y = y;
 
           let inSafe = false;
-          for (const s of safe){ if (rectsOverlap(box, s, 0)){ inSafe = true; break; } }
+          for (const s of safe){
+            if (rectsOverlap(box, s, 0)){ inSafe = true; break; }
+          }
           if (inSafe) continue;
 
           let hit = false;
-          for (const p of placed){ if (rectsOverlap(box, p, 18)){ hit = true; break; } }
+          for (const p of placed){
+            if (rectsOverlap(box, p, 18)){ hit = true; break; }
+          }
           if (hit) continue;
 
           ok = true;
@@ -1176,7 +1080,9 @@
         div.style.height = `${size}px`;
         div.style.left = `${box.x}px`;
         div.style.top = `${box.y}px`;
-        div.style.transform = `rotate(${rand(-22, 22)}deg)`;
+
+        const rot = rand(-22, 22);
+        div.style.transform = `rotate(${rot}deg)`;
 
         div.style.pointerEvents = "auto";
         div.addEventListener("click", (e) => {
@@ -1189,14 +1095,23 @@
       }
     }
 
-    window.addEventListener("resize", spawnStickers);
+    window.addEventListener("resize", () => {
+      spawnStickers();
+    });
 
-    // music + waveform
+    // --------- MUSIC (random soundtrack + waveform)
     const tracks = [
+      { file: "Bxmb Threat.mp3", label: "bxmb threat" },
+      { file: "FREDDIE DREDD - ENDLESS SEA.mp3", label: "endless sea (freddie dredd)" },
+      { file: "Tay-K - Dat Way [Official Audio] 4.mp3", label: "dat way (tay-k)" },
+      { file: "Tinashe - Nasty (Official Video) 0.mp3", label: "nasty (tinashe)" },
+      { file: "Intergalactic TV Show.mp3", label: "intergalactic tv show" },
+      { file: "I hope that you think of me 0.mp3", label: "i hope that you think of me" },
       { file: "530 0.mp3", label: "530 (kanye)" },
       { file: "bipolar.mp3", label: "bipolar (wifiskeleton)" },
       { file: "Tay-K - I Love My Choppa [Official Audio] 4.mp3", label: "i love my choppa (tay-k)" },
-      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" }
+      { file: "Who I Smoke (Official Music Video).mp3", label: "who i smoke" },
+      { file: "Mobile Suit Woe 0.mp3", label: "mobile suit woe" }
     ];
 
     const bgm = $("bgm");
@@ -1207,29 +1122,10 @@
     let trackIndex = Math.floor(Math.random() * tracks.length);
     let muted = false;
 
-    let audioCtx = null;
-    let analyser = null;
-    let data = null;
-    let srcNode = null;
-
-    async function resumeAudioContext(){
-      if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
-    }
-
-    function setupWaveform(){
-      if (audioCtx) return;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      try{
-        srcNode = audioCtx.createMediaElementSource(bgm);
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 512;
-        data = new Uint8Array(analyser.frequencyBinCount);
-        srcNode.connect(analyser);
-        analyser.connect(audioCtx.destination);
-      }catch(e){
-        analyser = null;
+    async function yepResumeAudio(){
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume();
       }
-      drawWave();
     }
 
     function loadTrack(i){
@@ -1240,9 +1136,88 @@
       trackMeta.textContent = `file: ${t.file}`;
     }
 
+
+// --------- THEME (pink / white / red) + evil mode hook
+const THEME_KEY = "bella_theme";
+const THEMES = ["pink","white","red"]; // red = evil
+let currentTheme = localStorage.getItem(THEME_KEY) || "pink";
+
+function setCssThemeVars(mode){
+  // we only touch the vars this file already uses (pink/pink2/pink3)
+  if (mode === "white"){
+    document.documentElement.style.setProperty("--pink", "#ffffff");
+    document.documentElement.style.setProperty("--pink2", "#d6d6dc");
+    document.documentElement.style.setProperty("--pink3", "#ffffff");
+  } else if (mode === "red"){
+    document.documentElement.style.setProperty("--pink", "#ff2a2a");
+    document.documentElement.style.setProperty("--pink2", "#ff7a7a");
+    document.documentElement.style.setProperty("--pink3", "#b00000");
+  } else {
+    document.documentElement.style.setProperty("--pink", "#ff78c8");
+    document.documentElement.style.setProperty("--pink2", "#ffb3e6");
+    document.documentElement.style.setProperty("--pink3", "#ff4db8");
+  }
+}
+
+function isEvil(){ return currentTheme === "red"; }
+
+async function applyTheme(mode, opts={}){
+  currentTheme = mode;
+  localStorage.setItem(THEME_KEY, mode);
+  setCssThemeVars(mode);
+  document.body.classList.toggle("evil", isEvil());
+
+  // update little chip text if present
+  const chip = document.querySelector('.chip strong.pulseText');
+  if (chip){
+    chip.textContent = (mode === 'red') ? 'black / white / red' : 'black / white / pink';
+  }
+
+  // red theme -> force bxmb threat
+  if (isEvil()){
+    const bx = tracks.findIndex(t => t.file === "Bxmb Threat.mp3");
+    if (bx !== -1){
+      loadTrack(bx);
+      try{
+        setupWaveform();
+        await yepResumeAudio();
+        await bgm.play();
+        musicBar.classList.remove("paused");
+        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+        trackMeta.textContent = `evil mode: forced track`;
+      }catch(e){
+        trackMeta.textContent = "evil mode armed. tap play if blocked.";
+      }
+    }
+  } else {
+    // leaving evil: don't auto-swap track unless asked
+    if (opts.autoplay){
+      try{
+        setupWaveform();
+        await yepResumeAudio();
+        await bgm.play();
+        musicBar.classList.remove("paused");
+        $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+      }catch(e){
+        // ok
+      }
+    }
+  }
+
+  // make waveform match theme
+  try{
+    const c = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
+    waveformCanvas.style.filter = isEvil() ? 'contrast(1.2) saturate(1.3)' : '';
+  }catch(e){}
+}
+
+function cycleTheme(){
+  const i = THEMES.indexOf(currentTheme);
+  const next = THEMES[(i + 1) % THEMES.length];
+  applyTheme(next, { autoplay: true });
+}
     $("playPause").addEventListener("click", async () => {
-      setupWaveform();
-      await resumeAudioContext().catch(()=>{});
+      await yepResumeAudio();
       if (bgm.paused) {
         bgm.play().catch(()=>{});
         musicBar.classList.remove("paused");
@@ -1255,8 +1230,7 @@
     });
 
     $("nextTrack").addEventListener("click", async () => {
-      setupWaveform();
-      await resumeAudioContext().catch(()=>{});
+      await yepResumeAudio();
       loadTrack(trackIndex + 1);
       bgm.play().catch(()=>{});
       musicBar.classList.remove("paused");
@@ -1269,8 +1243,37 @@
       $("mute").innerHTML = muted ? `<span class="k">vol</span> unmute` : `<span class="k">vol</span> mute`;
     });
 
+// palette button
+$("themeBtn").addEventListener("click", async () => {
+  // create audio context early so theme swap can force-track
+  try{ setupWaveform(); }catch(e){}
+  await yepResumeAudio().catch(()=>{});
+  cycleTheme();
+});
+
+
+    // waveform
     const waveformCanvas = $("waveform");
     const wf = waveformCanvas.getContext("2d");
+
+    let audioCtx = null;
+    let analyser = null;
+    let data = null;
+    let srcNode = null;
+
+    function setupWaveform(){
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      srcNode = audioCtx.createMediaElementSource(bgm);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      data = new Uint8Array(analyser.frequencyBinCount);
+
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      drawWave();
+    }
 
     function drawWave(){
       requestAnimationFrame(drawWave);
@@ -1285,19 +1288,21 @@
       }
 
       analyser.getByteTimeDomainData(data);
+
       wf.clearRect(0,0,cw,ch);
 
       wf.lineWidth = Math.max(1, Math.floor(devicePixelRatio));
-      wf.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#ff78c8";
-      wf.shadowColor = wf.strokeStyle;
+      const accent = getComputedStyle(document.documentElement).getPropertyValue("--pink").trim() || "#ff78c8";
+      wf.strokeStyle = accent;
+      wf.shadowColor = accent;
       wf.shadowBlur = 16;
 
       wf.beginPath();
-      for (let i=0;i<data.length;i++){
-        const x = (i/(data.length-1))*cw;
-        const y = (data[i]/255)*ch;
-        if (i===0) wf.moveTo(x,y);
-        else wf.lineTo(x,y);
+      for (let i = 0; i < data.length; i++){
+        const x = (i / (data.length - 1)) * cw;
+        const y = (data[i] / 255) * ch;
+        if (i === 0) wf.moveTo(x, y);
+        else wf.lineTo(x, y);
       }
       wf.stroke();
 
@@ -1312,21 +1317,32 @@
     }
 
     loadTrack(trackIndex);
+    applyTheme(currentTheme);
     musicBar.classList.add("paused");
+    document.addEventListener("click", () => setupWaveform(), { once:true });
 
-    // terminal
+    // --------- TERMINAL (types script, stops growing, then idles)
     const typedEl = $("typed");
     const outEl = $("termOut");
 
+    // updated: includes your new pages too
     const terminalScript = [
       { cmd: "whoami", out: "bella (aka BellaCactus)" },
-      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams  shrines" },
-      { cmd: "hint", out: "press / for command palette" },
-      { cmd: "hint", out: "a tiny visitor appears sometimes. click it." },
-      { cmd: "theme", out: "try: theme red  (evil mode)" }
+      { cmd: "cat interests.txt", out: "reverse engineering, coding, software, hardware, servers, technical minecraft" },
+      { cmd: "ls pages/", out: "limiter  os  ascii  idle  glitch  dreams" },
+      { cmd: "open glitch", out: "glitch.html" },
+      { cmd: "open dreams", out: "dreams.html" },
+      { cmd: "open idle", out: "idle.html" },
+      { cmd: "open youtube", out: "https://www.youtube.com/@BellaCactusYT" },
+      { cmd: "open limiter", out: "https://github.com/BellaCactus/bella-limiter-" },
+      { cmd: "run apps", out: "apps panel loaded (scroll a bit)  ->  /#apps" },
+      { cmd: "scan --local", out: "intel panel loaded (scroll a bit)  ->  /#intel" }
     ];
 
-    let lineIndex = 0, charIndex = 0, typing = false, idle = false;
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typing = false;
+    let idle = false;
 
     function escapeHtml(s){
       return String(s).replace(/[&<>"']/g, (m) => ({
@@ -1339,8 +1355,11 @@
       div.className = "termLine";
       div.innerHTML = `<span class="prompt">></span> <span class="cmd">${escapeHtml(text)}</span>`;
       outEl.appendChild(div);
+
       const maxLines = 6;
-      while(outEl.children.length > maxLines) outEl.removeChild(outEl.firstChild);
+      while(outEl.children.length > maxLines){
+        outEl.removeChild(outEl.firstChild);
+      }
     }
 
     function startTerminal(){
@@ -1370,6 +1389,7 @@
       if (charIndex > current.length){
         pushOutputLine(`$ ${terminalScript[lineIndex].cmd}`);
         pushOutputLine(terminalScript[lineIndex].out);
+
         lineIndex++;
         charIndex = 0;
         typedEl.textContent = "";
@@ -1391,7 +1411,7 @@
       loop();
     }
 
-    // ascii animals
+    // --------- ASCII ANIMALS
     const animals = [
 ` /\\_/\\
 ( o.o )
@@ -1409,6 +1429,7 @@
   ( •ω• )
   /    \\`
     ];
+
     let animalIndex = Math.floor(Math.random()*animals.length);
     function setAnimal(i){
       $("asciiAnimal").textContent = animals[(i + animals.length) % animals.length];
@@ -1416,363 +1437,484 @@
     setAnimal(animalIndex);
     setInterval(() => setAnimal(++animalIndex), 6500);
 
-    // theme system (pink/white/red evil)
-    const THEME_KEY = "bella_theme";
-    function applyTheme(mode){
-      document.body.classList.toggle("evil", mode === "red");
-      const chip = $("chipTheme").querySelector("strong");
-      const root = document.documentElement.style;
-
-      if (mode === "white"){
-        root.setProperty("--accent", "#ffffff");
-        root.setProperty("--accent2", "#d6d6dc");
-        root.setProperty("--accent3", "#ffffff");
-        chip.textContent = "white mode";
-      } else if (mode === "red"){
-        // evil uses body.evil vars, but keep fallback too
-        root.setProperty("--accent", "#ff3b3b");
-        root.setProperty("--accent2", "#ff8b8b");
-        root.setProperty("--accent3", "#ff1f6b");
-        chip.textContent = "evil mode";
-        $("chipMode").textContent = "do not trust";
-        pingToast("warning: evil mode armed >:3");
-      } else {
-        root.setProperty("--accent", "#ff78c8");
-        root.setProperty("--accent2", "#ffb3e6");
-        root.setProperty("--accent3", "#ff4db8");
-        chip.textContent = "pink mode";
-        $("chipMode").textContent = "building";
-      }
-
-      localStorage.setItem(THEME_KEY, mode);
-    }
-
-    function cycleTheme(){
-      const cur = localStorage.getItem(THEME_KEY) || "pink";
-      const next = cur === "pink" ? "white" : (cur === "white" ? "red" : "pink");
-      applyTheme(next);
-    }
-
-    $("btnThemeCycle").addEventListener("click", cycleTheme);
-    // restore theme
-    applyTheme(localStorage.getItem(THEME_KEY) || "pink");
-
-    // reroll
+    // --------- REROLL
     function rerollAll(){
       spawnStickers();
       loadTrack(Math.floor(Math.random() * tracks.length));
       musicBar.classList.add("paused");
       $("playPause").innerHTML = `<span class="k">▶</span> play/pause`;
-
-      // tiny chance to crash on reroll (easter egg)
-      if (Math.random() < 0.045) crashNow("reroll triggered a fatal vibe check");
     }
     $("reroll").addEventListener("click", rerollAll);
 
-    // command palette (/, ctrl+k)
-    const paletteGate = $("paletteGate");
-    const palInput = $("palInput");
-    const palList = $("palList");
+    // --------- INTEL PANEL (pretty + raw)
+    const intelOut = $("intelOut");
+    const intelPretty = $("intelPretty");
+    const intelPrettyBtn = $("intelPrettyBtn");
+    const intelJsonBtn = $("intelJsonBtn");
+    const intelStatus = $("intelStatus");
 
-    const commands = [
-      { label: "open dreams", run: ()=> location.href="dreams.html" },
-      { label: "open glitch", run: ()=> location.href="glitch.html" },
-      { label: "open idle", run: ()=> location.href="idle.html" },
-      { label: "open ascii", run: ()=> location.href="ascii.html" },
-      { label: "open shrines", run: ()=> location.href="shrines.html" },
-      { label: "theme pink", run: ()=> applyTheme("pink") },
-      { label: "theme white", run: ()=> applyTheme("white") },
-      { label: "theme red", run: ()=> applyTheme("red") },
-      { label: "reroll", run: ()=> rerollAll() },
-      { label: "secret", run: ()=> openSecret() },
-      { label: "crash", run: ()=> crashNow("manual crash invoked") }
-    ];
+    let intelMode = "pretty"; // pretty | json
 
-    function openPalette(){
-      paletteGate.classList.add("on");
-      paletteGate.setAttribute("aria-hidden","false");
-      palInput.value = "";
-      renderPalette("");
-      setTimeout(()=> palInput.focus(), 0);
+    const intel = {
+      base: {},
+      ip: null,
+      geo: null,
+      notify: null,
+      clipboard: null,
+      media: null,
+      devices: null,
+      storage: null,
+      battery: null,
+      webgl: null
+    };
+
+    function fmt(obj){
+      return JSON.stringify(obj, null, 2);
     }
 
-    function closePalette(){
-      paletteGate.classList.remove("on");
-      paletteGate.setAttribute("aria-hidden","true");
+    function setIntelStatus(text){
+      intelStatus.innerHTML = `<span class="dot"></span> ${escapeHtml(text)}`;
     }
 
-    function renderPalette(q){
-      const query = (q || "").trim().toLowerCase();
-      const list = commands
-        .filter(c => !query || c.label.includes(query))
-        .slice(0, 8);
+    function toHumanBytes(n){
+      if (typeof n !== "number" || !isFinite(n)) return "n/a";
+      const units = ["B","KB","MB","GB","TB"];
+      let i = 0, v = n;
+      while (v >= 1024 && i < units.length-1){ v /= 1024; i++; }
+      return `${v.toFixed(i === 0 ? 0 : 2)} ${units[i]}`;
+    }
 
-      palList.innerHTML = "";
-      if (!list.length){
-        const d = document.createElement("div");
-        d.className = "palItem";
-        d.innerHTML = `<div>no matches</div><div class="k">try: open dreams, theme red</div>`;
-        palList.appendChild(d);
-        return;
+    function kvRows(obj){
+      const rows = [];
+      for (const [k,v] of Object.entries(obj || {})){
+        let val = v;
+        if (val === null || val === undefined) val = "null";
+        if (Array.isArray(val)) val = val.join(", ");
+        if (typeof val === "object") val = fmt(val);
+        rows.push({ k, v: String(val) });
       }
+      return rows;
+    }
 
-      for (const item of list){
-        const d = document.createElement("div");
-        d.className = "palItem";
-        d.innerHTML = `<div>${escapeHtml(item.label)}</div><div class="k">enter</div>`;
-        palList.appendChild(d);
+    function card(title, rightText, rows){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody"></div>
+      `;
+      const body = div.querySelector(".intelCardBody");
+      for (const r of rows){
+        const row = document.createElement("div");
+        row.className = "kvRow";
+        row.innerHTML = `
+          <div class="kvKey">${escapeHtml(r.k)}</div>
+          <div class="kvVal">${escapeHtml(r.v)}</div>
+        `;
+        body.appendChild(row);
       }
+      return div;
     }
 
-    function runPalette(){
-      const v = (palInput.value || "").trim().toLowerCase();
-      const exact = commands.find(c => c.label === v);
-      const starts = commands.find(c => c.label.startsWith(v));
-      const pick = exact || starts;
-
-      // allow "open x" shortcuts
-      if (!pick && v.startsWith("open ")){
-        const target = v.slice(5).trim();
-        const map = {
-          "dreams":"dreams.html",
-          "glitch":"glitch.html",
-          "idle":"idle.html",
-          "ascii":"ascii.html",
-          "shrines":"shrines.html",
-          "vault":"vault.html"
-        };
-        if (map[target]) { location.href = map[target]; return; }
-      }
-
-      // allow "theme x" shortcuts
-      if (!pick && v.startsWith("theme ")){
-        const t = v.slice(6).trim();
-        if (t === "pink" || t === "white" || t === "red") { applyTheme(t); pingToast(`theme -> ${t}`); closePalette(); return; }
-      }
-
-      if (pick){
-        closePalette();
-        pick.run();
-      } else {
-        pingToast("unknown command. try: open dreams, theme red, secret");
-      }
+    function cardWrap(title, rightText, text){
+      const div = document.createElement("div");
+      div.className = "intelCard";
+      div.innerHTML = `
+        <div class="intelCardHead">
+          <div class="h">${escapeHtml(title)}</div>
+          <div class="small">${escapeHtml(rightText || "")}</div>
+        </div>
+        <div class="intelCardBody">
+          <div class="kvVal monoWrap">${escapeHtml(text || "")}</div>
+        </div>
+      `;
+      return div;
     }
 
-    $("btnPal").addEventListener("click", openPalette);
-    paletteGate.addEventListener("mousedown", (e)=>{ if (e.target === paletteGate) closePalette(); });
-    palInput.addEventListener("input", ()=> renderPalette(palInput.value));
-    palInput.addEventListener("keydown", (e)=>{
-      if (e.key === "Enter"){ e.preventDefault(); runPalette(); }
-      if (e.key === "Escape"){ e.preventDefault(); closePalette(); }
-    });
-
-    addEventListener("keydown", (e) => {
-      const k = (e.key || "").toLowerCase();
-      const ctrlk = (e.ctrlKey || e.metaKey) && k === "k";
-
-      if (ctrlk){
-        e.preventDefault();
-        openPalette();
-        return;
-      }
-      if (k === "/" && !paletteGate.classList.contains("on")){
-        // avoid triggering while typing in inputs
-        const tag = (document.activeElement && document.activeElement.tagName || "").toLowerCase();
-        if (tag === "input" || tag === "textarea") return;
-        e.preventDefault();
-        openPalette();
-        return;
-      }
-      if (k === "escape"){
-        if (paletteGate.classList.contains("on")) closePalette();
-        if ($("secretGate").classList.contains("on")) closeSecret();
-        if ($("crash").classList.contains("on")) rebootFromCrash();
-      }
-    });
-
-    // secret cookie + password
-    const cookie = $("cookie");
-    const secretGate = $("secretGate");
-    const secretInput = $("secretInput");
-    const secretMsg = $("secretMsg");
-
-    function makePassword(){
-      const words = ["cactus","pony","static","dream","velvet","socket","void","neon","kernel","whisper","twi","trixy"];
-      const w1 = words[Math.floor(Math.random()*words.length)];
-      const w2 = words[Math.floor(Math.random()*words.length)];
-      const n = Math.floor(10 + Math.random()*89);
-      return `${w1}-${w2}-${n}`;
-    }
-
-    let secretPass = makePassword();
-    $("hintGhost").textContent = `password: ${secretPass}  //  do not say it out loud`;
-
-    function placeCookie(){
-      const w = innerWidth, h = innerHeight;
-      const x = rand(18, Math.max(18, w - 62));
-      const y = rand(18, Math.max(18, h - 62));
-      cookie.style.left = `${x}px`;
-      cookie.style.top = `${y}px`;
-    }
-
-    function spawnCookieLater(){
-      const delay = rand(18000, 42000); // 18-42s
-      setTimeout(() => {
-        placeCookie();
-        cookie.style.opacity = "0.92";
-        pingToast("a tiny visitor appeared…");
-        // auto hide after a bit if not clicked
-        setTimeout(()=> hideCookie(), rand(12000, 20000));
-      }, delay);
-    }
-
-    function hideCookie(){
-      cookie.style.left = "-9999px";
-      cookie.style.top = "-9999px";
-    }
-
-    cookie.addEventListener("click", () => {
-      openSecret();
-      hideCookie();
-      // respawn later
-      secretPass = makePassword();
-      $("hintGhost").textContent = `password: ${secretPass}  //  do not say it out loud`;
-      spawnCookieLater();
-    });
-
-    function openSecret(){
-      secretMsg.textContent = "";
-      secretInput.value = "";
-      secretGate.classList.add("on");
-      secretGate.setAttribute("aria-hidden","false");
-      setTimeout(()=> secretInput.focus(), 0);
-    }
-
-    function closeSecret(){
-      secretGate.classList.remove("on");
-      secretGate.setAttribute("aria-hidden","true");
-    }
-
-    $("btnSecret").addEventListener("click", openSecret);
-    $("secretClose").addEventListener("click", closeSecret);
-    secretGate.addEventListener("mousedown", (e)=>{ if (e.target === secretGate) closeSecret(); });
-
-    function checkSecret(){
-      const v = (secretInput.value || "").trim();
-      if (!v){
-        secretMsg.textContent = "enter something bestie (:3)";
-        return;
-      }
-      if (v === secretPass){
-        secretMsg.textContent = "accepted. opening vault…";
-        pingToast("door unlocked");
-        setTimeout(()=> location.href = "vault.html", 650);
-      } else {
-        secretMsg.textContent = "nope. wrong phrase. (it’s on-screen.)";
-        pingToast("denied");
-      }
-    }
-
-    $("secretGo").addEventListener("click", checkSecret);
-    secretInput.addEventListener("keydown", (e)=>{
-      if (e.key === "Enter"){ e.preventDefault(); checkSecret(); }
-      if (e.key === "Escape"){ e.preventDefault(); closeSecret(); }
-    });
-
-    // crash screen
-    const crash = $("crash");
-    const crashBar = $("crashBar");
-    const crashText = $("crashText");
-    let crashTimer = null;
-
-    function crashNow(reason){
-      if (crash.classList.contains("on")) return;
-      closePalette();
-      closeSecret();
-      crash.classList.add("on");
-      crash.setAttribute("aria-hidden","false");
-
-      let p = 0;
-      crashBar.style.width = "0%";
-      crashText.innerHTML =
-        `a fatal error has occurred. do not close the tab. the tab is already cursed.<br>` +
-        `reason: <span style="opacity:0.9;">${escapeHtml(reason || "unknown")}</span><br>` +
-        `collecting sadness… (0%)<br>` +
-        `<span style="opacity:0.7;">press esc to reboot</span>`;
-
-      clearInterval(crashTimer);
-      crashTimer = setInterval(() => {
-        p = clamp(p + rand(3, 12), 0, 100);
-        crashBar.style.width = `${p}%`;
-        crashText.innerHTML =
-          `a fatal error has occurred. do not close the tab. the tab is already cursed.<br>` +
-          `reason: <span style="opacity:0.9;">${escapeHtml(reason || "unknown")}</span><br>` +
-          `collecting sadness… (${Math.floor(p)}%)<br>` +
-          `<span style="opacity:0.7;">press esc to reboot</span>`;
-        if (p >= 100){
-          clearInterval(crashTimer);
-          crashText.innerHTML =
-            `reboot ready. press esc.<br>` +
-            `<span style="opacity:0.7;">or just stare at it. that’s valid too.</span>`;
-        }
-      }, 380);
-    }
-
-    function rebootFromCrash(){
-      crash.classList.remove("on");
-      crash.setAttribute("aria-hidden","true");
-      clearInterval(crashTimer);
-      crashTimer = null;
-      pingToast("reboot complete");
-      // a tiny “reboot” reroll
-      rerollAll();
-    }
-
-    $("btnCrash").addEventListener("click", () => crashNow("manual crash invoked"));
-
-    // ambient whispers
-    const toast = $("toast");
-    const whisperPool = [
-      "the ui is watching you",
-      "press / to open commands",
-      "your tabs are alive",
-      "soft reboot of the soul",
-      "pink glow, low hp",
-      "you found a hidden process",
-      "do not disturb: building",
-      "evil mode hungers",
-      "the cookie knows"
-    ];
-
-    let toastT = null;
-    function pingToast(text){
-      clearTimeout(toastT);
-      toast.textContent = text;
-      toast.classList.add("on");
-      toastT = setTimeout(()=> toast.classList.remove("on"), 2100);
-    }
-
-    function startAmbientWhispers(){
-      const loop = () => {
-        const delay = rand(45000, 110000); // 45-110s
-        setTimeout(() => {
-          // small chance to show something spicy when evil
-          const isEvil = document.body.classList.contains("evil");
-          if (Math.random() < 0.75){
-            const msg = isEvil && Math.random() < 0.35 ? "the red theme is not cosmetic" : whisperPool[Math.floor(Math.random()*whisperPool.length)];
-            pingToast(msg);
-          }
-          loop();
-        }, delay);
+    function renderIntel(){
+      const out = {
+        base: intel.base,
+        ip: intel.ip,
+        geo: intel.geo,
+        notifications: intel.notify,
+        clipboard: intel.clipboard,
+        media: intel.media,
+        devices: intel.devices,
+        storage: intel.storage,
+        battery: intel.battery,
+        webgl: intel.webgl
       };
-      loop();
+
+      intelOut.textContent = fmt(out);
+      intelPretty.innerHTML = "";
+
+      const base = intel.base || {};
+      const loc = base.location || {};
+      const br = base.browser || {};
+      const scr = base.screen || {};
+      const hw = base.hardware || {};
+      const net = base.network || {};
+      const perms = base.permissions || {};
+
+      intelPretty.appendChild(card("time / locale", "", [
+        { k:"time", v: base.time || "n/a" },
+        { k:"timezone", v: loc.timezone || "n/a" },
+        { k:"locale", v: loc.locale || "n/a" },
+        { k:"languages", v: (loc.languages || []).join(", ") || "n/a" }
+      ]));
+
+      intelPretty.appendChild(card("browser", "", [
+        { k:"platform", v: br.platform || "n/a" },
+        { k:"vendor", v: br.vendor || "n/a" },
+        { k:"cookies", v: String(!!br.cookieEnabled) },
+        { k:"do not track", v: String(br.doNotTrack ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(cardWrap("user agent", "", br.userAgent || "n/a"));
+
+      intelPretty.appendChild(card("screen", "", [
+        { k:"resolution", v: `${scr.width || "?"} × ${scr.height || "?"}` },
+        { k:"available", v: `${scr.availWidth || "?"} × ${scr.availHeight || "?"}` },
+        { k:"color depth", v: String(scr.colorDepth ?? "n/a") },
+        { k:"pixel ratio", v: String(scr.pixelRatio ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("hardware", "", [
+        { k:"cores", v: String(hw.cores ?? "n/a") },
+        { k:"memory", v: hw.memoryGB ? `${hw.memoryGB} GB` : "n/a" },
+        { k:"touch points", v: String(hw.touchPoints ?? "n/a") },
+        { k:"online", v: String(net.online ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("network", "", [
+        { k:"effectiveType", v: net.connection?.effectiveType ?? "n/a" },
+        { k:"downlink", v: net.connection?.downlink ?? "n/a" },
+        { k:"rtt", v: net.connection?.rtt ?? "n/a" },
+        { k:"saveData", v: String(net.connection?.saveData ?? "n/a") }
+      ]));
+
+      intelPretty.appendChild(card("permissions", "", [
+        { k:"notifications", v: perms.notifications ?? "n/a" }
+      ]));
+
+      if (intel.ip) intelPretty.appendChild(card("public ip", "(click fetched)", kvRows(intel.ip)));
+      if (intel.geo) intelPretty.appendChild(card("geolocation", "(permission)", kvRows(intel.geo)));
+      if (intel.notify) intelPretty.appendChild(card("notifications", "(permission)", kvRows(intel.notify)));
+      if (intel.clipboard) intelPretty.appendChild(card("clipboard", "(permission)", kvRows(intel.clipboard)));
+      if (intel.media) intelPretty.appendChild(card("mic/cam", "(permission)", kvRows(intel.media)));
+      if (intel.devices){
+        const d = intel.devices;
+        const summary = { count: d.count ?? null, kinds: d.kinds ?? null };
+        intelPretty.appendChild(card("devices summary", "(permission helps labels)", kvRows(summary)));
+      }
+      if (intel.storage){
+        const s = intel.storage || {};
+        intelPretty.appendChild(card("storage", "", [
+          { k:"quota", v: toHumanBytes(s.quotaBytes) },
+          { k:"usage", v: toHumanBytes(s.usageBytes) }
+        ]));
+      }
+      if (intel.battery) intelPretty.appendChild(card("battery", "", kvRows(intel.battery)));
+      if (intel.webgl) intelPretty.appendChild(card("webgl", "", kvRows(intel.webgl)));
+
+      if (intelMode === "pretty"){
+        intelPretty.style.display = "";
+        intelOut.style.display = "none";
+      } else {
+        intelPretty.style.display = "none";
+        intelOut.style.display = "";
+      }
     }
 
-    // start audio context on first click anywhere (helps autoplay rules)
-    document.addEventListener("click", () => setupWaveform(), { once:true });
+    function refreshIntelBase(){
+      const nav = navigator;
 
-    // boot
-    // site shows when video ends or skip pressed
+      intel.base = {
+        time: new Date().toString(),
+        location: {
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown",
+          locale: nav.language || "unknown",
+          languages: nav.languages || []
+        },
+        browser: {
+          userAgent: nav.userAgent,
+          platform: nav.platform || "unknown",
+          vendor: nav.vendor || "unknown",
+          cookieEnabled: nav.cookieEnabled,
+          doNotTrack: nav.doNotTrack || null
+        },
+        screen: {
+          width: screen.width,
+          height: screen.height,
+          availWidth: screen.availWidth,
+          availHeight: screen.availHeight,
+          colorDepth: screen.colorDepth,
+          pixelRatio: devicePixelRatio
+        },
+        hardware: {
+          cores: nav.hardwareConcurrency || null,
+          memoryGB: nav.deviceMemory || null,
+          touchPoints: nav.maxTouchPoints || 0
+        },
+        network: {
+          online: nav.onLine,
+          connection: (nav.connection || nav.mozConnection || nav.webkitConnection) ? {
+            effectiveType: (nav.connection || {}).effectiveType || null,
+            downlink: (nav.connection || {}).downlink || null,
+            rtt: (nav.connection || {}).rtt || null,
+            saveData: (nav.connection || {}).saveData || null
+          } : null
+        },
+        permissions: {
+          notifications: (typeof Notification !== "undefined") ? Notification.permission : "unsupported"
+        }
+      };
+
+      setIntelStatus("base refreshed");
+      renderIntel();
+    }
+
+    intelPrettyBtn.addEventListener("click", () => {
+      intelMode = "pretty";
+      setIntelStatus("pretty view");
+      renderIntel();
+    });
+
+    intelJsonBtn.addEventListener("click", () => {
+      intelMode = "json";
+      setIntelStatus("raw json");
+      renderIntel();
+    });
+
+    // IP (explicit click)
+    $("btnIP").addEventListener("click", async () => {
+      try{
+        setIntelStatus("fetching ip…");
+        intel.ip = { status: "fetching…" };
+        renderIntel();
+        const res = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+        const j = await res.json();
+        intel.ip = { publicIP: j.ip };
+        setIntelStatus("ip loaded");
+      }catch(e){
+        intel.ip = { error: String(e) };
+        setIntelStatus("ip error");
+      }
+      renderIntel();
+    });
+
+    // GEO (permission prompt)
+    $("btnGeo").addEventListener("click", async () => {
+      if (!navigator.geolocation){
+        intel.geo = { error: "geolocation unsupported" };
+        setIntelStatus("geo unsupported");
+        renderIntel();
+        return;
+      }
+      setIntelStatus("requesting geo…");
+      intel.geo = { status: "requesting…" };
+      renderIntel();
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          intel.geo = {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            accuracyMeters: pos.coords.accuracy,
+            heading: pos.coords.heading,
+            speed: pos.coords.speed,
+            timestamp: new Date(pos.timestamp).toString()
+          };
+          setIntelStatus("geo loaded");
+          renderIntel();
+        },
+        (err) => {
+          intel.geo = { error: err.message || String(err) };
+          setIntelStatus("geo denied/error");
+          renderIntel();
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    });
+
+    // Notifications (permission prompt)
+    $("btnNotify").addEventListener("click", async () => {
+      try{
+        if (typeof Notification === "undefined"){
+          intel.notify = { error: "notifications unsupported" };
+          setIntelStatus("notifications unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("requesting notifications…");
+        const perm = await Notification.requestPermission();
+        intel.notify = { permission: perm };
+        setIntelStatus(`notifications: ${perm}`);
+      }catch(e){
+        intel.notify = { error: String(e) };
+        setIntelStatus("notifications error");
+      }
+      renderIntel();
+    });
+
+    // Clipboard read
+    $("btnClipboard").addEventListener("click", async () => {
+      try{
+        if (!navigator.clipboard || !navigator.clipboard.readText){
+          intel.clipboard = { error: "clipboard API unsupported (or blocked)" };
+          setIntelStatus("clipboard unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("reading clipboard…");
+        const txt = await navigator.clipboard.readText();
+        intel.clipboard = { textPreview: txt.slice(0, 200), length: txt.length };
+        setIntelStatus("clipboard read");
+      }catch(e){
+        intel.clipboard = { error: String(e) };
+        setIntelStatus("clipboard denied/error");
+      }
+      renderIntel();
+    });
+
+    // Mic/Cam permission
+    $("btnMedia").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+          intel.media = { error: "mediaDevices unsupported" };
+          setIntelStatus("media unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("requesting mic/cam…");
+        const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:true });
+        stream.getTracks().forEach(t => t.stop());
+        intel.media = { permission: "granted (stream opened then stopped)" };
+        setIntelStatus("mic/cam granted");
+      }catch(e){
+        intel.media = { error: String(e) };
+        setIntelStatus("mic/cam denied/error");
+      }
+      renderIntel();
+    });
+
+    // Enumerate devices
+    $("btnDevices").addEventListener("click", async () => {
+      try{
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices){
+          intel.devices = { error: "enumerateDevices unsupported" };
+          setIntelStatus("devices unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("enumerating devices…");
+        const list = await navigator.mediaDevices.enumerateDevices();
+        intel.devices = {
+          count: list.length,
+          kinds: list.reduce((acc, d) => {
+            acc[d.kind] = (acc[d.kind] || 0) + 1;
+            return acc;
+          }, {}),
+          devices: list.map(d => ({
+            kind: d.kind,
+            label: d.label || "(label hidden until permission)",
+            deviceId: d.deviceId ? "(present)" : "(none)",
+            groupId: d.groupId ? "(present)" : "(none)"
+          }))
+        };
+        setIntelStatus("devices loaded");
+      }catch(e){
+        intel.devices = { error: String(e) };
+        setIntelStatus("devices error");
+      }
+      renderIntel();
+    });
+
+    // Storage estimate
+    $("btnStorage").addEventListener("click", async () => {
+      try{
+        if (!navigator.storage || !navigator.storage.estimate){
+          intel.storage = { error: "storage estimate unsupported" };
+          setIntelStatus("storage unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("estimating storage…");
+        const est = await navigator.storage.estimate();
+        intel.storage = {
+          quotaBytes: est.quota ?? null,
+          usageBytes: est.usage ?? null,
+          usageDetails: est.usageDetails ?? null
+        };
+        setIntelStatus("storage loaded");
+      }catch(e){
+        intel.storage = { error: String(e) };
+        setIntelStatus("storage error");
+      }
+      renderIntel();
+    });
+
+    // Battery
+    $("btnBattery").addEventListener("click", async () => {
+      try{
+        if (!navigator.getBattery){
+          intel.battery = { error: "battery API unsupported" };
+          setIntelStatus("battery unsupported");
+          renderIntel();
+          return;
+        }
+        setIntelStatus("reading battery…");
+        const b = await navigator.getBattery();
+        intel.battery = {
+          charging: b.charging,
+          level: b.level,
+          chargingTime: b.chargingTime,
+          dischargingTime: b.dischargingTime
+        };
+        setIntelStatus("battery loaded");
+      }catch(e){
+        intel.battery = { error: String(e) };
+        setIntelStatus("battery error");
+      }
+      renderIntel();
+    });
+
+    // WebGL renderer/vendor
+    $("btnWebGL").addEventListener("click", async () => {
+      try{
+        setIntelStatus("probing gpu…");
+        const c = document.createElement("canvas");
+        const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+        if (!gl){
+          intel.webgl = { error: "webgl unavailable" };
+          setIntelStatus("webgl unavailable");
+          renderIntel();
+          return;
+        }
+        const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+        const vendor = dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+        const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+        intel.webgl = {
+          vendor,
+          renderer,
+          version: gl.getParameter(gl.VERSION),
+          shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        };
+        setIntelStatus("gpu loaded");
+      }catch(e){
+        intel.webgl = { error: String(e) };
+        setIntelStatus("gpu error");
+      }
+      renderIntel();
+    });
+
+    window.addEventListener("online", refreshIntelBase);
+    window.addEventListener("offline", refreshIntelBase);
+
+    // --------- start
+    // show site will be triggered by video end or skip
   </script>
 </body>
 </html>
