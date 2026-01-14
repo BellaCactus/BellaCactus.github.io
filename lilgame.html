@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>rain • bella cactus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="twi looking.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 15% 12%, rgba(255,120,200,0.12), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1200px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:44px 16px 110px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+    .badge{
+      width:56px;height:56px;border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .badge img{ width:100%; height:100%; object-fit:cover; filter:saturate(1.05) contrast(1.05); }
+    h1{
+      margin:0;
+      font-size:2rem;
+      letter-spacing:0.4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:0.98rem;
+      max-width:640px;
+    }
+
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--muted);
+      backdrop-filter: blur(6px);
+      font-family: var(--mono);
+      user-select:none;
+    }
+    .chip .dot{
+      display:inline-block;width:6px;height:6px;border-radius:999px;margin-right:6px;
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 940px){
+      .grid{grid-template-columns:1fr;}
+      .chips{justify-content:flex-start;}
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      backdrop-filter: blur(6px);
+    }
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h2{ margin:0; font-size:1.05rem; color:var(--pink2); letter-spacing:0.3px; }
+    .small{ font-size:0.86rem; color:var(--muted); font-family: var(--mono); }
+    .panelInner{ padding:16px; }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{ font-family: var(--mono); font-size:0.8rem; color:var(--pink2); }
+
+    .stage{
+      position:relative;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      height: min(70vh, 620px);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+    canvas#cv{ width:100%; height:100%; display:block; }
+
+    /* subtle scan + vignette */
+    .scan{
+      pointer-events:none;
+      position:absolute;
+      inset:0;
+      opacity:0.22;
+      mix-blend-mode: screen;
+      background:
+        radial-gradient(800px 600px at 40% 20%, rgba(255,120,200,0.10), transparent 60%),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.045) 0px,
+          rgba(255,255,255,0.045) 1px,
+          rgba(0,0,0,0) 3px,
+          rgba(0,0,0,0) 7px
+        ),
+        radial-gradient(1200px 900px at 50% 40%, transparent 55%, rgba(0,0,0,0.65) 100%);
+      animation: drift 6.8s linear infinite;
+    }
+    @keyframes drift{
+      0%{ transform: translateY(0); }
+      100%{ transform: translateY(18px); }
+    }
+
+    .hud{
+      position:absolute;
+      left:10px;
+      top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      z-index:4;
+      pointer-events:none;
+      font-family: var(--mono);
+      font-size:12px;
+    }
+    .hud .pill{
+      pointer-events:none;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.34);
+      color: rgba(255,255,255,0.84);
+      backdrop-filter: blur(6px);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+    }
+    .hud .pill .dot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+
+    .hint{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      z-index:4;
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(255,255,255,0.74);
+      background: rgba(0,0,0,0.30);
+      border:1px solid rgba(255,255,255,0.10);
+      padding:8px 10px;
+      border-radius:12px;
+      backdrop-filter: blur(6px);
+      pointer-events:none;
+      max-width:min(560px, calc(100% - 20px));
+    }
+
+    .field{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+    input[type="range"]{ accent-color: var(--pink); width:100%; }
+    .tog{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+      color:var(--muted);
+      font-family: var(--mono);
+      font-size:0.82rem;
+      user-select:none;
+      width: fit-content;
+    }
+    .tog input{ accent-color: var(--pink); }
+
+    .codebox{
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.35;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px;
+      color: rgba(255,255,255,0.92);
+      overflow:auto;
+    }
+    .codebox .pink{ color:var(--pink2); text-shadow:0 0 10px rgba(255,120,200,0.25); }
+
+    /* oneko */
+    .oneko{
+      position:fixed;
+      bottom:12px;
+      right:12px;
+      z-index:5;
+      opacity:0.95;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,0.6));
+      animation: floaty 3.6s ease-in-out infinite;
+      cursor:pointer;
+      user-select:none;
+    }
+    @keyframes floaty{
+      0%{transform: translateY(0);}
+      50%{transform: translateY(-6px);}
+      100%{transform: translateY(0);}
+    }
+    .oneko img{ width:52px; image-rendering:pixelated; display:block; }
+
+    @media (prefers-reduced-motion: reduce){
+      .pulseText{ animation:none; }
+      .scan{ animation:none; }
+      .oneko{ animation:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <img src="twi looking.png" alt="badge" />
+        </div>
+        <div class="titlebox">
+          <h1 class="pulseText">rain biome</h1>
+          <div class="sub">cute little creature + endless rain. move around, hop platforms, collect glow spores, hide in shelter.</div>
+        </div>
+      </div>
+
+      <div class="chips">
+        <div class="chip"><span class="dot"></span> <span class="pulseText">black/white/pink</span></div>
+        <div class="chip" id="chipSpore">spores: 0</div>
+        <div class="chip" id="chipBest">best: 0</div>
+        <div class="chip" id="chipState">state: calm</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>playfield</h2>
+          <div class="small">move: <span class="pulseText">wasd</span>/<span class="pulseText">arrows</span> • jump: <span class="pulseText">space</span> • dash: <span class="pulseText">shift</span> • reset: <span class="pulseText">r</span></div>
+        </div>
+        <div class="panelInner">
+          <div class="btnRow">
+            <a class="btn" href="index.html"><span class="k">cd</span> home</a>
+            <button class="btn" id="btnReset" type="button"><span class="k">rst</span> reset</button>
+            <button class="btn" id="btnReroll" type="button"><span class="k">rng</span> reroll biome</button>
+            <button class="btn" id="btnPause" type="button"><span class="k">⏸</span> pause</button>
+            <button class="btn" id="btnScreenshot" type="button" title="downloads a png"><span class="k">cam</span> screenshot</button>
+          </div>
+
+          <div class="stage" id="stage">
+            <canvas id="cv" aria-label="rain creature canvas"></canvas>
+            <div class="scan"></div>
+
+            <div class="hud" aria-hidden="true">
+              <div class="pill"><span class="dot"></span><span id="hudHp">hp: 6/6</span></div>
+              <div class="pill"><span class="dot"></span><span id="hudWet">wet: 0%</span></div>
+              <div class="pill"><span class="dot"></span><span id="hudWind">wind: 0.0</span></div>
+            </div>
+
+            <div class="hint" id="hint">
+              tip: shelter is the glowing rectangle. if the storm hits, get inside. (and yes this is fake rainworld energy, we’re just vibing) (:3)
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:10px;">
+            notes: everything is client-side. settings + best score save in localStorage.
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>controls</h2>
+          <div class="small pulseText">tune the weather</div>
+        </div>
+        <div class="panelInner">
+          <div class="field">
+            <div class="small">rain intensity: <span id="vRain">0.70</span></div>
+            <input id="rngRain" type="range" min="0" max="1" step="0.01" value="0.70">
+          </div>
+
+          <div class="field">
+            <div class="small">wind: <span id="vWind">0.35</span></div>
+            <input id="rngWind" type="range" min="0" max="1" step="0.01" value="0.35">
+          </div>
+
+          <div class="field">
+            <div class="small">thunder chance: <span id="vThunder">0.22</span></div>
+            <input id="rngThunder" type="range" min="0" max="0.8" step="0.01" value="0.22">
+          </div>
+
+          <div class="btnRow">
+            <label class="tog" title="reduce screen shake + lightning + particle count">
+              <input id="chkSoft" type="checkbox">
+              soft mode
+            </label>
+
+            <label class="tog" title="turn on a tiny ambient hum (requires click on page sometimes)">
+              <input id="chkHum" type="checkbox">
+              hum
+            </label>
+          </div>
+
+          <div class="field">
+            <div class="small">debug</div>
+            <div class="codebox" id="dbg">
+              <span class="pink">[biome]</span> seed: <span id="seedOut">000000</span><br>
+              <span class="pink">[shelter]</span> status: <span id="shelterOut">stable</span><br>
+              <span class="pink">[mood]</span> <span id="moodOut">soft rain</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="small">lil creature lore (totally real)</div>
+            <div class="codebox">
+<pre style="margin:0; white-space:pre-wrap;">   /\_/\
+  ( •.• )
+  /  ^  \   "i am small. i am damp.
+   \___/     i collect glow snacks."
+</pre>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="oneko" id="oneko" title="click me">
+    <img id="onekoImg" src="oneko.gif" alt="oneko" />
+  </div>
+
+  <audio id="yeah" preload="auto">
+    <source src="lil-jon-yeah.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    // -------- helpers
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
+    const lerp = (a,b,t) => a + (b-a)*t;
+
+    // oneko fallback + click
+    const onekoImg = $("onekoImg");
+    onekoImg.addEventListener("error", () => {
+      if (!onekoImg.dataset.tried) { onekoImg.dataset.tried="1"; onekoImg.src="onekogif"; }
+    });
+    $("oneko").addEventListener("click", () => {
+      const y = $("yeah");
+      y.currentTime = 0;
+      y.play().catch(()=>{});
+    });
+
+    // -------- settings (saved)
+    const SKEY = "bella.rainpage.v1";
+    const BEST_KEY = "bella.rainpage.best.v1";
+
+    const ui = {
+      rain: $("rngRain"),
+      wind: $("rngWind"),
+      thunder: $("rngThunder"),
+      soft: $("chkSoft"),
+      hum: $("chkHum")
+    };
+
+    function loadSettings(){
+      try{
+        const raw = localStorage.getItem(SKEY);
+        if (!raw) return null;
+        const j = JSON.parse(raw);
+        return j && typeof j === "object" ? j : null;
+      }catch(e){ return null; }
+    }
+    function saveSettings(){
+      const j = {
+        rain: Number(ui.rain.value),
+        wind: Number(ui.wind.value),
+        thunder: Number(ui.thunder.value),
+        soft: !!ui.soft.checked,
+        hum: !!ui.hum.checked
+      };
+      localStorage.setItem(SKEY, JSON.stringify(j));
+    }
+    function applySettings(s){
+      if (!s) return;
+      if (Number.isFinite(s.rain)) ui.rain.value = String(clamp(s.rain,0,1));
+      if (Number.isFinite(s.wind)) ui.wind.value = String(clamp(s.wind,0,1));
+      if (Number.isFinite(s.thunder)) ui.thunder.value = String(clamp(s.thunder,0,0.8));
+      ui.soft.checked = !!s.soft;
+      ui.hum.checked = !!s.hum;
+    }
+
+    function getBest(){
+      const n = Number(localStorage.getItem(BEST_KEY) || "0");
+      return Number.isFinite(n) ? n : 0;
+    }
+    function setBest(n){
+      const v = Math.max(0, Math.floor(n));
+      localStorage.setItem(BEST_KEY, String(v));
+    }
+
+    applySettings(loadSettings());
+    $("chipBest").textContent = `best: ${getBest()}`;
+
+    // -------- audio hum (optional)
+    let audioCtx = null;
+    let humNode = null;
+    let humGain = null;
+
+    function setupHum(){
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      humNode = audioCtx.createOscillator();
+      humGain = audioCtx.createGain();
+      humNode.type = "triangle";
+      humNode.frequency.value = 52;
+      humGain.gain.value = 0;
+      humNode.connect(humGain);
+      humGain.connect(audioCtx.destination);
+      humNode.start();
+    }
+
+    async function resumeAudio(){
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") await audioCtx.resume();
+    }
+
+    function setHum(on){
+      if (on){
+        setupHum();
+        resumeAudio().catch(()=>{});
+        // slow fade in
+        const t = audioCtx.currentTime;
+        humGain.gain.cancelScheduledValues(t);
+        humGain.gain.setValueAtTime(humGain.gain.value, t);
+        humGain.gain.linearRampToValueAtTime(0.03, t + 0.6);
+      } else if (audioCtx && humGain){
+        const t = audioCtx.currentTime;
+        humGain.gain.cancelScheduledValues(t);
+        humGain.gain.setValueAtTime(humGain.gain.value, t);
+        humGain.gain.linearRampToValueAtTime(0.0, t + 0.35);
+      }
+    }
+
+    // click once to unlock audio contexts in some browsers
+    document.addEventListener("click", () => {
+      if (ui.hum.checked) setHum(true);
+    }, { once:true });
+
+    // -------- canvas setup
+    const stage = $("stage");
+    const cv = $("cv");
+    const ctx = cv.getContext("2d");
+
+    function fit(){
+      const dpr = devicePixelRatio || 1;
+      const r = stage.getBoundingClientRect();
+      cv.width = Math.floor(r.width * dpr);
+      cv.height = Math.floor(r.height * dpr);
+      cv.style.width = r.width + "px";
+      cv.style.height = r.height + "px";
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    addEventListener("resize", fit);
+    fit();
+
+    // -------- tiny seeded rng
+    let seed = (Math.random()*1e9)>>>0;
+    function sRand(){
+      seed ^= seed << 13; seed >>>= 0;
+      seed ^= seed >> 17; seed >>>= 0;
+      seed ^= seed << 5;  seed >>>= 0;
+      return (seed >>> 0) / 4294967296;
+    }
+    function reseed(){
+      seed = (Math.random()*1e9)>>>0;
+      $("seedOut").textContent = String(seed).padStart(6,"0").slice(-6);
+    }
+    reseed();
+
+    // -------- world
+    function W(){ return stage.clientWidth; }
+    function H(){ return stage.clientHeight; }
+
+    let paused = false;
+
+    // biome params
+    let windTarget = 0.0;
+    let windNow = 0.0;
+
+    // storm cycle
+    let storm = {
+      t: 0,
+      phase: "calm", // calm -> building -> storm -> calm
+      nextLightning: 1.2,
+      flash: 0,
+      shake: 0
+    };
+
+    function setChipState(txt){
+      $("chipState").textContent = `state: ${txt}`;
+    }
+
+    function rollBiome(){
+      reseed();
+      // gentle variation in platforms
+      makePlatforms();
+      spawnSpores(true);
+      // storm timer reset
+      storm.t = 0;
+      storm.phase = "calm";
+      storm.nextLightning = 0.8 + sRand()*2.0;
+      storm.flash = 0;
+      storm.shake = 0;
+      setChipState("calm");
+      $("moodOut").textContent = "soft rain";
+      $("shelterOut").textContent = "stable";
+      wetness = 0;
+      hp = 6;
+      spores = 0;
+      updateChips();
+      // creature reset near left
+      player.x = 80;
+      player.y = H() - 120;
+      player.vx = 0;
+      player.vy = 0;
+      player.dashCd = 0;
+      player.inv = 0;
+    }
+
+    // platforms (procedural-ish but stable)
+    let plats = [];
+    let shelter = { x: 0, y: 0, w: 120, h: 72 };
+
+    function makePlatforms(){
+      const w = W(), h = H();
+      plats = [];
+
+      // ground (slightly above bottom so rain splashes look nice)
+      plats.push({ x: -200, y: h-52, w: w+400, h: 80, kind:"ground" });
+
+      // big pipes / ledges
+      const baseY = h - 180 - sRand()*40;
+      plats.push({ x: 80 + sRand()*40, y: baseY, w: 230 + sRand()*120, h: 18, kind:"ledge" });
+      plats.push({ x: w*0.55 + sRand()*30, y: h - 220 - sRand()*60, w: 260 + sRand()*120, h: 18, kind:"ledge" });
+      plats.push({ x: w*0.25 + sRand()*40, y: h - 320 - sRand()*80, w: 160 + sRand()*90, h: 16, kind:"thin" });
+      plats.push({ x: w*0.65 + sRand()*40, y: h - 360 - sRand()*90, w: 170 + sRand()*110, h: 16, kind:"thin" });
+
+      // vertical junk pillars (for vibes + collision)
+      plats.push({ x: w*0.44, y: h-260, w: 24, h: 208, kind:"pillar" });
+      if (sRand() < 0.65) plats.push({ x: w*0.76, y: h-300, w: 20, h: 250, kind:"pillar" });
+
+      // shelter placement on right-ish
+      shelter.w = 140;
+      shelter.h = 84;
+      shelter.x = Math.floor(w - shelter.w - 40 - sRand()*50);
+      shelter.y = Math.floor(h - 52 - shelter.h - 2);
+    }
+    makePlatforms();
+
+    // -------- creature
+    const player = {
+      x: 80, y: 200,
+      vx: 0, vy: 0,
+      w: 22, h: 16,
+      onGround: false,
+      face: 1,   // 1 right, -1 left
+      blink: 0,
+      bob: 0,
+      dashCd: 0,
+      inv: 0
+    };
+
+    let hp = 6;
+    let wetness = 0; // 0..100
+    let spores = 0;
+
+    function updateChips(){
+      $("chipSpore").textContent = `spores: ${spores}`;
+      $("chipBest").textContent = `best: ${getBest()}`;
+      $("hudHp").textContent = `hp: ${hp}/6`;
+      $("hudWet").textContent = `wet: ${Math.round(wetness)}%`;
+      $("hudWind").textContent = `wind: ${windNow.toFixed(1)}`;
+    }
+
+    function inShelter(px,py){
+      // shelter is a rectangle with a doorway; count as inside if player center is inside inner box
+      const cx = px + player.w/2;
+      const cy = py + player.h/2;
+      return (cx > shelter.x + 16 && cx < shelter.x + shelter.w - 16 &&
+              cy > shelter.y + 18 && cy < shelter.y + shelter.h - 10);
+    }
+
+    // input
+    const keys = new Set();
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s"," ","shift","r","escape","p"].includes(k)){
+        // avoid scrolling with space/arrows
+        if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault();
+      }
+
+      if (k === "escape") location.href = "index.html";
+      if (k === "r") { rollBiome(); return; }
+      if (k === "p") { togglePause(); return; }
+
+      keys.add(k);
+    }, { passive:false });
+
+    addEventListener("keyup", (e) => {
+      const k = (e.key || "").toLowerCase();
+      keys.delete(k);
+    });
+
+    function kDown(...names){
+      for (const n of names) if (keys.has(n)) return true;
+      return false;
+    }
+
+    // -------- collectibles (glow spores)
+    let sporeList = [];
+
+    function spawnSpores(reset=false){
+      if (reset) sporeList = [];
+      const w = W(), h = H();
+      const target = ui.soft.checked ? 8 : 14;
+      while (sporeList.length < target){
+        // place above platforms and not inside shelter
+        const x = 60 + sRand() * (w - 120);
+        const y = 80 + sRand() * (h - 260);
+        if (x > shelter.x && x < shelter.x + shelter.w && y > shelter.y && y < shelter.y + shelter.h) continue;
+        sporeList.push({
+          x, y,
+          r: 6 + sRand()*4,
+          bob: sRand()*Math.PI*2,
+          vx: (sRand()-0.5) * 0.2,
+          alive: true
+        });
+      }
+    }
+    spawnSpores(true);
+
+    function collectCheck(){
+      const cx = player.x + player.w/2;
+      const cy = player.y + player.h/2;
+      for (const s of sporeList){
+        if (!s.alive) continue;
+        const dx = cx - s.x;
+        const dy = cy - s.y;
+        if (dx*dx + dy*dy < (s.r + 10) * (s.r + 10)){
+          s.alive = false;
+          spores++;
+          const best = getBest();
+          if (spores > best) setBest(spores);
+          updateChips();
+          // tiny heal if soaked and safe
+          if (wetness > 70 && hp < 6 && Math.random() < 0.35) hp++;
+        }
+      }
+      // respawn some
+      if (sporeList.filter(s => s.alive).length < (ui.soft.checked ? 5 : 8)){
+        spawnSpores(false);
+      }
+    }
+
+    // -------- rain particles
+    let drops = [];
+    function makeRain(){
+      drops = [];
+      const w = W(), h = H();
+      const baseCount = ui.soft.checked ? 260 : 520;
+      const intensity = Number(ui.rain.value);
+      const n = Math.floor(lerp(60, baseCount, intensity));
+      for (let i=0;i<n;i++){
+        drops.push({
+          x: sRand() * w,
+          y: sRand() * h,
+          z: sRand(),               // depth 0..1
+          spd: 380 + sRand()*520,   // px/sec
+          len: 8 + sRand()*16
+        });
+      }
+    }
+    makeRain();
+
+    // splashes (cheap)
+    let splashes = [];
+    function addSplash(x,y,amt=1){
+      const n = ui.soft.checked ? 2 : Math.floor(2 + amt*4);
+      for (let i=0;i<n;i++){
+        splashes.push({
+          x, y,
+          vx: (Math.random()-0.5) * (30 + Math.random()*60),
+          vy: - (40 + Math.random()*90),
+          t: 0,
+          life: 0.35 + Math.random()*0.25
+        });
+      }
+    }
+
+    // -------- physics + collision
+    function aabb(a,b){
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function stepPlayer(dt){
+      const w = W(), h = H();
+      const soft = ui.soft.checked;
+
+      // friction / accel
+      const move = (kDown("a","arrowleft") ? -1 : 0) + (kDown("d","arrowright") ? 1 : 0);
+      if (move !== 0) player.face = move;
+
+      const accel = soft ? 960 : 1200;
+      const maxSpd = soft ? 180 : 230;
+
+      if (move !== 0){
+        player.vx += move * accel * dt;
+      } else {
+        // friction
+        player.vx *= Math.pow(soft ? 0.0007 : 0.00035, dt);
+      }
+      player.vx = clamp(player.vx, -maxSpd, maxSpd);
+
+      // jump
+      if (kDown(" ","w","arrowup") && player.onGround){
+        player.vy = -(soft ? 310 : 360);
+        player.onGround = false;
+        addSplash(player.x + player.w/2, player.y + player.h + 2, 0.7);
+      }
+
+      // dash (shift) gives a quick burst, cooldown based
+      player.dashCd = Math.max(0, player.dashCd - dt);
+      if (kDown("shift") && player.dashCd <= 0){
+        player.dashCd = soft ? 1.25 : 0.95;
+        player.vx += player.face * (soft ? 280 : 360);
+        player.vy -= soft ? 40 : 60;
+        storm.shake = Math.min(1, storm.shake + (soft ? 0.18 : 0.28));
+      }
+
+      // gravity
+      const g = soft ? 820 : 980;
+      player.vy += g * dt;
+      player.vy = clamp(player.vy, -999, 880);
+
+      // apply
+      let nx = player.x + player.vx * dt;
+      let ny = player.y + player.vy * dt;
+
+      // bounds (world walls)
+      nx = clamp(nx, 10, w - player.w - 10);
+      if (ny > h + 200){
+        // fell out: reset a bit and take dmg
+        ny = 140;
+        nx = 80;
+        player.vy = 0;
+        player.vx = 0;
+        hp = Math.max(0, hp-1);
+      }
+
+      // collision: vertical then horizontal for nicer behavior
+      player.onGround = false;
+
+      // vertical
+      const boxV = { x:nx, y:ny, w:player.w, h:player.h };
+      for (const p of plats){
+        if (!aabb(boxV, p)) continue;
+        const prevY = player.y;
+        if (player.vy > 0 && prevY + player.h <= p.y + 2){
+          // landing on top
+          ny = p.y - player.h;
+          player.vy = 0;
+          player.onGround = true;
+        } else if (player.vy < 0 && prevY >= p.y + p.h - 2){
+          // head bump
+          ny = p.y + p.h;
+          player.vy = 30;
+        }
+        boxV.y = ny;
+      }
+
+      // horizontal
+      const boxH = { x:nx, y:ny, w:player.w, h:player.h };
+      for (const p of plats){
+        if (!aabb(boxH, p)) continue;
+        const prevX = player.x;
+        if (player.vx > 0 && prevX + player.w <= p.x + 2){
+          nx = p.x - player.w;
+          player.vx = 0;
+        } else if (player.vx < 0 && prevX >= p.x + p.w - 2){
+          nx = p.x + p.w;
+          player.vx = 0;
+        }
+        boxH.x = nx;
+      }
+
+      player.x = nx;
+      player.y = ny;
+
+      // cute idle animation vars
+      player.bob += dt * (player.onGround ? 4.4 : 2.2);
+      player.blink -= dt;
+      if (player.blink < 0 && Math.random() < 0.02){
+        player.blink = 0.12 + Math.random()*0.14;
+      }
+
+      // inv timer
+      player.inv = Math.max(0, player.inv - dt);
+    }
+
+    // -------- storm / wetness / shelter logic
+    function stepStorm(dt){
+      const soft = ui.soft.checked;
+      storm.t += dt;
+
+      // gently drift wind
+      windTarget = (Number(ui.wind.value) * 2 - 1) * (soft ? 110 : 160);
+      windNow = lerp(windNow, windTarget, 1 - Math.pow(0.001, dt));
+
+      // cycle phases by time
+      // calm 0..20s, building 20..35s, storm 35..50s, then repeat
+      const cycle = soft ? 46 : 52;
+      const t = storm.t % cycle;
+
+      if (t < cycle*0.42){
+        if (storm.phase !== "calm"){
+          storm.phase = "calm";
+          setChipState("calm");
+          $("moodOut").textContent = "soft rain";
+          $("shelterOut").textContent = "stable";
+        }
+      } else if (t < cycle*0.68){
+        if (storm.phase !== "building"){
+          storm.phase = "building";
+          setChipState("building");
+          $("moodOut").textContent = "pressure rising";
+          $("shelterOut").textContent = "recommended";
+        }
+      } else {
+        if (storm.phase !== "storm"){
+          storm.phase = "storm";
+          setChipState("storm");
+          $("moodOut").textContent = "full storm";
+          $("shelterOut").textContent = "get inside";
+        }
+      }
+
+      // wetness increases outside shelter
+      const inside = inShelter(player.x, player.y);
+      const rainI = Number(ui.rain.value);
+      const wetGain = (storm.phase === "storm" ? 26 : storm.phase === "building" ? 18 : 10);
+      const wetLoss = 34;
+
+      if (!inside){
+        wetness = clamp(wetness + wetGain * rainI * dt, 0, 100);
+      } else {
+        wetness = clamp(wetness - wetLoss * dt, 0, 100);
+      }
+
+      // damage during storm if outside and very wet
+      if (storm.phase === "storm" && !inside && wetness > 85){
+        if (player.inv <= 0){
+          hp = Math.max(0, hp - 1);
+          player.inv = soft ? 1.2 : 0.9;
+          storm.shake = Math.min(1, storm.shake + (soft ? 0.12 : 0.20));
+        }
+      }
+
+      // lightning (visual only)
+      const thunderChance = Number(ui.thunder.value);
+      storm.nextLightning -= dt * (storm.phase === "storm" ? 1.6 : storm.phase === "building" ? 1.0 : 0.65);
+      if (storm.nextLightning <= 0){
+        storm.nextLightning = (soft ? 1.8 : 1.2) + Math.random()*2.2;
+        if (Math.random() < thunderChance){
+          storm.flash = 1;
+          if (!soft) storm.shake = Math.min(1, storm.shake + 0.22);
+        }
+      }
+
+      // decay flash + shake
+      storm.flash = Math.max(0, storm.flash - dt * (soft ? 3.0 : 4.5));
+      storm.shake = Math.max(0, storm.shake - dt * (soft ? 1.4 : 1.9));
+    }
+
+    // -------- rendering
+    function drawBackground(w,h){
+      // layered silhouettes for rainworld-ish depth
+      // (no fancy gradients to keep it crisp)
+      const g1 = ctx.createLinearGradient(0,0,0,h);
+      g1.addColorStop(0, "rgba(0,0,0,0.10)");
+      g1.addColorStop(1, "rgba(0,0,0,0.55)");
+      ctx.fillStyle = g1;
+      ctx.fillRect(0,0,w,h);
+
+      // distant blocks
+      ctx.save();
+      ctx.globalAlpha = 0.30;
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      const par = windNow * 0.02;
+      for (let i=0;i<10;i++){
+        const bw = 90 + (i%3)*60;
+        const bh = 40 + (i%4)*45;
+        const x = (i*140 + par + (seed%97)) % (w + 220) - 120;
+        const y = 60 + (i%5)*52;
+        ctx.fillRect(x, y, bw, bh);
+      }
+      ctx.restore();
+
+      // pink fog bands (subtle)
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      ctx.fillStyle = "rgba(255,120,200,0.16)";
+      const fogY = 120 + Math.sin(performance.now()*0.0004) * 10;
+      ctx.fillRect(-20, fogY, w+40, 70);
+      ctx.globalAlpha = 0.10;
+      ctx.fillRect(-20, fogY+140, w+40, 90);
+      ctx.restore();
+    }
+
+    function drawPlatforms(){
+      const w = W(), h = H();
+      // platform fill
+      for (const p of plats){
+        if (p.kind === "ground"){
+          ctx.fillStyle = "rgba(0,0,0,0.55)";
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          // wet sheen line
+          ctx.fillStyle = "rgba(255,179,230,0.10)";
+          ctx.fillRect(0, p.y, w, 2);
+          continue;
+        }
+
+        const isPillar = p.kind === "pillar";
+        ctx.fillStyle = isPillar ? "rgba(0,0,0,0.46)" : "rgba(0,0,0,0.40)";
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(p.x+0.5, p.y+0.5, p.w-1, p.h-1);
+
+        // pink rim
+        ctx.strokeStyle = "rgba(255,120,200,0.18)";
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y+1);
+        ctx.lineTo(p.x+p.w, p.y+1);
+        ctx.stroke();
+      }
+
+      // shelter
+      // outer
+      ctx.save();
+      const glow = 0.18 + Math.sin(performance.now()*0.004) * 0.06;
+      ctx.fillStyle = "rgba(0,0,0,0.52)";
+      ctx.fillRect(shelter.x, shelter.y, shelter.w, shelter.h);
+
+      ctx.strokeStyle = `rgba(255,179,230,${0.45 + glow})`;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(shelter.x+1, shelter.y+1, shelter.w-2, shelter.h-2);
+
+      // door
+      ctx.fillStyle = `rgba(255,120,200,${0.10 + glow})`;
+      const dx = shelter.x + shelter.w*0.32;
+      const dy = shelter.y + shelter.h*0.30;
+      const dw = shelter.w*0.36;
+      const dh = shelter.h*0.52;
+      ctx.fillRect(dx, dy, dw, dh);
+
+      // label
+      ctx.font = `12px ${getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
+      ctx.fillStyle = "rgba(255,179,230,0.90)";
+      ctx.fillText("shelter", shelter.x + 10, shelter.y + 16);
+      ctx.restore();
+    }
+
+    function drawSpores(dt){
+      // glow spores
+      ctx.save();
+      const t = performance.now() * 0.001;
+      for (const s of sporeList){
+        if (!s.alive) continue;
+        s.bob += dt * (1.6 + s.z*0.9);
+        s.x += s.vx * (ui.soft.checked ? 0.6 : 1);
+
+        // wrap
+        if (s.x < 30) s.x = W()-30;
+        if (s.x > W()-30) s.x = 30;
+
+        const yy = s.y + Math.sin(s.bob + t) * 6;
+        const pulse = 0.55 + Math.sin(s.bob*2.0 + t*2.3) * 0.18;
+
+        ctx.globalAlpha = 0.22;
+        ctx.fillStyle = "rgba(255,120,200,0.50)";
+        ctx.beginPath();
+        ctx.arc(s.x, yy, s.r*2.2, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.92;
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.beginPath();
+        ctx.arc(s.x, yy, s.r*0.9, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.globalAlpha = pulse;
+        ctx.strokeStyle = "rgba(255,179,230,0.80)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(s.x, yy, s.r*1.3, 0, Math.PI*2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawCreature(){
+      const soft = ui.soft.checked;
+
+      // tiny screen shake if storm hits (disabled in soft)
+      const shake = soft ? 0 : storm.shake;
+      const sx = (Math.random()-0.5) * 8 * shake;
+      const sy = (Math.random()-0.5) * 8 * shake;
+
+      ctx.save();
+      ctx.translate(sx, sy);
+
+      // body position
+      const bob = Math.sin(player.bob) * (player.onGround ? 1.2 : 0.6);
+      const x = player.x;
+      const y = player.y + bob;
+
+      // shadow
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.beginPath();
+      ctx.ellipse(x + player.w/2, y + player.h + 6, 14, 5, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      // invulnerable blink
+      const invBlink = player.inv > 0 ? (Math.floor(performance.now()/70)%2===0) : false;
+      if (invBlink) ctx.globalAlpha = 0.35;
+      else ctx.globalAlpha = 1;
+
+      // outline glow
+      const wetGlow = wetness / 100;
+      ctx.shadowColor = "rgba(255,120,200,0.40)";
+      ctx.shadowBlur = 12 * (0.35 + wetGlow);
+
+      // body (little slugcat-ish rectangle with ears)
+      const bodyW = player.w + 8;
+      const bodyH = player.h + 10;
+      const bx = x - 4;
+      const by = y - 8;
+
+      // tail wag
+      const wag = Math.sin(player.bob*1.25) * (player.onGround ? 0.7 : 0.35);
+      const tailDir = player.face;
+
+      ctx.fillStyle = "rgba(255,255,255,0.88)";
+      ctx.strokeStyle = "rgba(255,179,230,0.55)";
+      ctx.lineWidth = 2;
+
+      roundRect(bx, by, bodyW, bodyH, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // ears
+      ctx.fillStyle = "rgba(255,255,255,0.90)";
+      roundRect(bx + (tailDir>0? 10: bodyW-26), by - 8, 12, 12, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      roundRect(bx + (tailDir>0? 26: bodyW-42), by - 6, 10, 10, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // tail
+      ctx.save();
+      ctx.translate(x + (tailDir>0 ? -2 : bodyW+2), by + bodyH*0.65);
+      ctx.rotate(tailDir>0 ? -0.25 + wag*0.25 : 0.25 - wag*0.25);
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.strokeStyle = "rgba(255,179,230,0.45)";
+      ctx.lineWidth = 2;
+      roundRect(-10, -4, 18, 8, 5);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      // face
+      const eyeY = by + 14;
+      const eyeX1 = bx + (tailDir>0 ? 16 : bodyW-24);
+      const eyeX2 = bx + (tailDir>0 ? 28 : bodyW-36);
+
+      const blink = player.blink > 0;
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(20,20,22,0.95)";
+
+      if (!blink){
+        ctx.beginPath(); ctx.arc(eyeX1, eyeY, 2.2, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX2, eyeY, 2.2, 0, Math.PI*2); ctx.fill();
+      } else {
+        ctx.strokeStyle = "rgba(20,20,22,0.95)";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(eyeX1-2.3, eyeY); ctx.lineTo(eyeX1+2.3, eyeY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(eyeX2-2.3, eyeY); ctx.lineTo(eyeX2+2.3, eyeY); ctx.stroke();
+      }
+
+      // blush dots (cute debuff)
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = "rgba(255,120,200,0.55)";
+      ctx.beginPath(); ctx.arc(eyeX1-6, eyeY+6, 2.2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(eyeX2+6, eyeY+6, 2.2, 0, Math.PI*2); ctx.fill();
+
+      // little tummy line
+      ctx.globalAlpha = 0.25;
+      ctx.strokeStyle = "rgba(255,179,230,0.80)";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(bx + 10, by + bodyH - 10);
+      ctx.lineTo(bx + bodyW - 10, by + bodyH - 10);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function roundRect(x,y,w,h,r){
+      r = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r);
+      ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r);
+      ctx.closePath();
+    }
+
+    function drawRain(dt){
+      const w = W(), h = H();
+      const soft = ui.soft.checked;
+
+      const intensity = Number(ui.rain.value);
+      const n = drops.length;
+
+      const vx = windNow * (soft ? 0.65 : 1);
+      const slope = vx * 0.0028; // tilt based on wind
+
+      ctx.save();
+      ctx.globalAlpha = 0.52;
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = "rgba(255,255,255,0.55)";
+      ctx.shadowColor = "rgba(255,120,200,0.12)";
+      ctx.shadowBlur = 10;
+
+      const speedMul = lerp(0.7, 1.45, intensity) * (storm.phase === "storm" ? 1.35 : storm.phase === "building" ? 1.10 : 1.0);
+
+      for (let i=0;i<n;i++){
+        const d = drops[i];
+        d.y += d.spd * speedMul * dt;
+        d.x += vx * (0.25 + d.z*0.75) * dt;
+
+        if (d.y > h + 20){
+          d.y = -20 - sRand()*40;
+          d.x = sRand() * w;
+          // occasional splash at ground
+          if (Math.random() < 0.07 * intensity){
+            addSplash(d.x, h-54, 0.6);
+          }
+        }
+        if (d.x < -40) d.x = w + 40;
+        if (d.x > w + 40) d.x = -40;
+
+        const x2 = d.x + slope * d.len;
+        const y2 = d.y + d.len;
+
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // splashes
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = "rgba(255,179,230,0.55)";
+      for (let i=splashes.length-1;i>=0;i--){
+        const s = splashes[i];
+        s.t += dt;
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+        s.vy += 320 * dt;
+        const lifeT = s.t / s.life;
+        const a = 1 - lifeT;
+        ctx.globalAlpha = 0.55 * a;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 1.2 + (1-lifeT)*1.1, 0, Math.PI*2);
+        ctx.fill();
+        if (lifeT >= 1) splashes.splice(i,1);
+      }
+      ctx.restore();
+    }
+
+    function drawLightning(){
+      if (storm.flash <= 0) return;
+      const soft = ui.soft.checked;
+      if (soft) return;
+
+      const w = W(), h = H();
+      ctx.save();
+      ctx.globalAlpha = 0.40 * storm.flash;
+      ctx.fillStyle = "rgba(255,255,255,1)";
+      ctx.fillRect(0,0,w,h);
+
+      ctx.globalAlpha = 0.22 * storm.flash;
+      ctx.fillStyle = "rgba(255,120,200,1)";
+      ctx.fillRect(0,0,w,h);
+      ctx.restore();
+    }
+
+    function drawVignette(){
+      const w = W(), h = H();
+      ctx.save();
+      const g = ctx.createRadialGradient(w*0.5, h*0.35, 80, w*0.5, h*0.5, Math.max(w,h)*0.75);
+      g.addColorStop(0, "rgba(0,0,0,0)");
+      g.addColorStop(1, "rgba(0,0,0,0.55)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,w,h);
+      ctx.restore();
+    }
+
+    // -------- ui sync
+    function syncUI(){
+      $("vRain").textContent = Number(ui.rain.value).toFixed(2);
+      $("vWind").textContent = Number(ui.wind.value).toFixed(2);
+      $("vThunder").textContent = Number(ui.thunder.value).toFixed(2);
+
+      makeRain(); // regenerate counts based on intensity/soft
+      spawnSpores(false);
+
+      // hum toggle
+      setHum(ui.hum.checked);
+
+      saveSettings();
+    }
+    ui.rain.addEventListener("input", syncUI);
+    ui.wind.addEventListener("input", syncUI);
+    ui.thunder.addEventListener("input", syncUI);
+    ui.soft.addEventListener("change", syncUI);
+    ui.hum.addEventListener("change", syncUI);
+    syncUI();
+
+    // -------- buttons
+    function togglePause(){
+      paused = !paused;
+      $("btnPause").innerHTML = paused ? `<span class="k">▶</span> resume` : `<span class="k">⏸</span> pause`;
+      $("hint").textContent = paused
+        ? "paused. your creature is taking a tiny nap in the rain (unbothered). press p to resume. (:3)"
+        : "tip: shelter is the glowing rectangle. if the storm hits, get inside. (:3)";
+    }
+
+    $("btnPause").addEventListener("click", togglePause);
+    $("btnReset").addEventListener("click", () => rollBiome());
+    $("btnReroll").addEventListener("click", () => rollBiome());
+
+    $("btnScreenshot").addEventListener("click", () => {
+      // render current canvas to png and download
+      const a = document.createElement("a");
+      a.href = cv.toDataURL("image/png");
+      a.download = "rain-biome.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // keyboard pause
+    addEventListener("keydown", (e) => {
+      const k = (e.key || "").toLowerCase();
+      if (k === " " || k.startsWith("arrow")) e.preventDefault();
+    }, { passive:false });
+
+    // -------- game loop
+    let last = performance.now();
+    function loop(now){
+      requestAnimationFrame(loop);
+      fit();
+
+      const dt = clamp((now - last) / 1000, 0, 0.033);
+      last = now;
+
+      if (!paused){
+        stepStorm(dt);
+        stepPlayer(dt);
+        collectCheck();
+
+        // mood text
+        const inside = inShelter(player.x, player.y);
+        if (storm.phase === "storm" && !inside){
+          $("moodOut").textContent = hp <= 2 ? "low hp, get safe" : (wetness > 70 ? "soaked" : "storming");
+        } else if (inside){
+          $("moodOut").textContent = "safe in shelter";
+        } else if (storm.phase === "building"){
+          $("moodOut").textContent = "storm building";
+        } else {
+          $("moodOut").textContent = "soft rain";
+        }
+
+        // end-ish state
+        if (hp <= 0){
+          paused = true;
+          $("btnPause").innerHTML = `<span class="k">▶</span> resume`;
+          $("hint").textContent = "you got rain-checked (hp 0). press r to reset. (skill issue but in a cute way) >:3";
+        }
+
+        updateChips();
+      }
+
+      // draw
+      const w = W(), h = H();
+      ctx.clearRect(0,0,w,h);
+
+      drawBackground(w,h);
+      drawPlatforms();
+      drawSpores(dt);
+      drawRain(dt);
+      drawCreature();
+      drawLightning();
+      drawVignette();
+
+      // UI chip text for shelter
+      const inside = inShelter(player.x, player.y);
+      $("shelterOut").textContent = inside ? "inside" : (storm.phase === "storm" ? "danger" : "open");
+    }
+    requestAnimationFrame(loop);
+
+    // start state
+    rollBiome();
+    updateChips();
+  </script>
+</body>
+</html>
