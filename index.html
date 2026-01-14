@@ -1040,108 +1040,17 @@
 
     // --------- MUSIC (random soundtrack + waveform)
     const tracks = [
-      {
-        key: "530",
-        name: "530",
-        files: [
-          "assets/songs/530.mp3",
-          "songs/530 0.mp3",
-          "assests/530 0.mp3",
-          "assests/530.mp3",
-          "assets/530.mp3"
-        ]
-      },
-      {
-        key: "bipolar",
-        name: "bipolar",
-        files: [
-          "assets/songs/bipolar.mp3",
-          "songs/bipolar.mp3",
-          "assests/bipolar.mp3",
-          "assets/bipolar.mp3"
-        ]
-      },
-      {
-        key: "bxmb-threat",
-        name: "bxmb threat",
-        files: [
-          "assets/songs/bxmb-threat.mp3",
-          "songs/Bxmb Threat.mp3",
-          "assests/Bxmb Threat.mp3"
-        ]
-      },
-      {
-        key: "endless-sea",
-        name: "endless sea",
-        files: [
-          "assets/songs/freddie-dredd-endless-sea.mp3",
-          "songs/FREDDIE DREDD - ENDLESS SEA.mp3",
-          "assests/FREDDIE DREDD - ENDLESS SEA.mp3"
-        ]
-      },
-      {
-        key: "i-hope-that-you-think-of-me",
-        name: "i hope that you think of me",
-        files: [
-          "assets/songs/i-hope-that-you-think-of-me.mp3",
-          "songs/I hope that you think of me 0.mp3",
-          "assests/I hope that you think of me 0.mp3"
-        ]
-      },
-      {
-        key: "intergalactic-tv-show",
-        name: "intergalactic tv show",
-        files: [
-          "assets/songs/intergalactic-tv-show.mp3",
-          "songs/Intergalactic TV Show.mp3",
-          "assests/Intergalactic TV Show.mp3"
-        ]
-      },
-      {
-        key: "mobile-suit-woe",
-        name: "mobile suit woe",
-        files: [
-          "assets/songs/mobile-suit-woe.mp3",
-          "songs/Mobile Suit Woe 0.mp3",
-          "assests/Mobile Suit Woe 0.mp3"
-        ]
-      },
-      {
-        key: "tinashe-nasty",
-        name: "tinashe - nasty",
-        files: [
-          "assets/songs/tinashe-nasty.mp3",
-          "songs/Tinashe - Nasty (Official Video) 0.mp3",
-          "assests/Tinashe - Nasty (Official Video) 0.mp3"
-        ]
-      },
-      {
-        key: "who-i-smoke",
-        name: "who i smoke",
-        files: [
-          "assets/songs/who-i-smoke.mp3",
-          "songs/Who I Smoke (Official Music Video).mp3",
-          "assests/Who I Smoke (Official Music Video).mp3"
-        ]
-      },
-      {
-        key: "tay-k-dat-way",
-        name: "tay-k - dat way",
-        files: [
-          "assets/songs/tay-k-dat-way.mp3",
-          "songs/Tay-K - Dat Way [Official Audio] 4.mp3",
-          "assests/Tay-K - Dat Way [Official Audio] 4.mp3"
-        ]
-      },
-      {
-        key: "tay-k-i-love-my-choppa",
-        name: "tay-k - i love my choppa",
-        files: [
-          "assets/songs/tay-k-i-love-my-choppa.mp3",
-          "songs/Tay-K - I Love My Choppa [Official Audio] 4.mp3",
-          "assests/Tay-K - I Love My Choppa [Official Audio] 4.mp3"
-        ]
-      }
+      { key: "530", name: "530", files: ["assets/songs/530.mp3"] },
+      { key: "bipolar", name: "bipolar", files: ["assets/songs/bipolar.mp3"] },
+      { key: "bxmb-threat", name: "bxmb threat", files: ["assets/songs/bxmb-threat.mp3"] },
+      { key: "endless-sea", name: "endless sea", files: ["assets/songs/freddie-dredd-endless-sea.mp3"] },
+      { key: "i-hope-that-you-think-of-me", name: "i hope that you think of me", files: ["assets/songs/i-hope-that-you-think-of-me.mp3"] },
+      { key: "intergalactic-tv-show", name: "intergalactic tv show", files: ["assets/songs/intergalactic-tv-show.mp3"] },
+      { key: "mobile-suit-woe", name: "mobile suit woe", files: ["assets/songs/mobile-suit-woe.mp3"] },
+      { key: "tinashe-nasty", name: "tinashe - nasty", files: ["assets/songs/tinashe-nasty.mp3"] },
+      { key: "who-i-smoke", name: "who i smoke", files: ["assets/songs/who-i-smoke.mp3"] },
+      { key: "tay-k-dat-way", name: "tay-k - dat way", files: ["assets/songs/tay-k-dat-way.mp3"] },
+      { key: "tay-k-i-love-my-choppa", name: "tay-k - i love my choppa", files: ["assets/songs/tay-k-i-love-my-choppa.mp3"] }
     ];
 
     const bgm = $("bgm");
@@ -1195,13 +1104,15 @@
       trackName.textContent = t.name;
       trackMeta.textContent = "loading…";
 
-      try{
-        const chosen = await tryLoadAudio(bgm, t.files);
-        const nice = decodeURI(chosen).split("/").pop();
-        trackMeta.textContent = `file: ${nice}`;
-      }catch(e){
+      const chosen = await tryLoadAudio(bgm, t.files);
+      if (!chosen){
+        try{ bgm.removeAttribute("src"); bgm.load(); }catch(e){}
         trackMeta.textContent = "track missing (check assets/songs)";
+        return;
       }
+
+      const nice = decodeURI(chosen).split("/").pop();
+      trackMeta.textContent = `file: ${nice}`;
     }
 
     async function ensureTrackLoaded(){
