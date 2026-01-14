@@ -193,19 +193,18 @@
     }
     canvas#cv{ width:100%; height:100%; display:block; }
 
-    /* subtle scan + vignette */
     .scan{
       pointer-events:none;
       position:absolute;
       inset:0;
-      opacity:0.20;
+      opacity:0.22;
       mix-blend-mode: screen;
       background:
         radial-gradient(800px 600px at 40% 20%, rgba(255,120,200,0.10), transparent 60%),
         repeating-linear-gradient(
           to bottom,
-          rgba(255,255,255,0.04) 0px,
-          rgba(255,255,255,0.04) 1px,
+          rgba(255,255,255,0.045) 0px,
+          rgba(255,255,255,0.045) 1px,
           rgba(0,0,0,0) 3px,
           rgba(0,0,0,0) 7px
         ),
@@ -279,7 +278,6 @@
     }
     .codebox .pink{ color:var(--pink2); text-shadow:0 0 10px rgba(255,120,200,0.25); }
 
-    /* oneko */
     .oneko{
       position:fixed;
       bottom:12px;
@@ -315,7 +313,7 @@
         </div>
         <div class="titlebox">
           <h1 class="pulseText">rain biome</h1>
-          <div class="sub">tiny lil rain-dragon (but cute) + endless rain. move, double jump, tap-dash, collect glow spores, hide in shelter.</div>
+          <div class="sub">tiny creature + endless rain. hop platforms, collect glow spores, hide in shelter.</div>
         </div>
       </div>
 
@@ -355,7 +353,7 @@
           </div>
 
           <div class="small" style="margin-top:10px;">
-            notes: everything is client-side. settings + best score save in localStorage. (also yes it is intentionally soggy.)
+            notes: settings + best score save in localStorage. (also yes it is intentionally soggy.)
           </div>
         </div>
       </section>
@@ -363,9 +361,14 @@
       <aside class="panel">
         <div class="panelTitle">
           <h2>controls</h2>
-          <div class="small pulseText">tune the weather + jumps</div>
+          <div class="small pulseText">tune the weather</div>
         </div>
         <div class="panelInner">
+          <div class="field">
+            <div class="small">jump height: <span id="vJump">372</span></div>
+            <input id="rngJump" type="range" min="240" max="520" step="1" value="372">
+          </div>
+
           <div class="field">
             <div class="small">rain intensity: <span id="vRain">0.70</span></div>
             <input id="rngRain" type="range" min="0" max="1" step="0.01" value="0.70">
@@ -379,11 +382,6 @@
           <div class="field">
             <div class="small">thunder chance: <span id="vThunder">0.22</span></div>
             <input id="rngThunder" type="range" min="0" max="0.8" step="0.01" value="0.22">
-          </div>
-
-          <div class="field">
-            <div class="small">jump height: <span id="vJump">1.00</span>x</div>
-            <input id="rngJump" type="range" min="0.65" max="1.45" step="0.01" value="1.00">
           </div>
 
           <div class="btnRow">
@@ -411,8 +409,8 @@
             <div class="small">sprite (target vibe)</div>
             <div class="codebox">
 <pre style="margin:0; white-space:pre-wrap;">
-  <^9####9o>
-<====9#####9o>
+<(=^..^=)====9###9o
+   \__/\__/\__/\_/
 </pre>
             </div>
           </div>
@@ -451,10 +449,10 @@
     const BEST_KEY = "bella.rainpage.best.v1";
 
     const ui = {
+      jump: $("rngJump"),
       rain: $("rngRain"),
       wind: $("rngWind"),
       thunder: $("rngThunder"),
-      jump: $("rngJump"),
       soft: $("chkSoft"),
       hum: $("chkHum")
     };
@@ -469,10 +467,10 @@
     }
     function saveSettings(){
       const j = {
+        jump: Number(ui.jump.value),
         rain: Number(ui.rain.value),
         wind: Number(ui.wind.value),
         thunder: Number(ui.thunder.value),
-        jump: Number(ui.jump.value),
         soft: !!ui.soft.checked,
         hum: !!ui.hum.checked
       };
@@ -480,10 +478,10 @@
     }
     function applySettings(s){
       if (!s) return;
+      if (Number.isFinite(s.jump)) ui.jump.value = String(clamp(s.jump,240,520));
       if (Number.isFinite(s.rain)) ui.rain.value = String(clamp(s.rain,0,1));
       if (Number.isFinite(s.wind)) ui.wind.value = String(clamp(s.wind,0,1));
       if (Number.isFinite(s.thunder)) ui.thunder.value = String(clamp(s.thunder,0,0.8));
-      if (Number.isFinite(s.jump)) ui.jump.value = String(clamp(s.jump,0.65,1.45));
       ui.soft.checked = !!s.soft;
       ui.hum.checked = !!s.hum;
     }
@@ -548,23 +546,17 @@
     const cv = $("cv");
     const ctx = cv.getContext("2d");
 
-    let lastFitW = 0, lastFitH = 0;
-    function fit(force=false){
+    function fit(){
       const dpr = devicePixelRatio || 1;
       const r = stage.getBoundingClientRect();
-      const w = Math.floor(r.width);
-      const h = Math.floor(r.height);
-      if (!force && w === lastFitW && h === lastFitH) return;
-      lastFitW = w; lastFitH = h;
-
       cv.width = Math.floor(r.width * dpr);
       cv.height = Math.floor(r.height * dpr);
       cv.style.width = r.width + "px";
       cv.style.height = r.height + "px";
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
-    addEventListener("resize", () => fit(true));
-    fit(true);
+    addEventListener("resize", fit);
+    fit();
 
     // -------- tiny seeded rng
     let seed = (Math.random()*1e9)>>>0;
@@ -633,7 +625,7 @@
     const player = {
       x: 80, y: 200,
       vx: 0, vy: 0,
-      w: 26, h: 16,     // collision box: small and cute
+      w: 26, h: 16,
       onGround: false,
       face: 1,
       blink: 0,
@@ -650,18 +642,18 @@
     let wetness = 0;
     let spores = 0;
 
-    // tail physics chain
+    // tail physics (spine chain)
     const tail = {
-      segs: 10,
-      len: 7.8,
+      segs: 12,
+      len: 7.2,
       pts: [],
       initialized: false
     };
 
     function initTail(){
       tail.pts = [];
-      const bx = player.x + (player.face > 0 ? -2 : player.w + 2);
-      const by = player.y + 10;
+      const bx = player.x + player.w/2;
+      const by = player.y + 9;
       for (let i=0;i<tail.segs;i++){
         tail.pts.push({ x: bx - i*tail.len, y: by, vx:0, vy:0 });
       }
@@ -696,6 +688,7 @@
 
     addEventListener("keydown", (e) => {
       const k = normKey(e);
+
       if (["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s","space","shift","r","escape","p"].includes(k)){
         if (["arrowup","arrowdown","arrowleft","arrowright","space"].includes(k)) e.preventDefault();
       }
@@ -770,7 +763,7 @@
     function makeRain(){
       drops = [];
       const w = W(), h = H();
-      const baseCount = ui.soft.checked ? 240 : 520;
+      const baseCount = ui.soft.checked ? 240 : 500;
       const intensity = Number(ui.rain.value);
       const n = Math.floor(lerp(60, baseCount, intensity));
       for (let i=0;i<n;i++){
@@ -785,7 +778,6 @@
     }
     makeRain();
 
-    // splashes
     let splashes = [];
     function addSplash(x,y,amt=1){
       const n = ui.soft.checked ? 2 : Math.floor(2 + amt*4);
@@ -807,38 +799,33 @@
 
     function tailKick(str=1){
       if (!tail.initialized) return;
-      const fx = -player.face * (140 + Math.abs(player.vx)*0.20) * str;
-      const fy = (player.vy < 0 ? 60 : -20) * str; // much less vertical so it stays horizontal
+      const fx = -player.face * (110 + Math.abs(player.vx)*0.10) * str;
+      const fy = (player.vy < 0 ? 60 : -25) * str;
       for (let i=1;i<tail.pts.length;i++){
-        const p = tail.pts[i];
-        p.vx += fx * (0.004 + i*0.0008);
-        p.vy += fy * (0.003 + i*0.0006);
+        tail.pts[i].vx += fx * (0.004 + i*0.0007);
+        tail.pts[i].vy += fy * (0.003 + i*0.0006);
       }
     }
 
     function doJump(isDouble=false){
-      const soft = ui.soft.checked;
-      const jumpMult = Number(ui.jump.value);
-
-      const base = soft ? 322 : 372;
-      const v = (isDouble ? base*0.90 : base) * jumpMult;
-
+      const base = Number(ui.jump.value); // <- bella asked for variable jump height
+      const v = isDouble ? base * 0.90 : base;
       player.vy = -v;
       player.onGround = false;
       addSplash(player.x + player.w/2, player.y + player.h + 2, isDouble ? 1.0 : 0.7);
-      tailKick(isDouble ? 0.95 : 0.80);
+      tailKick(0.85 + Math.random()*0.25);
     }
 
     function startDash(){
       const soft = ui.soft.checked;
-      player.dashTimer = soft ? 0.13 : 0.11;
-      player.dashCd = soft ? 0.12 : 0.09;
+      player.dashTimer = soft ? 0.14 : 0.12;
+      player.dashCd = soft ? 0.12 : 0.08;
       player.canDash = false;
 
-      const dashV = soft ? 440 : 560;
+      const dashV = soft ? 420 : 520;
       player.vx = player.face * dashV;
       player.vy = 0;
-      storm.shake = Math.min(1, storm.shake + (soft ? 0.06 : 0.12));
+      storm.shake = Math.min(1, storm.shake + (soft ? 0.08 : 0.16));
       tailKick(1.25);
     }
 
@@ -865,8 +852,8 @@
         }
         player.vx = clamp(player.vx, -maxSpd, maxSpd);
       } else {
-        player.vx += move * (soft ? 220 : 290) * dt;
-        player.vx = clamp(player.vx, -(soft ? 560 : 680), (soft ? 560 : 680));
+        player.vx += move * (soft ? 240 : 300) * dt;
+        player.vx = clamp(player.vx, - (soft ? 520 : 620), (soft ? 520 : 620));
       }
 
       const wantsJump = anyPressed("space","w","arrowup");
@@ -889,7 +876,7 @@
         const g = soft ? 840 : 1000;
         player.vy += g * dt;
       } else {
-        player.vy += (soft ? 120 : 150) * dt;
+        player.vy += (soft ? 120 : 140) * dt;
       }
       player.vy = clamp(player.vy, -999, 920);
 
@@ -909,7 +896,6 @@
 
       player.onGround = false;
 
-      // vertical
       const boxV = { x:nx, y:ny, w:player.w, h:player.h };
       for (const p of plats){
         if (!aabb(boxV, p)) continue;
@@ -918,7 +904,7 @@
           ny = p.y - player.h;
           player.vy = 0;
           player.onGround = true;
-          if (!inDash && Math.random() < 0.35) addSplash(player.x + player.w/2, ny + player.h + 2, 0.6);
+          if (!inDash && Math.random() < 0.40) addSplash(player.x + player.w/2, ny + player.h + 2, 0.7);
         } else if (player.vy < 0 && prevY >= p.y + p.h - 2){
           ny = p.y + p.h;
           player.vy = 40;
@@ -926,7 +912,6 @@
         boxV.y = ny;
       }
 
-      // horizontal
       const boxH = { x:nx, y:ny, w:player.w, h:player.h };
       for (const p of plats){
         if (!aabb(boxH, p)) continue;
@@ -949,7 +934,7 @@
         player.canDash = true;
       }
 
-      player.bob += dt * (player.onGround ? 4.2 : 2.2);
+      player.bob += dt * (player.onGround ? 4.4 : 2.4);
       player.blink -= dt;
       if (player.blink < 0 && Math.random() < 0.02){
         player.blink = 0.12 + Math.random()*0.14;
@@ -961,8 +946,11 @@
     function stepTail(dt){
       if (!tail.initialized) initTail();
 
-      const baseX = player.x + (player.face > 0 ? -2 : player.w + 2);
-      const baseY = player.y + 10;
+      const bob = Math.sin(player.bob) * (player.onGround ? 0.7 : 0.35);
+
+      // anchor: attach behind the head so it reads like a horizontal lil dragon
+      const baseX = player.x + player.w/2 - player.face * 6;
+      const baseY = player.y + 9 + bob;
 
       tail.pts[0].x = baseX;
       tail.pts[0].y = baseY;
@@ -971,11 +959,13 @@
 
       const soft = ui.soft.checked;
       const damp = soft ? 0.86 : 0.82;
-      const k = soft ? 92 : 115;
+      const k = soft ? 86 : 104;
 
-      const windForce = windNow * (soft ? 0.22 : 0.28);
-      const gravity = soft ? 80 : 95;     // WAY lower so it doesn't droop
-      const yBiasK = soft ? 22 : 28;      // pulls tail back toward baseY (horizontal vibe)
+      const windForce = windNow * (soft ? 0.18 : 0.22);
+
+      // IMPORTANT: keep tail mostly horizontal
+      const gravity = soft ? 95 : 120;          // way lower than before
+      const levelK = soft ? 32 : 42;            // pulls segments toward baseY line
 
       for (let i=1;i<tail.pts.length;i++){
         const p = tail.pts[i];
@@ -989,23 +979,19 @@
         const ax = (dx/dist) * diff * k;
         const ay = (dy/dist) * diff * k;
 
-        // bias toward horizontal line
-        const biasAy = (baseY - p.y) * yBiasK;
+        const targetY = baseY + (Math.sin((i*0.55) + performance.now()*0.0012) * (soft ? 0.6 : 0.9));
+        const levelAy = (targetY - p.y) * levelK;
 
-        p.vx = p.vx * damp + ax * dt + windForce * dt - player.vx * 0.010 * dt;
-        p.vy = p.vy * damp + ay * dt + gravity * dt + biasAy * dt + player.vy * 0.004 * dt;
+        p.vx = p.vx * damp + ax * dt + windForce * dt - player.vx * 0.009 * dt;
+        p.vy = p.vy * damp + ay * dt + gravity * dt + levelAy * dt + player.vy * 0.004 * dt;
 
         p.x += p.vx;
         p.y += p.vy;
 
-        // clamp vertical drift hard (keeps tail from going down)
-        const yClamp = 18;
-        p.y = clamp(p.y, baseY - yClamp, baseY + yClamp);
-
-        p.x = clamp(p.x, -60, W()+60);
+        p.x = clamp(p.x, -40, W()+40);
+        p.y = clamp(p.y, -40, H()+80);
       }
 
-      // constraint pass
       for (let pass=0; pass<2; pass++){
         for (let i=1;i<tail.pts.length;i++){
           const p = tail.pts[i];
@@ -1018,16 +1004,11 @@
           const ny = dy/dist;
           p.x -= nx * err * 0.86;
           p.y -= ny * err * 0.86;
-
-          // re-clamp after correction
-          const baseY2 = player.y + 10;
-          const yClamp2 = 18;
-          p.y = clamp(p.y, baseY2 - yClamp2, baseY2 + yClamp2);
         }
       }
     }
 
-    // -------- storm / wetness / shelter logic
+    // -------- storm / wetness / shelter
     function stepStorm(dt){
       const soft = ui.soft.checked;
       storm.t += dt;
@@ -1077,7 +1058,7 @@
           hp = Math.max(0, hp - 1);
           player.inv = soft ? 1.2 : 0.9;
           storm.shake = Math.min(1, storm.shake + (soft ? 0.10 : 0.18));
-          tailKick(0.55);
+          tailKick(0.6);
         }
       }
 
@@ -1087,7 +1068,7 @@
         storm.nextLightning = (soft ? 1.8 : 1.2) + Math.random()*2.2;
         if (Math.random() < thunderChance){
           storm.flash = 1;
-          if (!soft) storm.shake = Math.min(1, storm.shake + 0.20);
+          if (!soft) storm.shake = Math.min(1, storm.shake + 0.22);
         }
       }
 
@@ -1121,7 +1102,7 @@
       ctx.fillStyle = "rgba(255,120,200,0.16)";
       const fogY = 120 + Math.sin(performance.now()*0.0004) * 10;
       ctx.fillRect(-20, fogY, w+40, 70);
-      ctx.globalAlpha = 0.10;
+      ctx.globalAlpha = 0.09;
       ctx.fillRect(-20, fogY+140, w+40, 90);
       ctx.restore();
     }
@@ -1132,16 +1113,16 @@
         if (p.kind === "ground"){
           ctx.fillStyle = "rgba(0,0,0,0.55)";
           ctx.fillRect(p.x, p.y, p.w, p.h);
-          ctx.fillStyle = "rgba(255,179,230,0.08)";
+          ctx.fillStyle = "rgba(255,179,230,0.10)";
           ctx.fillRect(0, p.y, w, 2);
           continue;
         }
 
         const isPillar = p.kind === "pillar";
-        ctx.fillStyle = isPillar ? "rgba(0,0,0,0.44)" : "rgba(0,0,0,0.38)";
+        ctx.fillStyle = isPillar ? "rgba(0,0,0,0.46)" : "rgba(0,0,0,0.40)";
         ctx.fillRect(p.x, p.y, p.w, p.h);
 
-        ctx.strokeStyle = "rgba(255,255,255,0.09)";
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
         ctx.lineWidth = 1;
         ctx.strokeRect(p.x+0.5, p.y+0.5, p.w-1, p.h-1);
 
@@ -1152,17 +1133,16 @@
         ctx.stroke();
       }
 
-      // shelter
       ctx.save();
       const glow = 0.18 + Math.sin(performance.now()*0.004) * 0.06;
       ctx.fillStyle = "rgba(0,0,0,0.52)";
       ctx.fillRect(shelter.x, shelter.y, shelter.w, shelter.h);
 
-      ctx.strokeStyle = `rgba(255,179,230,${0.35 + glow*0.75})`;
+      ctx.strokeStyle = `rgba(255,179,230,${0.38 + glow*0.9})`;
       ctx.lineWidth = 2;
       ctx.strokeRect(shelter.x+1, shelter.y+1, shelter.w-2, shelter.h-2);
 
-      ctx.fillStyle = `rgba(255,120,200,${0.08 + glow*0.85})`;
+      ctx.fillStyle = `rgba(255,120,200,${0.08 + glow})`;
       const dx = shelter.x + shelter.w*0.32;
       const dy = shelter.y + shelter.h*0.30;
       const dw = shelter.w*0.36;
@@ -1170,7 +1150,7 @@
       ctx.fillRect(dx, dy, dw, dh);
 
       ctx.font = `12px ${getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace"}`;
-      ctx.fillStyle = "rgba(255,179,230,0.85)";
+      ctx.fillStyle = "rgba(255,179,230,0.82)";
       ctx.fillText("shelter", shelter.x + 10, shelter.y + 16);
       ctx.restore();
     }
@@ -1180,7 +1160,7 @@
       const t = performance.now() * 0.001;
       for (const s of sporeList){
         if (!s.alive) continue;
-        s.bob += dt * (1.6);
+        s.bob += dt * 1.8;
         s.x += s.vx * (ui.soft.checked ? 0.6 : 1);
 
         if (s.x < 30) s.x = W()-30;
@@ -1190,9 +1170,9 @@
         const pulse = 0.55 + Math.sin(s.bob*2.0 + t*2.3) * 0.18;
 
         ctx.globalAlpha = 0.20;
-        ctx.fillStyle = "rgba(255,120,200,0.50)";
+        ctx.fillStyle = "rgba(255,120,200,0.45)";
         ctx.beginPath();
-        ctx.arc(s.x, yy, s.r*2.2, 0, Math.PI*2);
+        ctx.arc(s.x, yy, s.r*2.1, 0, Math.PI*2);
         ctx.fill();
 
         ctx.globalAlpha = 0.90;
@@ -1202,7 +1182,7 @@
         ctx.fill();
 
         ctx.globalAlpha = pulse;
-        ctx.strokeStyle = "rgba(255,179,230,0.75)";
+        ctx.strokeStyle = "rgba(255,179,230,0.72)";
         ctx.lineWidth = 1.1;
         ctx.beginPath();
         ctx.arc(s.x, yy, s.r*1.3, 0, Math.PI*2);
@@ -1211,76 +1191,21 @@
       ctx.restore();
     }
 
-    // --- ascii dragon sprite + tail
-    function getSpriteLines(){
-      // tiny side profile articulated dragon vibe (2-line thick)
-      // right-facing baseline:
-      //   <^9####9o>
-      // <====9#####9o>
-      const blink = player.blink > 0;
-      const inDash = player.dashTimer > 0.01;
-      const inAir = !player.onGround;
-
-      // small expression tweaks without exploding the silhouette
-      // o = eye bead, ^ = horn ridge
-      const eye = blink ? "-" : "o";
-      const snout = inDash ? ">" : (inAir ? "v" : ">");
-      const horn = inAir ? "^" : "^";
-
-      const right = [
-        `  <${horn}9####9${eye}${snout}`,
-        `<====9#####9${eye}${snout}`
-      ];
-
-      const left = [
-        `${snout}${eye}9####9${horn}>  `,
-        `${snout}${eye}9#####9====>`
-      ];
-
-      return (player.face > 0) ? right : left;
+    function roundRectCentered(w,h,r){
+      r = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(-w/2 + r, -h/2);
+      ctx.arcTo( w/2, -h/2,  w/2,  h/2, r);
+      ctx.arcTo( w/2,  h/2, -w/2,  h/2, r);
+      ctx.arcTo(-w/2,  h/2, -w/2, -h/2, r);
+      ctx.arcTo(-w/2, -h/2,  w/2, -h/2, r);
+      ctx.closePath();
     }
 
-    function drawTailAscii(){
-      if (!tail.initialized) return;
-
-      ctx.save();
-      const fontSize = 14;
-      const mono = getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace";
-      ctx.font = `${fontSize}px ${mono}`;
-      ctx.textBaseline = "middle";
-
-      // softer outline, not neon-highlighter
-      ctx.shadowColor = "rgba(255,120,200,0.28)";
-      ctx.shadowBlur = 7;
-
-      // draw from base outward so it feels connected
-      for (let i=1;i<tail.pts.length;i++){
-        const p = tail.pts[i];
-
-        // segment char ramp: near body chunky, then thinning, end tip
-        let ch = "=";
-        if (i < 3) ch = "#";
-        if (i === tail.pts.length-1) ch = (player.face > 0 ? ">" : "<");
-
-        const x = p.x;
-        const y = p.y;
-
-        // outline (thin + dim)
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "rgba(255,120,200,0.62)";
-        ctx.strokeText(ch, x, y);
-
-        // fill (near-black)
-        ctx.fillStyle = "rgba(8,8,10,0.98)";
-        ctx.fillText(ch, x, y);
-      }
-
-      ctx.restore();
-    }
-
-    function drawCreatureAscii(){
+    function drawTinyDragon(){
       const soft = ui.soft.checked;
 
+      // optional shake
       const shake = soft ? 0 : storm.shake;
       const sx = (Math.random()-0.5) * 6 * shake;
       const sy = (Math.random()-0.5) * 6 * shake;
@@ -1288,51 +1213,134 @@
       ctx.save();
       ctx.translate(sx, sy);
 
-      const bob = Math.sin(player.bob) * (player.onGround ? 0.75 : 0.35);
-      const x = player.x;
-      const y = player.y + bob;
+      const bob = Math.sin(player.bob) * (player.onGround ? 0.7 : 0.35);
+
+      // head point (front)
+      const headX = player.x + player.w/2 + player.face * 8;
+      const headY = player.y + 8 + bob;
 
       // shadow
       ctx.globalAlpha = 0.22;
-      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.fillStyle = "rgba(0,0,0,0.75)";
       ctx.beginPath();
-      ctx.ellipse(x + player.w/2, y + player.h + 8, 13, 4.5, 0, 0, Math.PI*2);
+      ctx.ellipse(player.x + player.w/2, player.y + player.h + 8, 16, 5, 0, 0, Math.PI*2);
       ctx.fill();
 
       const invBlink = player.inv > 0 ? (Math.floor(performance.now()/70)%2===0) : false;
-      ctx.globalAlpha = invBlink ? 0.32 : 1;
-
-      const lines = getSpriteLines();
-
-      const fontSize = 14;
-      const mono = getComputedStyle(document.documentElement).getPropertyValue("--mono") || "ui-monospace, monospace";
-      ctx.font = `${fontSize}px ${mono}`;
-      ctx.textBaseline = "top";
-
-      // measure width using longest line
-      const w1 = ctx.measureText(lines[0]).width;
-      const w2 = ctx.measureText(lines[1]).width;
-      const spriteW = Math.max(w1,w2);
-      const px = x + (player.w/2) - spriteW/2;
-      const py = y - 18;
+      ctx.globalAlpha = invBlink ? 0.35 : 1;
 
       const wetGlow = wetness / 100;
 
-      // thin outline + softer brightness
-      ctx.shadowColor = "rgba(255,120,200,0.32)";
-      ctx.shadowBlur = 9 * (0.20 + wetGlow);
+      // styling: less bright, thinner
+      const strokeA = 0.52 + wetGlow * 0.12;
+      ctx.strokeStyle = `rgba(255,120,200,${strokeA})`;
+      ctx.fillStyle = "rgba(8,8,10,0.98)";
+      ctx.lineWidth = 2;
+      ctx.lineJoin = "round";
 
-      for (let i=0;i<lines.length;i++){
-        const yy = py + i * (fontSize * 1.03);
-        const L = lines[i];
+      ctx.shadowColor = "rgba(255,120,200,0.25)";
+      ctx.shadowBlur = 6 + wetGlow * 6;
 
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "rgba(255,120,200,0.62)";
-        ctx.strokeText(L, px, yy);
+      // build spine points: head + tail chain
+      const spine = [];
+      spine.push({ x: headX, y: headY });
 
-        ctx.fillStyle = "rgba(8,8,10,0.98)";
-        ctx.fillText(L, px, yy);
+      // use tail points but flip order so it trails behind head cleanly
+      if (!tail.initialized) initTail();
+      for (let i=0;i<tail.pts.length;i++){
+        spine.push({ x: tail.pts[i].x, y: tail.pts[i].y });
       }
+
+      // draw segments from head -> back
+      const n = spine.length;
+
+      for (let i=0;i<n-1;i++){
+        const p = spine[i];
+        const q = spine[i+1];
+        const dx = q.x - p.x;
+        const dy = q.y - p.y;
+        const ang = Math.atan2(dy, dx);
+
+        const t = i / (n-1);
+        const segW = lerp(14, 6, t);
+        const segH = lerp(10, 5, t);
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(ang);
+
+        // body segment
+        roundRectCentered(segW, segH, 3.2);
+        ctx.fill();
+        ctx.stroke();
+
+        // little spikes (top ridge), skip head + last few
+        if (i >= 2 && i <= n-6){
+          const spike = 3.2 - t*1.6;
+          ctx.beginPath();
+          ctx.moveTo(-segW*0.10, -segH/2);
+          ctx.lineTo(0, -segH/2 - spike);
+          ctx.lineTo(segW*0.14, -segH/2);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        // tiny legs-ish bumps (low key)
+        if (i === 3 || i === 5){
+          ctx.beginPath();
+          ctx.moveTo(-segW*0.15, segH/2);
+          ctx.lineTo(-segW*0.05, segH/2 + 2.3);
+          ctx.lineTo(segW*0.10, segH/2);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      // head details (snout + eye)
+      ctx.save();
+      const neck = spine[1] || spine[0];
+      const hx = spine[0].x, hy = spine[0].y;
+      const hdx = hx - neck.x;
+      const hdy = hy - neck.y;
+      const hang = Math.atan2(hdy, hdx);
+
+      ctx.translate(hx, hy);
+      ctx.rotate(hang);
+
+      // snout
+      ctx.beginPath();
+      ctx.moveTo(6, 0);
+      ctx.lineTo(14, -2);
+      ctx.lineTo(14, 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // ear/horn
+      ctx.beginPath();
+      ctx.moveTo(2, -5);
+      ctx.lineTo(6, -10);
+      ctx.lineTo(8, -4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // eye
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.beginPath();
+      ctx.arc(3.5, -1.2, 1.2, 0, Math.PI*2);
+      ctx.fill();
+
+      // blush pixel
+      ctx.fillStyle = "rgba(255,120,200,0.40)";
+      ctx.fillRect(1.2, 1.2, 2, 1);
+
+      ctx.restore();
 
       ctx.restore();
     }
@@ -1348,11 +1356,11 @@
       const slope = vx * 0.0028;
 
       ctx.save();
-      ctx.globalAlpha = 0.50;
-      ctx.lineWidth = 1.15;
+      ctx.globalAlpha = 0.52;
+      ctx.lineWidth = 1.2;
       ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.shadowColor = "rgba(255,120,200,0.10)";
-      ctx.shadowBlur = 9;
+      ctx.shadowColor = "rgba(255,120,200,0.12)";
+      ctx.shadowBlur = 10;
 
       const speedMul = lerp(0.7, 1.45, intensity) * (storm.phase === "storm" ? 1.35 : storm.phase === "building" ? 1.10 : 1.0);
 
@@ -1365,7 +1373,7 @@
           d.y = -20 - sRand()*40;
           d.x = sRand() * w;
           if (Math.random() < 0.07 * intensity){
-            addSplash(d.x, h-54, 0.55);
+            addSplash(d.x, h-54, 0.6);
           }
         }
         if (d.x < -40) d.x = w + 40;
@@ -1381,9 +1389,8 @@
       }
       ctx.restore();
 
-      // splashes
       ctx.save();
-      ctx.fillStyle = "rgba(255,179,230,0.52)";
+      ctx.fillStyle = "rgba(255,179,230,0.55)";
       for (let i=splashes.length-1;i>=0;i--){
         const s = splashes[i];
         s.t += dt;
@@ -1392,9 +1399,9 @@
         s.vy += 320 * dt;
         const lifeT = s.t / s.life;
         const a = 1 - lifeT;
-        ctx.globalAlpha = 0.50 * a;
+        ctx.globalAlpha = 0.55 * a;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, 1.2 + (1-lifeT)*1.0, 0, Math.PI*2);
+        ctx.arc(s.x, s.y, 1.2 + (1-lifeT)*1.1, 0, Math.PI*2);
         ctx.fill();
         if (lifeT >= 1) splashes.splice(i,1);
       }
@@ -1408,11 +1415,11 @@
 
       const w = W(), h = H();
       ctx.save();
-      ctx.globalAlpha = 0.38 * storm.flash;
+      ctx.globalAlpha = 0.40 * storm.flash;
       ctx.fillStyle = "rgba(255,255,255,1)";
       ctx.fillRect(0,0,w,h);
 
-      ctx.globalAlpha = 0.20 * storm.flash;
+      ctx.globalAlpha = 0.22 * storm.flash;
       ctx.fillStyle = "rgba(255,120,200,1)";
       ctx.fillRect(0,0,w,h);
       ctx.restore();
@@ -1431,21 +1438,22 @@
 
     // -------- ui sync
     function syncUI(){
+      $("vJump").textContent = String(Math.round(Number(ui.jump.value)));
       $("vRain").textContent = Number(ui.rain.value).toFixed(2);
       $("vWind").textContent = Number(ui.wind.value).toFixed(2);
       $("vThunder").textContent = Number(ui.thunder.value).toFixed(2);
-      $("vJump").textContent = Number(ui.jump.value).toFixed(2);
 
       makeRain();
       spawnSpores(false);
 
       setHum(ui.hum.checked);
+
       saveSettings();
     }
+    ui.jump.addEventListener("input", syncUI);
     ui.rain.addEventListener("input", syncUI);
     ui.wind.addEventListener("input", syncUI);
     ui.thunder.addEventListener("input", syncUI);
-    ui.jump.addEventListener("input", syncUI);
     ui.soft.addEventListener("change", syncUI);
     ui.hum.addEventListener("change", syncUI);
     syncUI();
@@ -1507,7 +1515,7 @@
     let last = performance.now();
     function loop(now){
       requestAnimationFrame(loop);
-      fit(false);
+      fit();
 
       const dt = clamp((now - last) / 1000, 0, 0.033);
       last = now;
@@ -1548,8 +1556,8 @@
       drawSpores(dt);
       drawRain(dt);
 
-      drawTailAscii();
-      drawCreatureAscii();
+      // creature last so it sits on top of rain
+      drawTinyDragon();
 
       drawLightning();
       drawVignette();
@@ -1559,6 +1567,7 @@
     }
     requestAnimationFrame(loop);
 
+    // start
     rollBiome();
   </script>
 </body>
