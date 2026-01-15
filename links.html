@@ -5,7 +5,20 @@
   <title>bella cactus • links</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- favicon (tab icon) -->
+  <!-- discord/twitter embed preview (open graph) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="bella cactus • links" />
+  <meta property="og:description" content="reverse eng + tools • d2/gd • everything you want, right here." />
+  <meta property="og:url" content="https://bellacactus.github.io/links.html" />
+  <meta property="og:image" content="https://bellacactus.github.io/media/pfp.png" />
+  <meta name="theme-color" content="#ff78c8" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="bella cactus • links" />
+  <meta name="twitter:description" content="reverse eng + tools • d2/gd • everything you want, right here." />
+  <meta name="twitter:image" content="https://bellacactus.github.io/media/pfp.png" />
+
+  <!-- favicon -->
   <link rel="icon" type="image/png" href="twi looking.png" />
 
   <style>
@@ -54,7 +67,7 @@
       z-index:0;
     }
 
-    /* scanline-ish drift */
+    /* scanline drift */
     .scan{
       position:fixed; inset:-40px 0;
       pointer-events:none;
@@ -140,6 +153,144 @@
       overflow:hidden;
     }
 
+    /* ===== profile card (guns.lol-ish) ===== */
+    .profile{
+      position:relative;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(0,0,0,0.14);
+    }
+
+    .banner{
+      position:relative;
+      height: 140px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow:hidden;
+      background:
+        radial-gradient(800px 200px at 20% 30%, rgba(255,120,200,0.22), transparent 60%),
+        radial-gradient(700px 250px at 85% 45%, rgba(255,255,255,0.08), transparent 62%),
+        linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
+    }
+
+    .banner img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      opacity: 0.85;
+      filter: saturate(1.05) contrast(1.05);
+    }
+
+    .profileRow{
+      display:flex;
+      gap: 12px;
+      align-items:flex-end;
+      margin-top: -26px;
+      padding: 0 10px 6px;
+      flex-wrap:wrap;
+    }
+
+    .avatar{
+      width: 86px;
+      height: 86px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,120,200,0.35);
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 0 0 4px rgba(0,0,0,0.38);
+      overflow:hidden;
+      position:relative;
+      flex: 0 0 auto;
+    }
+
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .avatar .fallback{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-family: var(--mono);
+      color: rgba(255,120,200,0.95);
+      background:
+        radial-gradient(200px 120px at 30% 30%, rgba(255,120,200,0.18), transparent 60%),
+        radial-gradient(200px 120px at 75% 60%, rgba(255,255,255,0.06), transparent 65%),
+        rgba(0,0,0,0.25);
+      user-select:none;
+    }
+
+    .profileText{
+      min-width: 240px;
+      flex: 1 1 320px;
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      padding-bottom: 4px;
+    }
+
+    .handle{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+
+    .handle .name{
+      font-size: 15px;
+      color: var(--text);
+      max-width: none;
+    }
+
+    .tagline{
+      font-size: 12.5px;
+      color: rgba(185,185,194,0.92);
+      line-height: 1.4;
+    }
+
+    .quickButtons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-left:auto;
+      padding-bottom: 4px;
+    }
+
+    .qbtn{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      font-family: var(--mono);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      text-decoration:none;
+    }
+    .qbtn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+    .qbtn .dot{
+      width:8px; height:8px;
+      border-radius:50%;
+      background: rgba(255,120,200,0.85);
+      box-shadow: 0 0 12px rgba(255,120,200,0.55);
+    }
+
+    /* toolbar */
     .toolbar{
       display:flex;
       flex-wrap:wrap;
@@ -208,6 +359,7 @@
       align-items:center;
       gap:8px;
       user-select:none;
+      text-decoration:none;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -233,6 +385,7 @@
       header{ flex-direction:column; align-items:flex-start; }
       .content{ grid-template-columns: 1fr; }
       .btns{ width:100%; justify-content:flex-start; }
+      .quickButtons{ width:100%; margin-left:0; }
     }
 
     .section{
@@ -402,30 +555,33 @@
     }
     .meta .chip strong{ color: rgba(255,120,200,0.95); font-weight: 600; }
 
-    /* little floating spark */
-    .spark{
-      position:fixed;
-      width:6px; height:6px;
-      border-radius: 50%;
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.55);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      color: rgba(255,255,255,0.9);
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0;
       pointer-events:none;
-      background: rgba(255,120,200,0.9);
-      box-shadow: 0 0 14px rgba(255,120,200,0.7);
-      opacity:0;
-      transform: translate(-50%,-50%);
-      z-index:3;
-      animation: pop 600ms ease forwards;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 99;
     }
-    @keyframes pop{
-      0%{ opacity:0; transform: translate(-50%,-50%) scale(0.6); }
-      25%{ opacity:1; }
-      100%{ opacity:0; transform: translate(-50%,-80%) scale(1.6); }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
     }
 
     /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       .scan{ animation:none; }
-      .card, .btn, input[type="text"]{ transition:none; }
-      .spark{ display:none; }
+      .card, .btn, input[type="text"], .qbtn, .toast{ transition:none; }
     }
   </style>
 </head>
@@ -443,8 +599,8 @@
           <span class="badge">terminal-core</span>
         </div>
         <div class="sub">
-          one link to rule them all. search with <span style="color:rgba(255,120,200,0.95);font-family:var(--mono)">/</span>,
-          pin your favs with ★, and go explore. (:3)
+          guns.lol vibes, but self-hosted. search with <span style="color:rgba(255,120,200,0.95);font-family:var(--mono)">/</span>,
+          pin favs with ★, and copy stuff fast. (:3)
         </div>
       </div>
 
@@ -452,14 +608,49 @@
     </header>
 
     <div class="panel" role="region" aria-label="links hub">
+
+      <!-- profile top card -->
+      <div class="profile">
+        <div class="banner" title="optional banner: media/banner.png">
+          <img id="bannerImg" src="media/banner.png" alt="" style="display:none" />
+        </div>
+
+        <div class="profileRow">
+          <div class="avatar" title="pfp: media/pfp.png">
+            <img id="pfpImg" src="media/pfp.png" alt="bella pfp" style="display:none" />
+            <div class="fallback" id="pfpFallback">bella</div>
+          </div>
+
+          <div class="profileText">
+            <div class="handle">
+              <span class="name">bella cactus</span>
+              <span class="badge pink">reverse eng + tools</span>
+              <span class="badge">d2/gd</span>
+            </div>
+            <div class="tagline">
+              everything you want, right here. also: low hp sometimes, still clearing raids ;3
+            </div>
+          </div>
+
+          <div class="quickButtons">
+            <a class="qbtn" href="index.html" title="back to main hub"><span class="dot"></span>index</a>
+            <a class="qbtn" href="https://discord.gg/m8aTTQhkRG" target="_blank" rel="noopener noreferrer" title="join the server"><span class="dot"></span>server</a>
+            <a class="qbtn" href="https://github.com/BellaCactus" target="_blank" rel="noopener noreferrer" title="github"><span class="dot"></span>github</a>
+            <button class="qbtn" id="copyD2" type="button" title="copy d2 /join">
+              <span class="dot"></span>copy d2 /join
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="toolbar">
         <div class="searchBox">
           <div class="prompt">&gt; find:</div>
-          <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="type to filter… (ex: limiter, youtube, dreams, idle)" />
+          <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="type to filter… (ex: spotify, steam, twitch, dreams)" />
         </div>
 
         <div class="btns">
-          <button class="btn" id="copyHub" type="button" title="copy the one-link hub url">
+          <button class="btn" id="copyHub" type="button" title="copy the hub url">
             <span class="dot" aria-hidden="true"></span>
             copy hub url
           </button>
@@ -508,34 +699,38 @@
     </div>
   </div>
 
+  <div class="toast" id="toast">copied</div>
+
   <script>
     (() => {
-      // === editable link data ===
-      // if you add more pages later, just add rows here.
-      // (keep "id" unique)
+      // === editable bits ===
+      const D2_JOIN = "/join Bella#8413";
+
+      // === link data ===
       const internal = [
         { id: "home",  name: "index.html",   desc: "main hub", href: "index.html", tag: "hub" },
 
-        // common pages from your project:
         { id: "lim",   name: "limiter.html", desc: "limiter deep-dive / features", href: "pages/limiter.html", tag: "project" },
         { id: "os",    name: "os.html",      desc: "fake cli / fake os", href: "pages/os.html", tag: "play" },
         { id: "ascii", name: "ascii.html",   desc: "ascii zoo / creatures", href: "pages/ascii.html", tag: "zoo" },
         { id: "idle",  name: "idle.html",    desc: "screensaver page (leave it open)", href: "pages/idle.html", tag: "idle" },
         { id: "gl",    name: "glitch.html",  desc: "glitch / corruption playground", href: "pages/glitch.html", tag: "glitch" },
         { id: "dr",    name: "dreams.html",  desc: "dream log w/ timestamps", href: "pages/dreams.html", tag: "log" },
-
-        // if you make the tamers archive page later, add it here:
-        // { id: "tam", name: "tamers.html", desc: "tamers archive vault", href: "pages/tamers.html", tag: "vault" },
       ];
 
       const external = [
-        { id: "git", name: "github", desc: "code + repos", href: "https://github.com/BellaCactus", tag: "social" },
-        { id: "yt",  name: "youtube", desc: "@BellaCactusYT", href: "https://youtube.com/@BellaCactusYT", tag: "social" },
-        { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project" },
+        { id: "ig", name: "instagram", desc: "@bella126124565", href: "https://www.instagram.com/bella126124565/", tag: "social" },
+        { id: "sp", name: "spotify", desc: "bowencactus", href: "https://open.spotify.com/user/bowencactus", tag: "music" },
+        { id: "tw", name: "twitch", desc: "bellacactus_", href: "https://www.twitch.tv/bellacactus_", tag: "stream" },
+        { id: "st", name: "steam", desc: "BellaCactus", href: "https://steamcommunity.com/id/BellaCactus/", tag: "games" },
+        { id: "sky", name: "skycrypt", desc: "hypixel skyblock stats", href: "https://sky.shiiyu.moe/stats/BellaCactus/Apple#Gear", tag: "stats" },
 
-        // add more if you want:
-        // { id: "twitch", name: "twitch", desc: "streams", href: "https://twitch.tv/...", tag: "social" },
-        // { id: "pony", name: "pony.tube", desc: "tamers archive channel", href: "https://pony.tube/c/tamersarchive/videos", tag: "video" },
+        { id: "d2", name: "destiny 2", desc: D2_JOIN + " (click to copy)", href: "copy://d2join", tag: "d2" },
+        { id: "srv", name: "discord server", desc: "invite", href: "https://discord.gg/m8aTTQhkRG", tag: "discord" },
+
+        { id: "git", name: "github", desc: "BellaCactus", href: "https://github.com/BellaCactus", tag: "code" },
+        { id: "yt",  name: "youtube", desc: "@BellaCactusYT", href: "https://youtube.com/@BellaCactusYT", tag: "video" },
+        { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project" },
       ];
 
       // === ui refs ===
@@ -552,8 +747,10 @@
       const buff = $("#buff");
       const debuff = $("#debuff");
       const sync = $("#sync");
+      const toast = $("#toast");
 
-      const PIN_KEY = "bella_links_pins_v1";
+      const PIN_KEY = "bella_links_pins_v2";
+
       const getPins = () => {
         try {
           const raw = localStorage.getItem(PIN_KEY);
@@ -567,16 +764,30 @@
 
       function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
-      function sparkle(x, y){
-        const s = document.createElement("div");
-        s.className = "spark";
-        s.style.left = x + "px";
-        s.style.top = y + "px";
-        document.body.appendChild(s);
-        setTimeout(() => s.remove(), 650);
+      function showToast(msg){
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 900);
       }
 
-      function card(item, pinnedMode=false){
+      async function copyText(text){
+        try{
+          await navigator.clipboard.writeText(text);
+          showToast("copied ✓");
+          return true;
+        }catch{
+          const tmp = document.createElement("input");
+          tmp.value = text;
+          document.body.appendChild(tmp);
+          tmp.select();
+          document.execCommand("copy");
+          tmp.remove();
+          showToast("copied (fallback) ✓");
+          return true;
+        }
+      }
+
+      function card(item){
         const wrap = document.createElement("div");
         wrap.className = "card";
         wrap.dataset.id = item.id;
@@ -621,7 +832,6 @@
         star.setAttribute("aria-label", "pin or unpin");
         star.textContent = "★";
 
-        // set star state from pins
         const pins = getPins();
         const key = item.scope + ":" + item.id;
         if (pins.includes(key)) star.classList.add("on");
@@ -643,11 +853,17 @@
             buff.textContent = "favorite lock";
           }
           setPins(pinsNow);
-          render(); // refresh pinned section
+          render();
+        });
 
-          // sparkle near click
-          const r = star.getBoundingClientRect();
-          sparkle(r.left + r.width/2, r.top + r.height/2);
+        // special: "copy://d2join"
+        a.addEventListener("click", async (e) => {
+          if (item.href === "copy://d2join") {
+            e.preventDefault();
+            await copyText(D2_JOIN);
+            statusBadge.textContent = "d2 /join copied ✓";
+            setTimeout(() => statusBadge.textContent = "online", 1100);
+          }
         });
 
         right.appendChild(pill);
@@ -656,15 +872,6 @@
         wrap.appendChild(left);
         wrap.appendChild(right);
 
-        // tiny easter egg: type "pony" in search gives a wink in status
-        wrap.addEventListener("mouseenter", () => {
-          if (Math.random() < 0.06) {
-            statusBadge.textContent = "whispering to the wires…";
-            setTimeout(() => statusBadge.textContent = "online", 900);
-          }
-        });
-
-        // if pinned section, clicking whole card still goes to link, so we leave it normal.
         return wrap;
       }
 
@@ -680,7 +887,6 @@
           if (ok) visible++;
         });
 
-        // goofy little "hp" feedback, but subtle
         const base = 100;
         const penalty = clamp(Math.floor((cards.length - visible) * 6), 0, 60);
         hp.textContent = String(base - penalty);
@@ -698,14 +904,12 @@
 
         const pins = getPins();
 
-        // render main lists
         internal.forEach(item => internalList.appendChild(card({...item, scope:"internal"})));
         external.forEach(item => externalList.appendChild(card({...item, scope:"external"})));
 
         internalCount.textContent = internal.length + " items";
         externalCount.textContent = external.length + " items";
 
-        // render pinned list (ordered by pin order)
         const pinItems = pins
           .map(k => {
             const [scope, id] = k.split(":");
@@ -729,33 +933,20 @@
           `;
           pinnedList.appendChild(empty);
         } else {
-          pinItems.forEach(item => pinnedList.appendChild(card(item, true)));
+          pinItems.forEach(item => pinnedList.appendChild(card(item)));
         }
 
         pinnedCount.textContent = pinItems.length + " pinned";
-
         applyFilter();
       }
 
       // copy hub url
       $("#copyHub").addEventListener("click", async () => {
-        const url = location.origin + location.pathname.replace(/\/[^\/]*$/, "/") + "links.html";
-        try{
-          await navigator.clipboard.writeText(url);
-          statusBadge.textContent = "copied ✓";
-          buff.textContent = "clipboard loaded";
-          debuff.textContent = "none";
-        }catch{
-          // fallback
-          const tmp = document.createElement("input");
-          tmp.value = url;
-          document.body.appendChild(tmp);
-          tmp.select();
-          document.execCommand("copy");
-          tmp.remove();
-          statusBadge.textContent = "copied (fallback) ✓";
-          buff.textContent = "clipboard loaded";
-        }
+        const url = "https://bellacactus.github.io/links.html";
+        await copyText(url);
+        statusBadge.textContent = "hub url copied ✓";
+        buff.textContent = "clipboard loaded";
+        debuff.textContent = "none";
         setTimeout(() => statusBadge.textContent = "online", 1100);
       });
 
@@ -767,6 +958,13 @@
         buff.textContent = "fresh start";
         setTimeout(() => statusBadge.textContent = "online", 1200);
         render();
+      });
+
+      // copy d2 join (top button)
+      $("#copyD2").addEventListener("click", async () => {
+        await copyText(D2_JOIN);
+        statusBadge.textContent = "d2 /join copied ✓";
+        setTimeout(() => statusBadge.textContent = "online", 1100);
       });
 
       // keyboard shortcuts
@@ -784,10 +982,24 @@
         }
       });
 
-      // search filtering
       q.addEventListener("input", applyFilter);
 
-      // boot/status vibes
+      // banner/pfp: show fallback if file missing
+      function safeShowImage(imgEl, fallbackEl){
+        imgEl.addEventListener("load", () => {
+          imgEl.style.display = "block";
+          if (fallbackEl) fallbackEl.style.display = "none";
+        });
+        imgEl.addEventListener("error", () => {
+          imgEl.style.display = "none";
+          if (fallbackEl) fallbackEl.style.display = "grid";
+        });
+      }
+
+      safeShowImage($("#pfpImg"), $("#pfpFallback"));
+      safeShowImage($("#bannerImg"), null);
+
+      // status vibes
       const phrases = [
         "online",
         "ready",
@@ -809,14 +1021,8 @@
           statusBadge.textContent = p;
           setTimeout(() => statusBadge.textContent = "online", 900 + Math.random()*900);
         }, 7000);
-
-        // occasional sparkle following cursor (very rare)
-        window.addEventListener("mousemove", (ev) => {
-          if (Math.random() < 0.01) sparkle(ev.clientX, ev.clientY);
-        }, { passive:true });
       }
 
-      // initial render
       render();
       boot();
     })();
