@@ -2,8 +2,8 @@ name: discord - site updated
 
 on:
   push:
-    branches:
-      - "**"
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,7 +18,7 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
-          COMMIT_SHA: ${{ github.sha }}
+          SHA: ${{ github.sha }}
           COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
           SITE_URL: https://${{ github.repository_owner }}.github.io/
           MSG: ${{ github.event.head_commit.message }}
@@ -31,37 +31,48 @@ jobs:
           fi
 
           payload="$(python - <<'PY'
-import json, os
-repo=os.environ["REPO"]
-branch=os.environ["BRANCH"]
-actor=os.environ["ACTOR"]
-sha=os.environ["COMMIT_SHA"][:7]
-commit_url=os.environ["COMMIT_URL"]
-site=os.environ["SITE_URL"]
-msg=os.environ.get("MSG","").strip() or "(no commit message)"
+          import json, os
+          repo = os.environ.get("REPO","")
+          branch = os.environ.get("BRANCH","")
+          actor = os.environ.get("ACTOR","")
+          sha = os.environ.get("SHA","")[:7]
+          commit_url = os.environ.get("COMMIT_URL","")
+          site_url = os.environ.get("SITE_URL","")
+          msg = (os.environ.get("MSG","") or "").strip()
 
-data = {
-  "username": "site updated",
-  "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-  "embeds": [{
-    "title": "site updated",
-    "url": commit_url,
-    "color": 0xff78c8,
-    "description": f"**repo:** `{repo}`\n**branch:** `{branch}`\n**by:** `{actor}`\n**commit:** `{sha}`\n\n**msg:** {msg}",
-    "fields": [
-      {"name":"site", "value": site, "inline": False}
-    ],
-    "footer": {"text":"github actions → discord webhook"}
-  }]
-}
+          data = {
+            "username": "site updated",
+            "embeds": [{
+              "title": "site updated",
+              "url": commit_url,
+              "color": 0xff78c8,
+              "description": (msg if msg else "(no commit message)"),
+              "fields": [
+                {"name": "repo", "value": repo, "inline": True},
+                {"name": "branch", "value": branch, "inline": True},
+                {"name": "by", "value": actor, "inline": True},
+                {"name": "commit", "value": f"[{sha}]({commit_url})", "inline": True},
+                {"name": "site", "value": site_url, "inline": False},
+              ],
+              "footer": {"text": "github actions → discord webhook"}
+            }]
+          }
 
-print(json.dumps(data, ensure_ascii=False))
-PY
-)"
+          print(json.dumps(data, ensure_ascii=False))
+          PY
+          )"
 
-          curl -sS -f \
+          # post, and show discord response if it fails (super helpful for debugging)
+          http_code="$(curl -sS -o resp.txt -w "%{http_code}" \
             -H "Content-Type: application/json" \
             -d "$payload" \
-            "$DISCORD_WEBHOOK_URL"
+            "$DISCORD_WEBHOOK_URL" || true)"
+
+          echo "discord http: $http_code"
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "discord response:"
+            cat resp.txt || true
+            exit 1
+          fi
 
           echo "posted ✅"
