@@ -40,6 +40,12 @@
       --radius: 18px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+      /* banner tuning */
+      --banner-focus: 55% 40%; /* x y */
+      --banner-zoom: 1.12;     /* subtle crop */
+      --banner-blur: 18px;     /* blur behind layer (fills transparent/empty areas) */
+      --banner-dim: 0.92;      /* image opacity */
     }
 
     *{ box-sizing:border-box; }
@@ -105,11 +111,7 @@
       margin-bottom: 14px;
     }
 
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
+    .title{ display:flex; flex-direction:column; gap:6px; }
 
     .h1{
       font-family: var(--mono);
@@ -131,7 +133,6 @@
       background: rgba(255,255,255,0.03);
       color: var(--muted);
     }
-
     .badge.pink{
       border-color: rgba(255,120,200,0.35);
       color: rgba(255,120,200,0.95);
@@ -153,7 +154,7 @@
       overflow:hidden;
     }
 
-    /* ===== profile card (guns.lol-ish) ===== */
+    /* ===== profile card ===== */
     .profile{
       position:relative;
       padding: 12px;
@@ -163,7 +164,7 @@
 
     .banner{
       position:relative;
-      height: 140px;
+      height: 148px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.08);
       overflow:hidden;
@@ -173,20 +174,51 @@
         linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
     }
 
-    .banner img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      opacity: 0.88;
-      filter: saturate(1.05) contrast(1.05);
+    /* two-layer banner: blurred cover behind + sharper cover in front
+       this fixes transparent/empty areas inside pngs */
+    .banner::before{
+      content:"";
+      position:absolute;
+      inset:-22px; /* bleed so blur never shows edges */
+      background-image: var(--banner-url);
+      background-position: var(--banner-focus);
+      background-size: cover;
+      background-repeat: no-repeat;
+      transform: scale(calc(var(--banner-zoom) + 0.08));
+      transform-origin: var(--banner-focus);
+      filter: blur(var(--banner-blur)) saturate(1.15) contrast(1.10);
+      opacity: 0.55;
+    }
+    .banner::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--banner-url);
+      background-position: var(--banner-focus);
+      background-size: cover;
+      background-repeat: no-repeat;
+      transform: scale(var(--banner-zoom));
+      transform-origin: var(--banner-focus);
+      filter: saturate(1.06) contrast(1.06);
+      opacity: var(--banner-dim);
+    }
+
+    .bannerShade{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(900px 220px at 20% 25%, rgba(255,120,200,0.18), transparent 65%),
+        radial-gradient(700px 240px at 80% 45%, rgba(255,255,255,0.08), transparent 70%),
+        linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.62));
+      pointer-events:none;
+      z-index:2;
     }
 
     .profileRow{
       display:flex;
       gap: 12px;
       align-items:flex-end;
-      margin-top: -26px;
+      margin-top: -28px;
       padding: 0 10px 6px;
       flex-wrap:wrap;
     }
@@ -201,14 +233,9 @@
       overflow:hidden;
       position:relative;
       flex: 0 0 auto;
+      z-index:3;
     }
-
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
 
     .avatar .fallback{
       width:100%;
@@ -231,6 +258,7 @@
       flex-direction:column;
       gap: 6px;
       padding-bottom: 4px;
+      z-index:3;
     }
 
     .handle{
@@ -241,12 +269,7 @@
       font-family: var(--mono);
       font-size: 14px;
     }
-
-    .handle .name{
-      font-size: 15px;
-      color: var(--text);
-      max-width: none;
-    }
+    .handle .name{ font-size: 15px; color: var(--text); white-space:nowrap; }
 
     .tagline{
       font-size: 12.5px;
@@ -260,6 +283,7 @@
       gap:8px;
       margin-left:auto;
       padding-bottom: 4px;
+      z-index:3;
     }
 
     .qbtn{
@@ -277,6 +301,7 @@
       gap:8px;
       user-select:none;
       text-decoration:none;
+      white-space:nowrap;
     }
     .qbtn:hover{
       transform: translateY(-1px);
@@ -309,7 +334,6 @@
       flex: 1 1 420px;
       min-width: 240px;
     }
-
     .prompt{
       font-family: var(--mono);
       font-size: 12px;
@@ -343,6 +367,7 @@
       gap:8px;
       flex: 0 0 auto;
       justify-content:flex-end;
+      flex-wrap:wrap;
     }
 
     .btn{
@@ -360,6 +385,7 @@
       gap:8px;
       user-select:none;
       text-decoration:none;
+      white-space:nowrap;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -401,6 +427,7 @@
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 16px;
       padding: 12px;
+      min-width:0;
     }
 
     .section h2{
@@ -421,11 +448,7 @@
       margin-left:auto;
     }
 
-    .list{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+    .list{ display:flex; flex-direction:column; gap:8px; }
 
     .card{
       display:flex;
@@ -440,14 +463,12 @@
       position:relative;
       overflow:hidden;
     }
-
     .card:hover{
       transform: translateY(-1px);
       border-color: rgba(255,120,200,0.30);
       box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
       filter: brightness(1.03);
     }
-
     .card:before{
       content:"";
       position:absolute;
@@ -461,11 +482,43 @@
     }
     .card:hover:before{ opacity:1; }
 
+    /* icon bubble */
+    .iconBubble{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.26);
+      display:grid;
+      place-items:center;
+      flex: 0 0 auto;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.18) inset;
+    }
+    .iconBubble svg{
+      width: 18px;
+      height: 18px;
+      fill: rgba(255,255,255,0.86);
+    }
+    .iconBubble.pink{
+      border-color: rgba(255,120,200,0.28);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.06) inset;
+    }
+    .iconBubble.pink svg{ fill: rgba(255,120,200,0.92); }
+
     .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex: 1 1 auto;
+    }
+
+    .textWrap{
       display:flex;
       flex-direction:column;
       gap:3px;
       min-width:0;
+      flex: 1 1 auto;
     }
 
     .name{
@@ -477,7 +530,6 @@
       text-overflow:ellipsis;
       max-width: 58ch;
     }
-
     .desc{
       font-size: 12px;
       color: rgba(185,185,194,0.9);
@@ -505,7 +557,6 @@
       user-select:none;
       white-space:nowrap;
     }
-
     .pill.pink{
       border-color: rgba(255,120,200,0.32);
       color: rgba(255,120,200,0.95);
@@ -540,6 +591,9 @@
     a.link{
       color: inherit;
       text-decoration:none;
+      display:block;
+      min-width:0;
+      flex:1 1 auto;
     }
 
     .meta{
@@ -586,89 +640,83 @@
       transform: translateX(-50%) translateY(-2px);
     }
 
-    /* unicode stash */
-    .uControls{
+    /* discord profile card */
+    .dcard{
       display:flex;
-      gap:8px;
+      gap:12px;
       align-items:center;
-      flex-wrap:wrap;
-      margin-bottom: 10px;
-    }
-    .uControls .prompt{ margin-right: 2px; }
-    .uControls input{
-      flex: 1 1 180px;
-      min-width: 160px;
-    }
-
-    .uGroup{
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.20);
+      background: rgba(0,0,0,0.22);
       border-radius: 14px;
       padding: 10px;
-      margin-bottom: 10px;
-    }
-    .uGroupTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin: 0 0 8px 0;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(255,120,200,0.95);
-    }
-    .uGrid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:8px;
-    }
-    @media (max-width: 860px){
-      .uGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    .uChip{
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.02);
-      border-radius: 12px;
-      padding: 9px 9px;
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
-      user-select:none;
       overflow:hidden;
+      position:relative;
     }
-    .uChip:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,120,200,0.35);
-      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    .dcard::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(320px 120px at 20% 0%, rgba(255,120,200,0.14), transparent 60%),
+        radial-gradient(280px 120px at 85% 40%, rgba(255,255,255,0.06), transparent 65%);
+      opacity:0.9;
+      pointer-events:none;
     }
-    .uChar{
+    .dpfp{
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,120,200,0.30);
+      background: rgba(0,0,0,0.28);
+      overflow:hidden;
+      flex: 0 0 auto;
+      z-index:1;
+    }
+    .dpfp img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .dinfo{ min-width:0; flex:1 1 auto; z-index:1; }
+    .dname{
       font-family: var(--mono);
-      font-size: 18px;
-      letter-spacing: 0.5px;
-      color: rgba(255,255,255,0.92);
+      font-size: 13px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .uNote{
-      font-family: var(--mono);
-      font-size: 10.5px;
-      color: rgba(185,185,194,0.88);
-      margin-top: 4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .uHint{
+    .dsub{
       font-family: var(--mono);
       font-size: 11px;
       color: rgba(185,185,194,0.88);
-      margin-top: 8px;
+      margin-top: 3px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
+    .dstatus{
+      display:flex;
+      gap:6px;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(185,185,194,0.92);
+      z-index:1;
+      flex: 0 0 auto;
+      white-space:nowrap;
+    }
+    .dotS{
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(185,185,194,0.55);
+      box-shadow: 0 0 10px rgba(185,185,194,0.22);
+    }
+    .dotS.online{ background: #43b581; box-shadow: 0 0 14px rgba(67,181,129,0.35); }
+    .dotS.idle{ background: #faa61a; box-shadow: 0 0 14px rgba(250,166,26,0.35); }
+    .dotS.dnd{ background: #f04747; box-shadow: 0 0 14px rgba(240,71,71,0.35); }
+    .dotS.offline{ background: #747f8d; box-shadow: 0 0 14px rgba(116,127,141,0.25); }
 
     /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       .scan{ animation:none; }
-      .card, .btn, input[type="text"], .qbtn, .toast, .uChip{ transition:none; }
+      .card, .btn, input[type="text"], .qbtn, .toast, .star{ transition:none; }
     }
   </style>
 </head>
@@ -687,7 +735,7 @@
         </div>
         <div class="sub">
           guns.lol vibes, but self-hosted. search with <span style="color:rgba(255,120,200,0.95);font-family:var(--mono)">/</span>,
-          pin favs with ★, copy stuff fast, and hoard cursed unicode in one place. (:3)
+          pin favs with ★, copy stuff fast. (:3)
         </div>
       </div>
 
@@ -698,14 +746,16 @@
 
       <!-- profile top card -->
       <div class="profile">
-        <div class="banner" title="uses your existing file: media/ponies in bed.jpg">
-          <img id="bannerImg" src="media/ponies%20in%20bed.jpg" alt="" style="display:none" />
+        <!-- banner url is injected via css var so we can do the 2-layer trick -->
+        <div class="banner" id="banner"
+             style="--banner-url: url('media/ponies%20in%20bed.jpg');"
+             title="banner: media/ponies in bed.jpg (change in the html inline style)">
+          <div class="bannerShade"></div>
         </div>
 
         <div class="profileRow">
-          <div class="avatar" title="uses your existing file: media/tamers12345-mlp.gif">
-            <img id="pfpImg" src="media/tamers12345-mlp.gif" alt="bella pfp" style="display:none" />
-            <div class="fallback" id="pfpFallback">bella</div>
+          <div class="avatar" title="pfp:media/tamers12345-mlp.gif">
+            <img id="pfpImg" src="media/tamers12345-mlp.gif" alt="bella pfp" />
           </div>
 
           <div class="profileText">
@@ -762,6 +812,27 @@
         <div class="rightCol">
           <div class="section">
             <h2>
+              discord profile
+              <span class="tiny" id="discordHint">lanyard</span>
+            </h2>
+
+            <div class="dcard" id="dcard">
+              <div class="dpfp">
+                <img id="dAvatar" alt="discord avatar" src="media/twi%20looking.png" />
+              </div>
+              <div class="dinfo">
+                <div class="dname" id="dName">bellacactus</div>
+                <div class="dsub" id="dSub">id: 875229909881073695</div>
+              </div>
+              <div class="dstatus" id="dStatus">
+                <span class="dotS offline" id="dDot"></span>
+                <span id="dText">loading…</span>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+
+            <h2>
               external / socials
               <span class="tiny" id="externalCount">0</span>
             </h2>
@@ -774,25 +845,6 @@
               <span class="tiny" id="pinnedCount">0</span>
             </h2>
             <div class="list" id="pinnedList"></div>
-          </div>
-
-          <div class="section">
-            <h2>
-              unicode stash
-              <span class="tiny">click to copy</span>
-            </h2>
-
-            <div class="uControls">
-              <div class="prompt">&gt; glyph:</div>
-              <input id="uq" type="text" inputmode="search" autocomplete="off" placeholder="filter unicode… (ex: wide, cuneiform, zalgo, pua)" />
-              <button class="btn" id="copyPad" type="button" title="copies a chunky padding line">
-                <span class="dot" aria-hidden="true"></span>
-                copy padding bar
-              </button>
-            </div>
-
-            <div id="unicodeGroups"></div>
-            <div class="uHint">tip: these might render as tofu on some fonts, but copy still works. (:3)</div>
           </div>
         </div>
       </div>
@@ -811,107 +863,39 @@
 
   <script>
     (() => {
-      // === editable bits ===
       const D2_JOIN = "/join Bella#8413";
+      const DISCORD_USER_ID = "875229909881073695";
 
-      // === link data ===
       const internal = [
-        { id: "home",  name: "index.html",   desc: "main hub", href: "index.html", tag: "hub" },
-
-        { id: "lim",   name: "limiter.html", desc: "limiter deep-dive / features", href: "pages/limiter.html", tag: "project" },
-        { id: "os",    name: "os.html",      desc: "fake cli / fake os", href: "pages/os.html", tag: "play" },
-        { id: "ascii", name: "ascii.html",   desc: "ascii zoo / creatures", href: "pages/ascii.html", tag: "zoo" },
-        { id: "idle",  name: "idle.html",    desc: "screensaver page (leave it open)", href: "pages/idle.html", tag: "idle" },
-        { id: "gl",    name: "glitch.html",  desc: "glitch / corruption playground", href: "pages/glitch.html", tag: "glitch" },
-        { id: "dr",    name: "dreams.html",  desc: "dream log w/ timestamps", href: "pages/dreams.html", tag: "log" },
-        { id: "tam",   name: "tamers.html",  desc: "tamers vault", href: "pages/tamers.html", tag: "vault" },
-        { id: "vault", name: "vault.html",   desc: "misc vault", href: "pages/vault.html", tag: "vault" },
+        { id: "home",  name: "index.html",   desc: "main hub", href: "index.html", tag: "hub", icon: "home" },
+        { id: "lim",   name: "limiter.html", desc: "limiter deep-dive / features", href: "pages/limiter.html", tag: "project", icon: "cpu" },
+        { id: "os",    name: "os.html",      desc: "fake cli / fake os", href: "pages/os.html", tag: "play", icon: "terminal" },
+        { id: "ascii", name: "ascii.html",   desc: "ascii zoo / creatures", href: "pages/ascii.html", tag: "zoo", icon: "paw" },
+        { id: "idle",  name: "idle.html",    desc: "screensaver page (leave it open)", href: "pages/idle.html", tag: "idle", icon: "moon" },
+        { id: "gl",    name: "glitch.html",  desc: "glitch / corruption playground", href: "pages/glitch.html", tag: "glitch", icon: "bug" },
+        { id: "dr",    name: "dreams.html",  desc: "dream log w/ timestamps", href: "pages/dreams.html", tag: "log", icon: "book" },
+        { id: "tam",   name: "tamers.html",  desc: "tamers vault", href: "pages/tamers.html", tag: "vault", icon: "vault" },
+        { id: "vault", name: "vault.html",   desc: "misc vault", href: "pages/vault.html", tag: "vault", icon: "box" },
       ];
 
       const external = [
-        { id: "ig", name: "instagram", desc: "@bella126124565", href: "https://www.instagram.com/bella126124565/", tag: "social" },
-        { id: "sp", name: "spotify", desc: "bowencactus", href: "https://open.spotify.com/user/bowencactus", tag: "music" },
-        { id: "tw", name: "twitch", desc: "bellacactus_", href: "https://www.twitch.tv/bellacactus_", tag: "stream" },
-        { id: "st", name: "steam", desc: "BellaCactus", href: "https://steamcommunity.com/id/BellaCactus/", tag: "games" },
-        { id: "sky", name: "skycrypt", desc: "hypixel skyblock stats", href: "https://sky.shiiyu.moe/stats/BellaCactus/Apple#Gear", tag: "stats" },
+        { id: "ig", name: "instagram", desc: "@bella126124565", href: "https://www.instagram.com/bella126124565/", tag: "social", icon: "instagram" },
+        { id: "sp", name: "spotify", desc: "bowencactus", href: "https://open.spotify.com/user/bowencactus", tag: "music", icon: "spotify" },
+        { id: "tw", name: "twitch", desc: "bellacactus_", href: "https://www.twitch.tv/bellacactus_", tag: "stream", icon: "twitch" },
+        { id: "st", name: "steam", desc: "BellaCactus", href: "https://steamcommunity.com/id/BellaCactus/", tag: "games", icon: "steam" },
+        { id: "sky", name: "skycrypt", desc: "hypixel skyblock stats", href: "https://sky.shiiyu.moe/stats/BellaCactus/Apple#Gear", tag: "stats", icon: "chart" },
 
-        { id: "d2", name: "destiny 2", desc: D2_JOIN + " (click to copy)", href: "copy://d2join", tag: "d2" },
-        { id: "srv", name: "discord server", desc: "invite", href: "https://discord.gg/m8aTTQhkRG", tag: "discord" },
+        { id: "d2", name: "destiny 2", desc: D2_JOIN + " (click to copy)", href: "copy://d2join", tag: "d2", icon: "crosshair" },
+        { id: "srv", name: "discord server", desc: "invite", href: "https://discord.gg/m8aTTQhkRG", tag: "discord", icon: "discord" },
 
-        { id: "git", name: "github", desc: "BellaCactus", href: "https://github.com/BellaCactus", tag: "code" },
-        { id: "yt",  name: "youtube", desc: "@BellaCactusYT", href: "https://youtube.com/@BellaCactusYT", tag: "video" },
-        { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project" },
+        { id: "git", name: "github", desc: "BellaCactus", href: "https://github.com/BellaCactus", tag: "code", icon: "github" },
+        { id: "yt",  name: "youtube", desc: "@BellaCactusYT", href: "https://youtube.com/@BellaCactusYT", tag: "video", icon: "youtube" },
+        { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project", icon: "link" },
       ];
 
-      // === unicode stash data ===
-      const unicodeStash = [
-        {
-          id: "wide14",
-          title: "top wide chars (shorter → wider)",
-          items: [
-            { ch:"Ǆ", note:"Ǆ" }, { ch:"؁", note:"؁" }, { ch:"‱", note:"‱" },
-            { ch:"ஹ", note:"ஹ" }, { ch:"௸", note:"௸" }, { ch:"௵", note:"௵" },
-            { ch:"꧄", note:"꧄" }, { ch:".", note:"." }, { ch:"ဪ", note:"ဪ" },
-            { ch:"꧅", note:"꧅" }, { ch:"⸻", note:"⸻" }, { ch:"𒈙", note:"𒈙" },
-            { ch:"𒐫", note:"𒐫" }, { ch:"﷽", note:"﷽" }
-          ]
-        },
-        {
-          id: "cuneiform2",
-          title: "widest cuneiform (often counts as 2 chars)",
-          items: [
-            { ch:"𒌄", note:"𒌄" }, { ch:"𒈟", note:"𒈟" }, { ch:"𒍼", note:"𒍼" },
-            { ch:"𒁎", note:"𒁎" }, { ch:"𒀱", note:"𒀱" }, { ch:"𒌧", note:"𒌧" },
-            { ch:"𒅃", note:"𒅃" }, { ch:"𒈓", note:"𒈓" }, { ch:"𒍙", note:"𒍙" },
-            { ch:"𒊎", note:"𒊎" }, { ch:"𒄡", note:"𒄡" }, { ch:"𒅌", note:"𒅌" },
-            { ch:"𒁏", note:"𒁏" }, { ch:"𒀰", note:"𒀰" }, { ch:"𒐪", note:"𒐪" },
-            { ch:"𒐩", note:"𒐩" }, { ch:"𒈙", note:"𒈙" }, { ch:"𒐫", note:"𒐫" }
-          ]
-        },
-        {
-          id: "dense",
-          title: "dense stroke monsters (chinese)",
-          items: [
-            { ch:"𱁬", note:"84 strokes" },
-            { ch:"𰽔", note:"76 strokes" },
-            { ch:"𪚥", note:"64 strokes" },
-            { ch:"䨻", note:"52 strokes" },
-            { ch:"龘", note:"48 strokes" },
-            { ch:"䲜", note:"44 strokes" }
-          ]
-        },
-        {
-          id: "pua",
-          title: "cool privates (pua-ish)",
-          items: [
-            { ch:"", note:"" }, { ch:"", note:"" }, { ch:"", note:"" },
-            { ch:"", note:"" }, { ch:"", note:"" }, { ch:"", note:"" },
-            { ch:"", note:"" }, { ch:"á́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́", note:"combining stack" }
-          ]
-        },
-        {
-          id: "zalgo",
-          title: "tall zalgo vibe",
-          items: [
-            { ch:"h̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺ͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩ",
-              note:"copy at own risk" }
-          ]
-        },
-        {
-          id: "misc",
-          title: "other weird ones",
-          items: [
-            { ch:"😃⃢👍", note:"emoji combo" },
-            { ch:"༼;´༎ຶ ۝ ༎ຶ༽", note:"crying face" },
-            { ch:"🥶⃤", note:"cold stamp" }
-          ]
-        }
-      ];
-
-      // === ui refs ===
       const $ = (sel) => document.querySelector(sel);
+
       const q = $("#q");
-      const uq = $("#uq");
       const internalList = $("#internalList");
       const externalList = $("#externalList");
       const pinnedList = $("#pinnedList");
@@ -924,9 +908,14 @@
       const debuff = $("#debuff");
       const sync = $("#sync");
       const toast = $("#toast");
-      const uWrap = $("#unicodeGroups");
 
-      const PIN_KEY = "bella_links_pins_v3";
+      const dAvatar = $("#dAvatar");
+      const dName = $("#dName");
+      const dSub = $("#dSub");
+      const dDot = $("#dDot");
+      const dText = $("#dText");
+
+      const PIN_KEY = "bella_links_pins_v4";
 
       const getPins = () => {
         try {
@@ -964,6 +953,42 @@
         }
       }
 
+      // simple inline svg icons (no external deps)
+      function iconSVG(kind){
+        const paths = {
+          // brands
+          discord: `<path d="M20.5 6.2a16.7 16.7 0 0 0-4.2-1.3l-.2.3c1.6.5 2.3 1 2.3 1a15.9 15.9 0 0 0-6.4 0s.7-.5 2.3-1l-.2-.3a16.7 16.7 0 0 0-4.2 1.3A17.8 17.8 0 0 0 4 18.1a16.6 16.6 0 0 0 5.1 2.6l.7-1.2a10.6 10.6 0 0 1-1.6-.8l.4-.3a12.4 12.4 0 0 0 10.8 0l.4.3a10.6 10.6 0 0 1-1.6.8l.7 1.2a16.6 16.6 0 0 0 5.1-2.6A17.8 17.8 0 0 0 20.5 6.2zM9.4 15.9c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8zm5.2 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8z"/>`,
+          github: `<path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1-1-1.3-1-1.3-.8-.6.1-.6.1-.6.9.1 1.4.9 1.4.9.8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-2.2-.2-4.5-1.1-4.5-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.6s.8-.3 2.7 1a9.2 9.2 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.2.2 2.2.1 2.6a3.9 3.9 0 0 1 1 2.7c0 3.9-2.3 4.8-4.5 5 .3.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/>`,
+          youtube: `<path d="M21.6 7.2s-.2-1.4-.8-2c-.8-.8-1.7-.8-2.1-.9C15.7 4 12 4 12 4h0s-3.7 0-6.7.3c-.4 0-1.3.1-2.1.9-.6.6-.8 2-.8 2S2 8.8 2 10.5v1c0 1.7.4 3.3.4 3.3s.2 1.4.8 2c.8.8 1.9.8 2.4.9C7.3 18 12 18 12 18s3.7 0 6.7-.3c.4 0 1.3-.1 2.1-.9.6-.6.8-2 .8-2s.4-1.6.4-3.3v-1c0-1.7-.4-3.3-.4-3.3zM10.5 13.7V8.3L15.3 11l-4.8 2.7z"/>`,
+          steam: `<path d="M11.6 2.3a6.5 6.5 0 0 1 6.5 6.5c0 .5-.1 1-.2 1.5l3.2 2.3a2.5 2.5 0 0 1-3 4l-3.8-2.3a6.5 6.5 0 0 1-6.3-2.5l-3.3-1.4a2.6 2.6 0 1 0-1 5l4.1 1.8a6.5 6.5 0 1 1 3.8-12.4zm0 2a4.5 4.5 0 1 0 3.9 6.7l.2-.4a4.5 4.5 0 0 0-4.1-6.3zm7.8 8.6a1 1 0 1 0 1.2 1.6 1 1 0 0 0-1.2-1.6z"/>`,
+          twitch: `<path d="M4 3h18v10l-4 4h-4l-2 2H9v-2H6l-2-2V3zm2 2v12h4v2.2L12.2 17H18l2-2V5H6zm4 3h2v6h-2V8zm5 0h2v6h-2V8z"/>`,
+          spotify: `<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4c-.2.3-.6.4-.9.2-2.6-1.6-5.9-2-9.9-1.2-.4.1-.7-.2-.8-.5-.1-.4.2-.7.5-.8 4.4-.9 8.1-.4 11 1.4.3.2.4.6.1.9zm1.3-2.9c-.2.4-.7.5-1.1.3-3-1.8-7.5-2.4-11-1.3-.4.1-.9-.1-1-.5-.1-.4.1-.9.5-1 4.1-1.2 9.1-.6 12.6 1.5.4.2.5.7.3 1zm.1-3c-3.6-2.1-9.5-2.3-12.9-1.2-.5.1-1-.1-1.1-.6-.2-.5.1-1 .6-1.1 3.9-1.2 10.3-1 14.4 1.4.5.3.6.9.3 1.3-.3.5-.9.6-1.3.3z"/>`,
+          instagram: `<path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17.8 6.2a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/>`,
+
+          // utility-ish
+          link: `<path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.4-3.4a2 2 0 1 1 2.8 2.8l-1.3 1.3a1 1 0 1 1-1.4-1.4l1.3-1.3a.1.1 0 0 0 0-.1.1.1 0 0 0-.1 0l-3.4 3.4a1 1 0 0 1-1.3.1zm2.8-2.8a1 1 0 0 1 0 1.4l-3.4 3.4a2 2 0 1 1-2.8-2.8l1.3-1.3a1 1 0 0 1 1.4 1.4l-1.3 1.3a.1.1 0 0 0 0 .1.1.1 0 0 0 .1 0l3.4-3.4a1 1 0 0 1 1.3-.1z"/>`,
+          home: `<path d="M12 3l9 8h-3v9h-5v-5H11v5H6v-9H3l9-8z"/>`,
+          terminal: `<path d="M4 5h16v14H4V5zm2 2v10h12V7H6zm1.5 2.2 3 2.3-3 2.3-.9-1.2 1.5-1.1-1.5-1.1.9-1.2zM12 14h4v-1.5h-4V14z"/>`,
+          cpu: `<path d="M9 2h6v2h2v2h2v6h-2v2h-2v2H9v-2H7v-2H5V6h2V4h2V2zm1 4v8h4V6h-4z"/>`,
+          paw: `<path d="M8.5 11.5c.8 0 1.5.8 1.5 1.8S9.3 15 8.5 15 7 14.2 7 13.3s.7-1.8 1.5-1.8zm7 0c.8 0 1.5.8 1.5 1.8S16.3 15 15.5 15 14 14.2 14 13.3s.7-1.8 1.5-1.8zM10 8.2c.7 0 1.3.7 1.3 1.6S10.7 11.4 10 11.4 8.7 10.7 8.7 9.8 9.3 8.2 10 8.2zm4 0c.7 0 1.3.7 1.3 1.6S14.7 11.4 14 11.4 12.7 10.7 12.7 9.8 13.3 8.2 14 8.2zM12 12.2c1.8 0 3.6 1.2 3.6 2.7 0 1.2-1.3 1.8-3.6 1.8s-3.6-.6-3.6-1.8c0-1.5 1.8-2.7 3.6-2.7z"/>`,
+          moon: `<path d="M21 14.2A7.6 7.6 0 0 1 9.8 3a6.5 6.5 0 1 0 11.2 11.2z"/>`,
+          bug: `<path d="M14 7h-4l-1-2h6l-1 2zm-5 2h6v2H9V9zm-2 3h10v2H7v-2zm2 3h6v5H9v-5z"/>`,
+          book: `<path d="M6 3h10a3 3 0 0 1 3 3v14H7a3 3 0 0 0-3 3V3zm2 2v14h9V6a1 1 0 0 0-1-1H8z"/>`,
+          vault: `<path d="M4 7h16v14H4V7zm2 2v10h12V9H6zm5 1h2v2h-2v-2zm0 3h2v4h-2v-4z"/>`,
+          box: `<path d="M4 7l8-4 8 4v12l-8 4-8-4V7zm8-2.2L6.6 7 12 9.2 17.4 7 12 4.8z"/>`,
+          chart: `<path d="M5 19V5h2v12h12v2H5zm4-4V9h2v6H9zm4 0V7h2v8h-2zm4 0v-5h2v5h-2z"/>`,
+          crosshair: `<path d="M11 2h2v2.1a8 8 0 0 1 6.9 6.9H22v2h-2.1a8 8 0 0 1-6.9 6.9V22h-2v-2.1a8 8 0 0 1-6.9-6.9H2v-2h2.1A8 8 0 0 1 11 4.1V2zm1 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>`,
+        };
+
+        const p = paths[kind] || paths.link;
+        return `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+      }
+
+      function iconBubbleHTML(kind, accent=false){
+        const cls = accent ? "iconBubble pink" : "iconBubble";
+        return `<div class="${cls}" aria-hidden="true">${iconSVG(kind)}</div>`;
+      }
+
       function card(item){
         const wrap = document.createElement("div");
         wrap.className = "card";
@@ -976,12 +1001,20 @@
         const left = document.createElement("div");
         left.className = "left";
 
+        // icon
+        const icon = document.createElement("div");
+        icon.innerHTML = iconBubbleHTML(item.icon || "link", item.scope === "external");
+        left.appendChild(icon.firstElementChild);
+
         const a = document.createElement("a");
         a.className = "link";
         a.href = item.href;
         a.target = item.scope === "external" ? "_blank" : "_self";
         a.rel = item.scope === "external" ? "noopener noreferrer" : "";
         a.title = item.href;
+
+        const textWrap = document.createElement("div");
+        textWrap.className = "textWrap";
 
         const nm = document.createElement("div");
         nm.className = "name";
@@ -991,8 +1024,10 @@
         ds.className = "desc";
         ds.textContent = item.desc || "";
 
-        a.appendChild(nm);
-        a.appendChild(ds);
+        textWrap.appendChild(nm);
+        textWrap.appendChild(ds);
+        a.appendChild(textWrap);
+
         left.appendChild(a);
 
         const right = document.createElement("div");
@@ -1033,7 +1068,6 @@
           render();
         });
 
-        // special: "copy://d2join"
         a.addEventListener("click", async (e) => {
           if (item.href === "copy://d2join") {
             e.preventDefault();
@@ -1069,68 +1103,6 @@
         hp.textContent = String(base - penalty);
       }
 
-      function renderUnicode(){
-        const ft = (uq?.value || "").trim().toLowerCase();
-        uWrap.innerHTML = "";
-
-        const want = (g) => {
-          if (!ft) return true;
-          if (g.title.toLowerCase().includes(ft)) return true;
-          if (g.id.toLowerCase().includes(ft)) return true;
-          return g.items.some(i => (i.note || "").toLowerCase().includes(ft) || (i.ch || "").toLowerCase().includes(ft));
-        };
-
-        unicodeStash.filter(want).forEach(group => {
-          const box = document.createElement("div");
-          box.className = "uGroup";
-          box.dataset.utitle = group.title.toLowerCase();
-          box.dataset.uid = group.id.toLowerCase();
-
-          const top = document.createElement("div");
-          top.className = "uGroupTitle";
-          top.textContent = group.title;
-
-          const grid = document.createElement("div");
-          grid.className = "uGrid";
-
-          group.items.forEach(it => {
-            const chip = document.createElement("div");
-            chip.className = "uChip";
-            chip.title = "click to copy";
-
-            const ch = document.createElement("div");
-            ch.className = "uChar";
-            ch.textContent = it.ch;
-
-            const note = document.createElement("div");
-            note.className = "uNote";
-            note.textContent = it.note || "";
-
-            chip.appendChild(ch);
-            chip.appendChild(note);
-
-            chip.addEventListener("click", async () => {
-              await copyText(it.ch);
-              statusBadge.textContent = "unicode copied ✓";
-              setTimeout(() => statusBadge.textContent = "online", 900);
-            });
-
-            grid.appendChild(chip);
-          });
-
-          box.appendChild(top);
-          box.appendChild(grid);
-          uWrap.appendChild(box);
-        });
-
-        if (!uWrap.children.length){
-          const empty = document.createElement("div");
-          empty.className = "uHint";
-          empty.textContent = "no matches. try: wide / cuneiform / zalgo / pua";
-          uWrap.appendChild(empty);
-        }
-      }
-
       function render(){
         internalList.innerHTML = "";
         externalList.innerHTML = "";
@@ -1158,8 +1130,13 @@
           empty.style.opacity = "0.75";
           empty.innerHTML = `
             <div class="left">
-              <div class="name">no pins yet</div>
-              <div class="desc">click ★ on a link to keep it here</div>
+              <div class="iconBubble pink" aria-hidden="true">${iconSVG("link")}</div>
+              <a class="link" href="javascript:void(0)">
+                <div class="textWrap">
+                  <div class="name">no pins yet</div>
+                  <div class="desc">click ★ on a link to keep it here</div>
+                </div>
+              </a>
             </div>
             <div class="right">
               <div class="pill pink">tip</div>
@@ -1171,9 +1148,7 @@
         }
 
         pinnedCount.textContent = pinItems.length + " pinned";
-
         applyFilter();
-        renderUnicode();
       }
 
       // copy hub url
@@ -1196,18 +1171,10 @@
         render();
       });
 
-      // copy d2 join (top button)
+      // copy d2 join
       $("#copyD2").addEventListener("click", async () => {
         await copyText(D2_JOIN);
         statusBadge.textContent = "d2 /join copied ✓";
-        setTimeout(() => statusBadge.textContent = "online", 1100);
-      });
-
-      // unicode padding bar
-      $("#copyPad").addEventListener("click", async () => {
-        const pad = "⸻𒐫﷽𒈙⸻𒐫﷽𒈙⸻𒐫";
-        await copyText(pad);
-        statusBadge.textContent = "padding bar copied ✓";
         setTimeout(() => statusBadge.textContent = "online", 1100);
       });
 
@@ -1228,22 +1195,60 @@
 
       q.addEventListener("input", applyFilter);
 
-      uq?.addEventListener("input", renderUnicode);
-
-      // banner/pfp: show fallback if file missing
-      function safeShowImage(imgEl, fallbackEl){
-        imgEl.addEventListener("load", () => {
-          imgEl.style.display = "block";
-          if (fallbackEl) fallbackEl.style.display = "none";
-        });
-        imgEl.addEventListener("error", () => {
-          imgEl.style.display = "none";
-          if (fallbackEl) fallbackEl.style.display = "grid";
-        });
+      // discord profile via lanyard (no backend, public endpoint)
+      function setDiscordStatus(state){
+        dDot.className = "dotS " + state;
       }
 
-      safeShowImage($("#pfpImg"), $("#pfpFallback"));
-      safeShowImage($("#bannerImg"), null);
+      function statusLabel(state){
+        if (state === "online") return "online";
+        if (state === "idle") return "idle";
+        if (state === "dnd") return "dnd";
+        return "offline";
+      }
+
+      async function loadDiscord(){
+        // default
+        dSub.textContent = "id: " + DISCORD_USER_ID;
+
+        try{
+          const res = await fetch("https://api.lanyard.rest/v1/users/" + encodeURIComponent(DISCORD_USER_ID), {
+            cache: "no-store"
+          });
+
+          if (!res.ok) throw new Error("lanyard http " + res.status);
+
+          const data = await res.json();
+          if (!data || !data.success || !data.data) throw new Error("lanyard bad payload");
+
+          const u = data.data.discord_user || {};
+          const presence = data.data.discord_status || "offline";
+          const activity = (data.data.activities || []).find(a => a && a.name && a.type === 0) || null;
+
+          const uname = u.display_name || u.username || "bellacactus";
+          dName.textContent = uname;
+
+          // avatar url from discord cdn
+          if (u.avatar){
+            const isGif = u.avatar.startsWith("a_");
+            const ext = isGif ? "gif" : "png";
+            const avatarUrl = `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=128`;
+            dAvatar.src = avatarUrl;
+          }
+
+          setDiscordStatus(presence);
+          const actText = activity ? (" • " + activity.name) : "";
+          dText.textContent = statusLabel(presence) + actText;
+
+          // refresh every 30s
+          setTimeout(loadDiscord, 30000);
+        } catch (e){
+          setDiscordStatus("offline");
+          dText.textContent = "offline • (lanyard blocked?)";
+          // retry slower
+          setTimeout(loadDiscord, 60000);
+        }
+      }
 
       // status vibes
       const phrases = [
@@ -1271,6 +1276,7 @@
 
       render();
       boot();
+      loadDiscord();
     })();
   </script>
 </body>
