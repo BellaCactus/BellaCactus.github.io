@@ -5,7 +5,7 @@
 terminal-core personal website.  
 **static-only** (github pages), **no backend**, just **html / css / js**.
 
-**black / white / pink** by default
+**black / white / pink** by default, with optional “evil” vibes depending on page 😈
 
 ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-ff78c8?style=for-the-badge)
 ![Static](https://img.shields.io/badge/Static--Only-no%20backend-0b0b0b?style=for-the-badge)
@@ -18,115 +18,159 @@ terminal-core personal website.
 ## what is this?
 
 **bella cactus** is my personal **terminal-themed website playground**.  
-it’s made to feel like a fake OS / interactive terminal hub rather than a normal portfolio.
+it’s meant to feel like a fake OS / interactive terminal hub, not a normal portfolio.
 
 it’s a place for:
 - mini tools
 - experiments
 - weird little pages
 - secret stuff
-- and “why did i add this” moments
+- “why did i add this” moments
+
+live url (because this is a `*.github.io` repo):  
+**https://bellacactus.github.io/**
 
 ---
 
-##  vibe
+## vibe
 
 - fake-os / terminal playground aesthetic  
 - black / white / pink default palette  
-- optional **red “evil” mode**  
-- cozy-chaotic and meant to be **explored**, not skimmed  
+- cozy-chaotic, meant to be **explored**, not skimmed  
 - subtle motion > loud motion  
+- “alive” UI: shimmer text, floating sprites, scanlines, ambient nonsense
 
 ---
 
-##  highlights
+## repo layout
 
-- **intro gate**: auto-playing video (if browser allows)  
-- **music bar + waveform**: random track picker + lil waveform line  
-- **terminal script**: types out commands + responses  
-- **sticker wall**: random stickers sprinkled behind the UI  
-- **command palette**: quick actions + navigation  
-- **easter eggs**: oneko, secrets, and assorted nonsense  
+```txt
+/
+├─ index.html              # main hub
+├─ links.html              # extra link hub / legacy-ish
+├─ pages/                  # all subpages live here
+├─ media/                  # images/gifs/video/favicon
+└─ assets/
+   └─ songs/               # mp3 soundtrack files
+```
+
+---
+
+## highlights (main hub stuff)
+
+- **intro gate**: autoplay video gate (click if browser blocks it)
+- **music bar + waveform**: random track picker + waveform line
+- **terminal script**: types commands + responses (doesn’t grow forever)
+- **sticker wall**: background stickers sprinkled behind UI
+- **command palette**: quick actions + navigation
+- **easter eggs**: oneko + “yeah” button energy :3
 
 ---
 
 ## pages
 
-### main pages
-core pages that match the “site world” vibe:
+### core “site world” pages
+these match the main vibe / feel like part of the same universe:
 
 - `index.html` : main hub (terminal + music + stickers + palette)
-- `limiter.html` : bella limiter page
-- `os.html` : fake cli / fake os page
-- `ascii.html` : ascii zoo
-- `idle.html` : screensaver-style page (leave it open)
-- `glitch.html` : glitch / corruption playground
-- `dreams.html` : surreal dream log
+- `pages/limiter.html` : bella limiter deep-dive page
+- `pages/os.html` : fake cli / fake os page
+- `pages/ascii.html` : ascii zoo + local stash
+- `pages/idle.html` : screensaver-style page (leave it open)
+- `pages/glitch.html` : glitch / corruption playground
+- `pages/dreams.html` : surreal dream log
+- `pages/vault.html` : vault page (archive-y / stash vibes)
+- `pages/shrines.html` : shrine page (lore / vibes)
+- `pages/tamers.html` : tamers archive page
 
-### extra mini-tools / experiments
-little side quests:
+### tools / utilities
+little practical side quests:
 
-- `encrypter.html`
-- `ascii-art-maker-type-shit.html`
-- `keyb.html`
-- `snkaegame.html`
-- `dungeoncrawler.html`
-- `shitty-ass-gamez-3d.html`
-- `controllar-test.html`
-- `boucnignlolgo.html`
-- `sigmaness-basiclaly-epic.html`
-- `legacy-home.html`
-- `shrines.html`
-- `vault.html`
+- `pages/encrypter.html`
+- `pages/tab-crypt.html`
+- `pages/epic-calc.html`
+- `pages/audio-editor.html`
+- `pages/ascii-art-maker-type-shit.html`
+- `pages/keyb.html`
+- `pages/pokecap.html`
+- `pages/controllar-test.html`
+
+### games / experiments
+because of course:
+
+- `pages/snkaegame.html`
+- `pages/dungeoncrawler.html`
+- `pages/shitty-ass-gamez-3d.html`
+- `pages/lilgame.html`
+- `pages/boucnignlolgo.html`
+- `pages/sigmaness-basiclaly-epic.html`
+
+### misc / legacy
+- `pages/legacy-home.html`
+- `links.html`
 
 ---
 
-##  controls (good to know)
+## controls (good to know)
 
-### index.html
-- **ctrl + k** (or **/**) opens the command palette  
-- **esc** closes palette / overlays  
+### index.html (main hub)
+- **ctrl + k** (or **/**): open command palette  
+- **esc**: close palette / overlays
 
-the palette understands stuff like:
+palette understands stuff like:
 - `open dreams`
 - `open idle`
 - `open glitch`
-- `theme pink` / `theme white` / `theme red`
+- `theme pink` / `theme white` / `theme red` *(if the page supports it)*
 
-### idle.html screensaver
+### pages/idle.html (screensaver)
 - **space**: pause/resume  
 - **r**: reroll sprites/text  
 - **t**: cycle theme  
-- **esc**: back to `index.html`  
+- **esc**: back to `index.html`
+
+### pages/glitch.html (glitch gallery)
+- **drag & drop** an image onto the stage (local-only, not uploaded)
+- **r**: reroll corruption
+- **space**: freeze/unfreeze
+- **esc**: back to home
+
+### pages/ascii.html (ascii zoo)
+- reroll creature button (and it cycles on its own)
+- includes a **local stash** using **IndexedDB** (saved only in *your* browser)
 
 ---
 
-##  customization
-
-this site is built to be reskinned + remixed without needing any backend stuff.
+## customization
 
 ### change the soundtrack
-the music list lives in `index.html`  
-(search for `const tracks = [`)
+songs live in: `assets/songs/`
 
-- drop `.mp3` files in the repo root (same folder as `index.html`)
-- add them to the tracks list
-- keep filenames exact (spaces + punctuation matter)
+1) drop `.mp3` files into `assets/songs/`  
+2) update the `tracks` list in `index.html` (search for `const tracks = [`)
 
-### change stickers
-sticker filenames are also listed in `index.html`  
-(search `stickerFiles`)
+**important:** filenames must match exactly (spaces/punctuation included)
 
-- add images (`.png / .jpg / .gif`) to the repo root
-- update the list
+### change stickers / media
+images/gifs/video live in: `media/`
+
+- stickers are referenced by filename in `index.html` (search `stickerFiles`)
+- other pages may also have their own sticker lists
 
 ### theme persistence
-theme saves in `localStorage` under:
+some pages store theme in `localStorage` under:
 
 - `bella_theme`  
   values: `pink`, `white`, `red`
 
-so if you flip into red mode once… it sticks until you change it 😈
+so if you flip modes… it can stick until you change it again >:3
+
+### “uploads” note (static site reality check)
+github pages can’t accept uploads to the repo from the website itself.
+
+- **glitch gallery** file input = local-only (in-memory)
+- **ascii zoo stash** = local-only (IndexedDB), won’t sync across devices  
+- if you want “real uploads”, you’d need a backend (not happening here by design)
 
 ---
 
@@ -140,3 +184,23 @@ recommended (less browser weirdness with audio/video):
 ```bash
 # from the repo folder
 python -m http.server 8000
+```
+
+then open: `http://localhost:8000/`
+
+---
+
+## notes / gotchas
+
+- autoplay is a liar: browsers often block audio/video until a click happens  
+- if music “doesn’t play”, hit play once and you’re good
+- if you move files between folders, update links in:
+  - `index.html` (tracks + sticker list + page links)
+  - and any page that references media directly
+
+---
+
+## status
+
+this repo is a living art-tech project.  
+it will keep mutating. that is the point. (:3)
