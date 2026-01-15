@@ -2,69 +2,63 @@ name: discord - site updated
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+    # if you truly want ANY push, keep as-is.
+    # optional anti-spam: uncomment to avoid pinging when you only edit workflows
+    # paths-ignore:
+    #   - ".github/workflows/**"
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: post embed to discord webhook
+      - name: post to discord webhook
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO: ${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
+          BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
-          MSG: ${{ github.event.head_commit.message }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          OWNER: ${{ github.repository_owner }}
         run: |
-          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
-            echo "missing DISCORD_WEBHOOK_URL secret"
-            exit 1
-          fi
+          python3 - <<'PY'
+          import os, json, urllib.request
 
-          python3 - << 'PY'
-import os, json, urllib.request
+          url = os.environ.get("DISCORD_WEBHOOK_URL")
+          if not url:
+            raise SystemExit("missing DISCORD_WEBHOOK_URL secret")
 
-webhook = os.environ["DISCORD_WEBHOOK_URL"]
-repo    = os.environ["REPO"]
-branch  = os.environ["BRANCH"]
-actor   = os.environ["ACTOR"]
-sha     = os.environ["SHA"]
-msg     = (os.environ.get("MSG") or "").strip()
+          repo   = os.environ.get("REPO", "unknown")
+          actor  = os.environ.get("ACTOR", "unknown")
+          branch = os.environ.get("BRANCH", "unknown")
+          sha    = os.environ.get("SHA", "")[:7]
+          msg    = os.environ.get("COMMIT_MSG", "(no message)")
+          c_url  = os.environ.get("COMMIT_URL", "")
+          owner  = os.environ.get("OWNER", "unknown")
 
-short_sha  = sha[:7]
-commit_url = f"https://github.com/{repo}/commit/{sha}"
+          pages_url = f"https://{owner}.github.io/"
 
-# correct pages url for a user site repo like BellaCactus.github.io
-owner, name = repo.split("/", 1)
-if name.lower() == f"{owner.lower()}.github.io":
-  pages_url = f"https://{owner.lower()}.github.io/"
-else:
-  pages_url = f"https://{owner.lower()}.github.io/{name}/"
+          payload = {
+            "username": "site bot",
+            "embeds": [{
+              "title": "site updated",
+              "url": c_url or pages_url,
+              "description": f"**repo:** {repo}\n**branch:** {branch}\n**by:** {actor}\n**msg:** {msg}",
+              "color": 0xff78c8,
+              "fields": [
+                {"name": "pages", "value": pages_url, "inline": False},
+                {"name": "commit", "value": f"`{sha}`", "inline": True},
+              ],
+            }]
+          }
 
-if len(msg) > 180:
-  msg = msg[:177] + "..."
+          data = json.dumps(payload).encode("utf-8")
+          req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+          with urllib.request.urlopen(req) as r:
+            r.read()
 
-payload = {
-  "username": "site updated",
-  "embeds": [{
-    "title": "🖤 site updated",
-    "url": commit_url,
-    "description": msg or "(no commit message)",
-    "color": 0xFF78C8,
-    "fields": [
-      {"name":"repo","value": repo, "inline": True},
-      {"name":"branch","value": branch, "inline": True},
-      {"name":"commit","value": short_sha, "inline": True},
-      {"name":"pages","value": pages_url, "inline": False},
-      {"name":"pushed by","value": actor, "inline": True},
-    ],
-    "footer": {"text":"bella cactus • github actions"}
-  }]
-}
-
-data = json.dumps(payload).encode("utf-8")
-req = urllib.request.Request(webhook, data=data, headers={"Content-Type":"application/json"})
-urllib.request.urlopen(req).read()
-print("sent ✅")
-PY
+          print("posted ✅")
+          PY
