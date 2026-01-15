@@ -1,12 +1,11 @@
 <div align="center">
 
-# 🖤 bella cactus (github pages)
+# ♡ bella cactus (github pages)
 
 terminal-core personal website.  
 **static-only** (github pages), **no backend**, just **html / css / js**.
 
-**black / white / pink** by default  
-+ optional **red “evil” palette** when you want it spicy 🔥
+**black / white / pink** by default
 
 ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-ff78c8?style=for-the-badge)
 ![Static](https://img.shields.io/badge/Static--Only-no%20backend-0b0b0b?style=for-the-badge)
