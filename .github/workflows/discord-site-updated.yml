@@ -3,13 +3,6 @@ name: discord - site updated
 on:
   push:
     branches: ["main"]
-    paths:
-      - "index.html"
-      - "links.html"
-      - "pages/**"
-      - "media/**"
-      - "assets/**"
-      - ".github/workflows/**"
 
 jobs:
   notify:
@@ -29,12 +22,6 @@ jobs:
             exit 1
           fi
 
-          SHORT_SHA="${SHA:0:7}"
-          COMMIT_URL="https://github.com/${REPO}/commit/${SHA}"
-          REPO_URL="https://github.com/${REPO}"
-          # if your pages is the root user site (like https://bellacactus.github.io/) this still works fine
-          PAGES_URL="https://${REPO%/*}.github.io/${REPO#*/}/"
-
           python3 - << 'PY'
 import os, json, urllib.request
 
@@ -45,38 +32,39 @@ actor   = os.environ["ACTOR"]
 sha     = os.environ["SHA"]
 msg     = (os.environ.get("MSG") or "").strip()
 
-short_sha = sha[:7]
+short_sha  = sha[:7]
 commit_url = f"https://github.com/{repo}/commit/{sha}"
-repo_url   = f"https://github.com/{repo}"
-pages_url  = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}/"
 
-# keep it tidy (discord embed field limits)
+# correct pages url for a user site repo like BellaCactus.github.io
+owner, name = repo.split("/", 1)
+if name.lower() == f"{owner.lower()}.github.io":
+  pages_url = f"https://{owner.lower()}.github.io/"
+else:
+  pages_url = f"https://{owner.lower()}.github.io/{name}/"
+
 if len(msg) > 180:
   msg = msg[:177] + "..."
 
 payload = {
   "username": "site updated",
-  "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-  "embeds": [
-    {
-      "title": "🖤 site updated",
-      "url": commit_url,
-      "description": msg or "(no commit message)",
-      "color": 0xFF78C8,
-      "fields": [
-        {"name": "repo", "value": f"[{repo}]({repo_url})", "inline": True},
-        {"name": "branch", "value": branch, "inline": True},
-        {"name": "commit", "value": f"[{short_sha}]({commit_url})", "inline": True},
-        {"name": "pages", "value": f"[open site]({pages_url})", "inline": True},
-        {"name": "pushed by", "value": actor, "inline": True},
-      ],
-      "footer": {"text": "bella cactus • github actions"},
-    }
-  ]
+  "embeds": [{
+    "title": "🖤 site updated",
+    "url": commit_url,
+    "description": msg or "(no commit message)",
+    "color": 0xFF78C8,
+    "fields": [
+      {"name":"repo","value": repo, "inline": True},
+      {"name":"branch","value": branch, "inline": True},
+      {"name":"commit","value": short_sha, "inline": True},
+      {"name":"pages","value": pages_url, "inline": False},
+      {"name":"pushed by","value": actor, "inline": True},
+    ],
+    "footer": {"text":"bella cactus • github actions"}
+  }]
 }
 
 data = json.dumps(payload).encode("utf-8")
-req = urllib.request.Request(webhook, data=data, headers={"Content-Type": "application/json"})
+req = urllib.request.Request(webhook, data=data, headers={"Content-Type":"application/json"})
 urllib.request.urlopen(req).read()
 print("sent ✅")
 PY
