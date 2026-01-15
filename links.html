@@ -8,18 +8,18 @@
   <!-- discord/twitter embed preview (open graph) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="bella cactus • links" />
-  <meta property="og:description" content="reverse eng + tools • d2/gd • everything you want, right here." />
+  <meta property="og:description" content="reverse eng + tools • d2/gd/mc • everything you want, right here." />
   <meta property="og:url" content="https://bellacactus.github.io/links.html" />
-  <meta property="og:image" content="https://bellacactus.github.io/media/pfp.png" />
+  <meta property="og:image" content="https://bellacactus.github.io/media/favicon.png" />
   <meta name="theme-color" content="#ff78c8" />
 
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="bella cactus • links" />
-  <meta name="twitter:description" content="reverse eng + tools • d2/gd • everything you want, right here." />
-  <meta name="twitter:image" content="https://bellacactus.github.io/media/pfp.png" />
+  <meta name="twitter:description" content="reverse eng + tools • d2/gd/mc • everything you want, right here." />
+  <meta name="twitter:image" content="https://bellacactus.github.io/media/favicon.png" />
 
   <!-- favicon -->
-  <link rel="icon" type="image/png" href="twi looking.png" />
+  <link rel="icon" type="image/png" href="media/favicon.png" />
 
   <style>
     :root{
@@ -178,7 +178,7 @@
       height:100%;
       object-fit:cover;
       display:block;
-      opacity: 0.85;
+      opacity: 0.88;
       filter: saturate(1.05) contrast(1.05);
     }
 
@@ -379,6 +379,14 @@
       display:grid;
       gap: 12px;
       grid-template-columns: 1.2fr 0.8fr;
+      align-items:start;
+    }
+
+    .rightCol{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-width: 0;
     }
 
     @media (max-width: 860px){
@@ -578,10 +586,89 @@
       transform: translateX(-50%) translateY(-2px);
     }
 
+    /* unicode stash */
+    .uControls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .uControls .prompt{ margin-right: 2px; }
+    .uControls input{
+      flex: 1 1 180px;
+      min-width: 160px;
+    }
+
+    .uGroup{
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.20);
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .uGroupTitle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin: 0 0 8px 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,120,200,0.95);
+    }
+    .uGrid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:8px;
+    }
+    @media (max-width: 860px){
+      .uGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    .uChip{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      padding: 9px 9px;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      user-select:none;
+      overflow:hidden;
+    }
+    .uChip:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+    .uChar{
+      font-family: var(--mono);
+      font-size: 18px;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.92);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .uNote{
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: rgba(185,185,194,0.88);
+      margin-top: 4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .uHint{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(185,185,194,0.88);
+      margin-top: 8px;
+    }
+
     /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       .scan{ animation:none; }
-      .card, .btn, input[type="text"], .qbtn, .toast{ transition:none; }
+      .card, .btn, input[type="text"], .qbtn, .toast, .uChip{ transition:none; }
     }
   </style>
 </head>
@@ -600,7 +687,7 @@
         </div>
         <div class="sub">
           guns.lol vibes, but self-hosted. search with <span style="color:rgba(255,120,200,0.95);font-family:var(--mono)">/</span>,
-          pin favs with ★, and copy stuff fast. (:3)
+          pin favs with ★, copy stuff fast, and hoard cursed unicode in one place. (:3)
         </div>
       </div>
 
@@ -611,13 +698,13 @@
 
       <!-- profile top card -->
       <div class="profile">
-        <div class="banner" title="optional banner: media/banner.png">
-          <img id="bannerImg" src="media/banner.png" alt="" style="display:none" />
+        <div class="banner" title="uses your existing file: media/ponies in bed.jpg">
+          <img id="bannerImg" src="media/ponies%20in%20bed.jpg" alt="" style="display:none" />
         </div>
 
         <div class="profileRow">
-          <div class="avatar" title="pfp: media/pfp.png">
-            <img id="pfpImg" src="media/pfp.png" alt="bella pfp" style="display:none" />
+          <div class="avatar" title="uses your existing file: media/twi looking.png">
+            <img id="pfpImg" src="media/twi%20looking.png" alt="bella pfp" style="display:none" />
             <div class="fallback" id="pfpFallback">bella</div>
           </div>
 
@@ -625,7 +712,7 @@
             <div class="handle">
               <span class="name">bella cactus</span>
               <span class="badge pink">reverse eng + tools</span>
-              <span class="badge">d2/gd</span>
+              <span class="badge">d2/gd/mc</span>
             </div>
             <div class="tagline">
               everything you want, right here. also: low hp sometimes, still clearing raids ;3
@@ -646,7 +733,7 @@
       <div class="toolbar">
         <div class="searchBox">
           <div class="prompt">&gt; find:</div>
-          <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="type to filter… (ex: spotify, steam, twitch, dreams)" />
+          <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="type to filter links… (ex: spotify, steam, twitch, dreams)" />
         </div>
 
         <div class="btns">
@@ -672,20 +759,41 @@
           <div class="list" id="internalList"></div>
         </div>
 
-        <div class="section">
-          <h2>
-            external / socials
-            <span class="tiny" id="externalCount">0</span>
-          </h2>
-          <div class="list" id="externalList"></div>
+        <div class="rightCol">
+          <div class="section">
+            <h2>
+              external / socials
+              <span class="tiny" id="externalCount">0</span>
+            </h2>
+            <div class="list" id="externalList"></div>
 
-          <div style="height:10px"></div>
+            <div style="height:10px"></div>
 
-          <h2>
-            pinned (favorites)
-            <span class="tiny" id="pinnedCount">0</span>
-          </h2>
-          <div class="list" id="pinnedList"></div>
+            <h2>
+              pinned (favorites)
+              <span class="tiny" id="pinnedCount">0</span>
+            </h2>
+            <div class="list" id="pinnedList"></div>
+          </div>
+
+          <div class="section">
+            <h2>
+              unicode stash
+              <span class="tiny">click to copy</span>
+            </h2>
+
+            <div class="uControls">
+              <div class="prompt">&gt; glyph:</div>
+              <input id="uq" type="text" inputmode="search" autocomplete="off" placeholder="filter unicode… (ex: wide, cuneiform, zalgo, pua)" />
+              <button class="btn" id="copyPad" type="button" title="copies a chunky padding line">
+                <span class="dot" aria-hidden="true"></span>
+                copy padding bar
+              </button>
+            </div>
+
+            <div id="unicodeGroups"></div>
+            <div class="uHint">tip: these might render as tofu on some fonts, but copy still works. (:3)</div>
+          </div>
         </div>
       </div>
 
@@ -716,6 +824,8 @@
         { id: "idle",  name: "idle.html",    desc: "screensaver page (leave it open)", href: "pages/idle.html", tag: "idle" },
         { id: "gl",    name: "glitch.html",  desc: "glitch / corruption playground", href: "pages/glitch.html", tag: "glitch" },
         { id: "dr",    name: "dreams.html",  desc: "dream log w/ timestamps", href: "pages/dreams.html", tag: "log" },
+        { id: "tam",   name: "tamers.html",  desc: "tamers vault", href: "pages/tamers.html", tag: "vault" },
+        { id: "vault", name: "vault.html",   desc: "misc vault", href: "pages/vault.html", tag: "vault" },
       ];
 
       const external = [
@@ -733,9 +843,75 @@
         { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project" },
       ];
 
+      // === unicode stash data ===
+      const unicodeStash = [
+        {
+          id: "wide14",
+          title: "top wide chars (shorter → wider)",
+          items: [
+            { ch:"Ǆ", note:"Ǆ" }, { ch:"؁", note:"؁" }, { ch:"‱", note:"‱" },
+            { ch:"ஹ", note:"ஹ" }, { ch:"௸", note:"௸" }, { ch:"௵", note:"௵" },
+            { ch:"꧄", note:"꧄" }, { ch:".", note:"." }, { ch:"ဪ", note:"ဪ" },
+            { ch:"꧅", note:"꧅" }, { ch:"⸻", note:"⸻" }, { ch:"𒈙", note:"𒈙" },
+            { ch:"𒐫", note:"𒐫" }, { ch:"﷽", note:"﷽" }
+          ]
+        },
+        {
+          id: "cuneiform2",
+          title: "widest cuneiform (often counts as 2 chars)",
+          items: [
+            { ch:"𒌄", note:"𒌄" }, { ch:"𒈟", note:"𒈟" }, { ch:"𒍼", note:"𒍼" },
+            { ch:"𒁎", note:"𒁎" }, { ch:"𒀱", note:"𒀱" }, { ch:"𒌧", note:"𒌧" },
+            { ch:"𒅃", note:"𒅃" }, { ch:"𒈓", note:"𒈓" }, { ch:"𒍙", note:"𒍙" },
+            { ch:"𒊎", note:"𒊎" }, { ch:"𒄡", note:"𒄡" }, { ch:"𒅌", note:"𒅌" },
+            { ch:"𒁏", note:"𒁏" }, { ch:"𒀰", note:"𒀰" }, { ch:"𒐪", note:"𒐪" },
+            { ch:"𒐩", note:"𒐩" }, { ch:"𒈙", note:"𒈙" }, { ch:"𒐫", note:"𒐫" }
+          ]
+        },
+        {
+          id: "dense",
+          title: "dense stroke monsters (chinese)",
+          items: [
+            { ch:"𱁬", note:"84 strokes" },
+            { ch:"𰽔", note:"76 strokes" },
+            { ch:"𪚥", note:"64 strokes" },
+            { ch:"䨻", note:"52 strokes" },
+            { ch:"龘", note:"48 strokes" },
+            { ch:"䲜", note:"44 strokes" }
+          ]
+        },
+        {
+          id: "pua",
+          title: "cool privates (pua-ish)",
+          items: [
+            { ch:"", note:"" }, { ch:"", note:"" }, { ch:"", note:"" },
+            { ch:"", note:"" }, { ch:"", note:"" }, { ch:"", note:"" },
+            { ch:"", note:"" }, { ch:"á́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́", note:"combining stack" }
+          ]
+        },
+        {
+          id: "zalgo",
+          title: "tall zalgo vibe",
+          items: [
+            { ch:"h̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺̺ͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩͩ",
+              note:"copy at own risk" }
+          ]
+        },
+        {
+          id: "misc",
+          title: "other weird ones",
+          items: [
+            { ch:"😃⃢👍", note:"emoji combo" },
+            { ch:"༼;´༎ຶ ۝ ༎ຶ༽", note:"crying face" },
+            { ch:"🥶⃤", note:"cold stamp" }
+          ]
+        }
+      ];
+
       // === ui refs ===
       const $ = (sel) => document.querySelector(sel);
       const q = $("#q");
+      const uq = $("#uq");
       const internalList = $("#internalList");
       const externalList = $("#externalList");
       const pinnedList = $("#pinnedList");
@@ -748,8 +924,9 @@
       const debuff = $("#debuff");
       const sync = $("#sync");
       const toast = $("#toast");
+      const uWrap = $("#unicodeGroups");
 
-      const PIN_KEY = "bella_links_pins_v2";
+      const PIN_KEY = "bella_links_pins_v3";
 
       const getPins = () => {
         try {
@@ -890,10 +1067,67 @@
         const base = 100;
         const penalty = clamp(Math.floor((cards.length - visible) * 6), 0, 60);
         hp.textContent = String(base - penalty);
+      }
 
-        if (t === "pony" || t === "mlp") {
-          statusBadge.textContent = "pony detected ;3";
-          setTimeout(() => { if ((q.value||"").trim().toLowerCase() === t) statusBadge.textContent = "online"; }, 1400);
+      function renderUnicode(){
+        const ft = (uq?.value || "").trim().toLowerCase();
+        uWrap.innerHTML = "";
+
+        const want = (g) => {
+          if (!ft) return true;
+          if (g.title.toLowerCase().includes(ft)) return true;
+          if (g.id.toLowerCase().includes(ft)) return true;
+          return g.items.some(i => (i.note || "").toLowerCase().includes(ft) || (i.ch || "").toLowerCase().includes(ft));
+        };
+
+        unicodeStash.filter(want).forEach(group => {
+          const box = document.createElement("div");
+          box.className = "uGroup";
+          box.dataset.utitle = group.title.toLowerCase();
+          box.dataset.uid = group.id.toLowerCase();
+
+          const top = document.createElement("div");
+          top.className = "uGroupTitle";
+          top.textContent = group.title;
+
+          const grid = document.createElement("div");
+          grid.className = "uGrid";
+
+          group.items.forEach(it => {
+            const chip = document.createElement("div");
+            chip.className = "uChip";
+            chip.title = "click to copy";
+
+            const ch = document.createElement("div");
+            ch.className = "uChar";
+            ch.textContent = it.ch;
+
+            const note = document.createElement("div");
+            note.className = "uNote";
+            note.textContent = it.note || "";
+
+            chip.appendChild(ch);
+            chip.appendChild(note);
+
+            chip.addEventListener("click", async () => {
+              await copyText(it.ch);
+              statusBadge.textContent = "unicode copied ✓";
+              setTimeout(() => statusBadge.textContent = "online", 900);
+            });
+
+            grid.appendChild(chip);
+          });
+
+          box.appendChild(top);
+          box.appendChild(grid);
+          uWrap.appendChild(box);
+        });
+
+        if (!uWrap.children.length){
+          const empty = document.createElement("div");
+          empty.className = "uHint";
+          empty.textContent = "no matches. try: wide / cuneiform / zalgo / pua";
+          uWrap.appendChild(empty);
         }
       }
 
@@ -937,7 +1171,9 @@
         }
 
         pinnedCount.textContent = pinItems.length + " pinned";
+
         applyFilter();
+        renderUnicode();
       }
 
       // copy hub url
@@ -967,6 +1203,14 @@
         setTimeout(() => statusBadge.textContent = "online", 1100);
       });
 
+      // unicode padding bar
+      $("#copyPad").addEventListener("click", async () => {
+        const pad = "⸻𒐫﷽𒈙⸻𒐫﷽𒈙⸻𒐫";
+        await copyText(pad);
+        statusBadge.textContent = "padding bar copied ✓";
+        setTimeout(() => statusBadge.textContent = "online", 1100);
+      });
+
       // keyboard shortcuts
       window.addEventListener("keydown", (e) => {
         if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey){
@@ -983,6 +1227,8 @@
       });
 
       q.addEventListener("input", applyFilter);
+
+      uq?.addEventListener("input", renderUnicode);
 
       // banner/pfp: show fallback if file missing
       function safeShowImage(imgEl, fallbackEl){
