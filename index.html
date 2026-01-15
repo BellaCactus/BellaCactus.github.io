@@ -703,7 +703,7 @@
     <div class="top">
       <div class="brand">
         <div class="badge" aria-hidden="true">
-          <img src="media/tamers12345-mlp.gif" alt="badge" />
+          <img id="badgeImg" src="media/tamers12345-mlp.gif" alt="badge" />
         </div>
         <div class="titlebox">
           <h1 class="pulseText">bella cactus</h1>
@@ -1025,6 +1025,52 @@
       });
     }
 
+    // --- image loader (for stickers + badge) (tries multiple urls)
+    function tryLoadImage(candidates, timeoutMs = 3500){
+      return new Promise((resolve) => {
+        let i = 0;
+        const attempt = () => {
+          if (i >= candidates.length) return resolve(null);
+          const raw = candidates[i++];
+          const url = encodeURI(raw);
+          const img = new Image();
+          let done = false;
+          const timer = setTimeout(() => {
+            if (done) return;
+            done = true;
+            resolve(null); // timeout counts as fail for this attempt
+          }, timeoutMs);
+
+          img.onload = () => {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            resolve(url);
+          };
+          img.onerror = () => {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            attempt();
+          };
+
+          img.src = url;
+        };
+        attempt();
+      });
+    }
+
+    function expandBase(basePath){
+      // try common extensions, plus "as-is" in case you already included .png etc
+      const exts = ["", ".png", ".jpg", ".jpeg", ".gif", ".webp"];
+      const list = [];
+      for (const ext of exts){
+        if (!ext) list.push(basePath);
+        else list.push(basePath + ext);
+      }
+      return list;
+    }
+
     // date
     const d = new Date();
     $("date").textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"2-digit" });
@@ -1037,6 +1083,23 @@
         onekoImg.src = "media/oneko.gif";
       }
     });
+
+    // badge fallback (tries your new files too)
+    (async () => {
+      const b = $("badgeImg");
+      if (!b) return;
+      const picked = await tryLoadImage([
+        "media/tamers12345-mlp.gif",
+        "media/tamers12345-mlp.png",
+        "media/tamers12345-mlp.jpg",
+        "media/tamers12345-mlp.jpeg",
+        "media/tamers12345-mlp.webp",
+        "media/tamers12345-tamers.png",
+        "media/tamers12345-tamers.jpg",
+        "media/twi looking.png"
+      ]);
+      if (picked) b.src = picked;
+    })();
 
     // --------- MUSIC (random soundtrack + waveform)
     const tracks = [
@@ -1131,6 +1194,7 @@
         if (!y.src){
           await tryLoadAudio(y, [
             "assests/lil-jon-yeah.mp3",
+            "assets/songs/lil-jon-yeah.mp3",
             "assets/lil-jon-yeah.mp3",
             "media/lil-jon-yeah.mp3"
           ]).catch(()=>{});
@@ -1189,70 +1253,47 @@
       }
     });
 
-    function showSite(){
-      clearTimeout(hardSkipTimer);
-      clearInterval(introInterval);
-      introGate.classList.add("hidden");
-      main.style.visibility = "visible";
-
-      rerollAll();
-      startTerminal();
-      refreshIntelBase();
-
-      // best effort autoplay
-      (async () => {
-        try{
-          setupWaveform();
-          await yepResumeAudio();
-          await ensureTrackLoaded();
-          await bgm.play();
-          musicBar.classList.remove("paused");
-          $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-          trackMeta.textContent = "autoplay engaged";
-        }catch(e){
-          trackMeta.textContent = "tap play if audio is blocked";
-          const poke = async () => {
-            try{
-              setupWaveform();
-              await yepResumeAudio();
-              await ensureTrackLoaded();
-              await bgm.play();
-              musicBar.classList.remove("paused");
-              $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
-              trackMeta.textContent = "audio enabled";
-            }catch(e2){}
-            window.removeEventListener('pointerdown', poke, true);
-            window.removeEventListener('keydown', poke, true);
-          };
-          window.addEventListener('pointerdown', poke, true);
-          window.addEventListener('keydown', poke, true);
-        }
-      })();
-    }
-
-    skipIntro.addEventListener("click", () => {
-      armHardSkip();
-      try { introVideo.pause(); } catch(e){}
-      showSite();
-    });
-
-    introVideo.addEventListener("ended", showSite);
-
-    introVideo.addEventListener("click", () => {
-      armHardSkip();
-      introVideo.play().catch(()=>{});
-    });
-
     // --------- STICKERS (random wall images, NO OVERLAP)
     const wall = $("wall");
 
-    // EDIT THIS LIST to match your actual filenames
-    const stickerFiles = [
-      "media/twi looking.png",
-      "media/twi and trixy.jpg",
-      "media/ponies in bed.jpg",
-      "media/yuri meme.png"
+    // add your new bases here (no extension needed, it’ll try png/jpg/gif/webp)
+    // keep old exact filenames too (spaces etc)
+    const stickerCandidateGroups = [
+      expandBase("media/tamers12345-tamersfuni"),
+      expandBase("media/tamers12345-flawlesssigma"),
+      expandBase("media/tamers12345-tamers"),
+      expandBase("media/tamers12345-flawless"),
+      expandBase("media/tamers12345-mlp"),
+
+      ["media/twi looking.png"],
+      ["media/twi and trixy.jpg"],
+      ["media/ponies in bed.jpg"],
+      ["media/yuri meme.png"],
+
+      // oneko reactions you already have
+      ["media/onekoss.png"],
+      ["media/onekosss.png"],
+      ["media/onekossssthibnk.png"],
+      ["media/onekossssurpised.png"]
     ];
+
+    let stickerPool = [];
+    let stickerPoolReady = false;
+
+    async function initStickerPool(){
+      if (stickerPoolReady) return;
+
+      // probe all candidate groups and keep the first working url per group
+      const found = [];
+      for (const group of stickerCandidateGroups){
+        const picked = await tryLoadImage(group);
+        if (picked) found.push(picked);
+      }
+
+      // fallback: at least keep the first url of each group so wall still renders something
+      stickerPool = (found.length ? found : stickerCandidateGroups.map(g => g[0]).filter(Boolean));
+      stickerPoolReady = true;
+    }
 
     function clearWall(){
       while(wall.firstChild) wall.removeChild(wall.firstChild);
@@ -1269,6 +1310,9 @@
 
     function spawnStickers(){
       clearWall();
+
+      const list = (stickerPoolReady && stickerPool.length) ? stickerPool : stickerCandidateGroups.map(g => g[0]).filter(Boolean);
+      if (!list.length) return;
 
       const countTarget = window.innerWidth < 700 ? 7 : 12;
       const w = window.innerWidth;
@@ -1291,7 +1335,7 @@
       const placed = [];
 
       for (let i = 0; i < countTarget; i++){
-        const file = stickerFiles[i % stickerFiles.length];
+        const file = list[Math.floor(Math.random() * list.length)];
         const size = rand(120, window.innerWidth < 900 ? 220 : 260);
         const box = { x:0, y:0, w:size, h:size };
 
@@ -1348,6 +1392,66 @@
 
     window.addEventListener("resize", () => {
       spawnStickers();
+    });
+
+    function showSite(){
+      clearTimeout(hardSkipTimer);
+      clearInterval(introInterval);
+      introGate.classList.add("hidden");
+      main.style.visibility = "visible";
+
+      // sticker pool first, then render wall
+      initStickerPool().then(() => spawnStickers());
+      startTerminal();
+      refreshIntelBase();
+
+      // best effort autoplay
+      (async () => {
+        try{
+          setupWaveform();
+          await yepResumeAudio();
+          await ensureTrackLoaded();
+          await bgm.play();
+          musicBar.classList.remove("paused");
+          $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+          trackMeta.textContent = "autoplay engaged";
+        }catch(e){
+          trackMeta.textContent = "tap play if audio is blocked";
+          const poke = async () => {
+            try{
+              setupWaveform();
+              await yepResumeAudio();
+              await ensureTrackLoaded();
+              await bgm.play();
+              musicBar.classList.remove("paused");
+              $("playPause").innerHTML = `<span class="k">⏸</span> play/pause`;
+              trackMeta.textContent = "audio enabled";
+            }catch(e2){}
+            window.removeEventListener('pointerdown', poke, true);
+            window.removeEventListener('keydown', poke, true);
+          };
+          window.addEventListener('pointerdown', poke, true);
+          window.addEventListener('keydown', poke, true);
+        }
+      })();
+
+      // do the rest after first paint
+      setTimeout(() => {
+        rerollAll();
+      }, 0);
+    }
+
+    skipIntro.addEventListener("click", () => {
+      armHardSkip();
+      try { introVideo.pause(); } catch(e){}
+      showSite();
+    });
+
+    introVideo.addEventListener("ended", showSite);
+
+    introVideo.addEventListener("click", () => {
+      armHardSkip();
+      introVideo.play().catch(()=>{});
     });
 
     // --------- THEME (pink / white / red / etc) + evil mode hook
@@ -1645,7 +1749,7 @@
 
     // --------- REROLL
     function rerollAll(){
-      spawnStickers();
+      initStickerPool().then(() => spawnStickers());
       trackIndex = Math.floor(Math.random() * tracks.length);
       loadTrack(trackIndex).catch(()=>{});
       musicBar.classList.add("paused");
@@ -2125,6 +2229,9 @@
     loadTrack(trackIndex).catch(()=>{});
     applyTheme(currentTheme);
     document.addEventListener("click", () => setupWaveform(), { once:true });
+
+    // kick sticker pool early (no harm)
+    initStickerPool().catch(()=>{});
   </script>
 </body>
 </html>
