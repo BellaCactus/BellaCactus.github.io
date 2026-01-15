@@ -2,13 +2,17 @@ name: discord - site updated
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - "**"
+
+permissions:
+  contents: read
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: send discord webhook
+      - name: post to discord webhook
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO: ${{ github.repository }}
@@ -17,90 +21,50 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
           COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
           SITE_URL: https://${{ github.repository_owner }}.github.io/
+          MSG: ${{ github.event.head_commit.message }}
         run: |
-          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
-            echo "DISCORD_WEBHOOK_URL secret is missing."
+          set -euo pipefail
+
+          if [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
+            echo "DISCORD_WEBHOOK_URL secret is missing"
             exit 1
           fi
 
-          python3 - << 'PY'
-          import json, os, subprocess
+          # build json safely (no quote/emoji breakage)
+          payload="$(python - <<'PY'
+import json, os
+repo=os.environ["REPO"]
+branch=os.environ["BRANCH"]
+actor=os.environ["ACTOR"]
+sha=os.environ["COMMIT_SHA"][:7]
+commit_url=os.environ["COMMIT_URL"]
+site=os.environ["SITE_URL"]
+msg=os.environ.get("MSG","").strip() or "(no commit message)"
 
-          repo = os.environ["REPO"]
-          branch = os.environ["BRANCH"]
-          actor = os.environ["ACTOR"]
-          sha = os.environ["COMMIT_SHA"]
-          commit_url = os.environ["COMMIT_URL"]
-          site_url = os.environ["SITE_URL"]
+data = {
+  "username": "site updated",
+  "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+  "embeds": [{
+    "title": "site updated",
+    "url": commit_url,
+    "color": 0xff78c8,
+    "description": f"**repo:** `{repo}`\n**branch:** `{branch}`\n**by:** `{actor}`\n**commit:** `{sha}`\n\n**msg:** {msg}",
+    "fields": [
+      {"name":"site", "value": site, "inline": False}
+    ],
+    "footer": {"text":"github actions → discord webhook"}
+  }]
+}
 
-          # grab last commit message safely
-          msg = subprocess.check_output(["git", "log", "-1", "--pretty=%s"], text=True).strip()
-          if not msg:
-            msg = "update"
+print(json.dumps(data, ensure_ascii=False))
+PY
+)"
 
-          short = sha[:7]
-
-          payload = {
-            "username": "site updates",
-            "content": None,
-            "embeds": [
-              {
-                "title": "site updated",
-                "url": commit_url,
-                "description": f"**{msg}**",
-                "fields": [
-                  {"name": "repo", "value": repo, "inline": True},
-                  {"name": "branch", "value": branch, "inline": True},
-                  {"name": "by", "value": actor, "inline": True},
-                  {"name": "commit", "value": short, "inline": True},
-                  {"name": "site", "value": site_url, "inline": False},
-                ],
-              }
-            ],
-          }
-
-          print(json.dumps(payload))
-          PY
-          # ^ prints json to stdout, but we need it again for curl:
-          JSON="$(python3 - << 'PY'
-          import json, os, subprocess
-
-          repo = os.environ["REPO"]
-          branch = os.environ["BRANCH"]
-          actor = os.environ["ACTOR"]
-          sha = os.environ["COMMIT_SHA"]
-          commit_url = os.environ["COMMIT_URL"]
-          site_url = os.environ["SITE_URL"]
-
-          msg = subprocess.check_output(["git", "log", "-1", "--pretty=%s"], text=True).strip()
-          if not msg:
-            msg = "update"
-
-          short = sha[:7]
-
-          payload = {
-            "username": "site updates",
-            "content": None,
-            "embeds": [
-              {
-                "title": "site updated",
-                "url": commit_url,
-                "description": f"**{msg}**",
-                "fields": [
-                  {"name": "repo", "value": repo, "inline": True},
-                  {"name": "branch", "value": branch, "inline": True},
-                  {"name": "by", "value": actor, "inline": True},
-                  {"name": "commit", "value": short, "inline": True},
-                  {"name": "site", "value": site_url, "inline": False},
-                ],
-              }
-            ],
-          }
-
-          print(json.dumps(payload))
-          PY
-          )"
-
-          curl -sS -X POST "$DISCORD_WEBHOOK_URL" \
+          echo "sending webhook…"
+          # curl will fail the step if discord rejects it
+          curl -sS -f \
             -H "Content-Type: application/json" \
-            -d "$JSON"
+            -d "$payload" \
+            "$DISCORD_WEBHOOK_URL"
+
+          echo "posted ✅"
