@@ -2,63 +2,105 @@ name: discord - site updated
 
 on:
   push:
-    branches:
-      - main
-    # if you truly want ANY push, keep as-is.
-    # optional anti-spam: uncomment to avoid pinging when you only edit workflows
-    # paths-ignore:
-    #   - ".github/workflows/**"
+    branches: ["main"]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: post to discord webhook
+      - name: send discord webhook
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO: ${{ github.repository }}
-          ACTOR: ${{ github.actor }}
           BRANCH: ${{ github.ref_name }}
-          SHA: ${{ github.sha }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          OWNER: ${{ github.repository_owner }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+          SITE_URL: https://${{ github.repository_owner }}.github.io/
         run: |
-          python3 - <<'PY'
-          import os, json, urllib.request
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL secret is missing."
+            exit 1
+          fi
 
-          url = os.environ.get("DISCORD_WEBHOOK_URL")
-          if not url:
-            raise SystemExit("missing DISCORD_WEBHOOK_URL secret")
+          python3 - << 'PY'
+          import json, os, subprocess
 
-          repo   = os.environ.get("REPO", "unknown")
-          actor  = os.environ.get("ACTOR", "unknown")
-          branch = os.environ.get("BRANCH", "unknown")
-          sha    = os.environ.get("SHA", "")[:7]
-          msg    = os.environ.get("COMMIT_MSG", "(no message)")
-          c_url  = os.environ.get("COMMIT_URL", "")
-          owner  = os.environ.get("OWNER", "unknown")
+          repo = os.environ["REPO"]
+          branch = os.environ["BRANCH"]
+          actor = os.environ["ACTOR"]
+          sha = os.environ["COMMIT_SHA"]
+          commit_url = os.environ["COMMIT_URL"]
+          site_url = os.environ["SITE_URL"]
 
-          pages_url = f"https://{owner}.github.io/"
+          # grab last commit message safely
+          msg = subprocess.check_output(["git", "log", "-1", "--pretty=%s"], text=True).strip()
+          if not msg:
+            msg = "update"
+
+          short = sha[:7]
 
           payload = {
-            "username": "site bot",
-            "embeds": [{
-              "title": "site updated",
-              "url": c_url or pages_url,
-              "description": f"**repo:** {repo}\n**branch:** {branch}\n**by:** {actor}\n**msg:** {msg}",
-              "color": 0xff78c8,
-              "fields": [
-                {"name": "pages", "value": pages_url, "inline": False},
-                {"name": "commit", "value": f"`{sha}`", "inline": True},
-              ],
-            }]
+            "username": "site updates",
+            "content": None,
+            "embeds": [
+              {
+                "title": "site updated",
+                "url": commit_url,
+                "description": f"**{msg}**",
+                "fields": [
+                  {"name": "repo", "value": repo, "inline": True},
+                  {"name": "branch", "value": branch, "inline": True},
+                  {"name": "by", "value": actor, "inline": True},
+                  {"name": "commit", "value": short, "inline": True},
+                  {"name": "site", "value": site_url, "inline": False},
+                ],
+              }
+            ],
           }
 
-          data = json.dumps(payload).encode("utf-8")
-          req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
-          with urllib.request.urlopen(req) as r:
-            r.read()
-
-          print("posted ✅")
+          print(json.dumps(payload))
           PY
+          # ^ prints json to stdout, but we need it again for curl:
+          JSON="$(python3 - << 'PY'
+          import json, os, subprocess
+
+          repo = os.environ["REPO"]
+          branch = os.environ["BRANCH"]
+          actor = os.environ["ACTOR"]
+          sha = os.environ["COMMIT_SHA"]
+          commit_url = os.environ["COMMIT_URL"]
+          site_url = os.environ["SITE_URL"]
+
+          msg = subprocess.check_output(["git", "log", "-1", "--pretty=%s"], text=True).strip()
+          if not msg:
+            msg = "update"
+
+          short = sha[:7]
+
+          payload = {
+            "username": "site updates",
+            "content": None,
+            "embeds": [
+              {
+                "title": "site updated",
+                "url": commit_url,
+                "description": f"**{msg}**",
+                "fields": [
+                  {"name": "repo", "value": repo, "inline": True},
+                  {"name": "branch", "value": branch, "inline": True},
+                  {"name": "by", "value": actor, "inline": True},
+                  {"name": "commit", "value": short, "inline": True},
+                  {"name": "site", "value": site_url, "inline": False},
+                ],
+              }
+            ],
+          }
+
+          print(json.dumps(payload))
+          PY
+          )"
+
+          curl -sS -X POST "$DISCORD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$JSON"
