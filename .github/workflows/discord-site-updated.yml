@@ -30,7 +30,6 @@ jobs:
             exit 1
           fi
 
-          # build json safely (no quote/emoji breakage)
           payload="$(python - <<'PY'
 import json, os
 repo=os.environ["REPO"]
@@ -60,8 +59,6 @@ print(json.dumps(data, ensure_ascii=False))
 PY
 )"
 
-          echo "sending webhook…"
-          # curl will fail the step if discord rejects it
           curl -sS -f \
             -H "Content-Type: application/json" \
             -d "$payload" \
