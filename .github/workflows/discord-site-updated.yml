@@ -1,0 +1,44 @@
+name: discord - site updated
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "index.html"
+      - "links.html"
+      - "pages/**"
+      - "media/**"
+      - "assets/**"
+      - ".github/workflows/**"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: post to discord webhook
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          SHA: ${{ github.sha }}
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "missing DISCORD_WEBHOOK_URL secret"
+            exit 1
+          fi
+
+          SHORT_SHA="${SHA:0:7}"
+          COMMIT_URL="https://github.com/${REPO}/commit/${SHA}"
+          REPO_URL="https://github.com/${REPO}"
+          PAGES_URL="https://${REPO%/*}.github.io/${REPO#*/}/"
+
+          # payload (simple + safe)
+          CONTENT="🖤 **site updated**\nrepo: ${REPO}\nbranch: ${BRANCH}\nby: ${ACTOR}\ncommit: ${SHORT_SHA}\nmsg: ${MSG}\n${COMMIT_URL}\n${PAGES_URL}"
+
+          # send
+          curl -sS -X POST \
+            -H "Content-Type: application/json" \
+            -d "$(printf '%s' "$CONTENT" | python3 -c 'import json,sys; print(json.dumps({"content": sys.stdin.read()}))')" \
+            "$DISCORD_WEBHOOK_URL"
