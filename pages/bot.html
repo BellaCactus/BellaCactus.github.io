@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>bot • its so floppy</title>
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(800px 500px at 15% 10%, rgba(255,120,200,0.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 30%, rgba(255,179,230,0.10), transparent 55%),
+        radial-gradient(1000px 700px at 40% 95%, rgba(255,77,184,0.08), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family:var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+
+    a{color:var(--pink); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .pulseText{
+      background: linear-gradient(90deg, #ffffff, var(--pink), #ffffff, var(--pink2), #ffffff);
+      background-size: 260% 100%;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      animation: shimmer 4.8s ease-in-out infinite;
+    }
+    @keyframes shimmer{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:44px 16px 110px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+    .badge{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,120,200,0.22), rgba(255,120,200,0.06));
+      border:1px solid rgba(255,120,200,0.25);
+      display:grid;
+      place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .badge svg{opacity:0.95;}
+    h1{
+      margin:0;
+      font-size:2rem;
+      letter-spacing:0.5px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:0.98rem;
+      max-width:560px;
+    }
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      font-size:0.82rem;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--muted);
+      backdrop-filter: blur(6px);
+    }
+    .chip strong{color:var(--text); font-weight:600;}
+    .chip .dot{
+      display:inline-block;
+      width:6px;height:6px;
+      border-radius:999px;
+      margin-right:6px;
+      background:var(--pink);
+      box-shadow:0 0 12px rgba(255,120,200,0.6);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr;}
+      .chips{justify-content:flex-start;}
+      .sub{max-width:100%;}
+    }
+
+    .panel{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panelInner{ padding:16px 16px; }
+    .panelTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.18);
+    }
+    .panelTitle h2{
+      margin:0;
+      font-size:1.05rem;
+      color:var(--pink2);
+      letter-spacing:0.3px;
+    }
+    .small{font-size:0.86rem; color:var(--muted);}
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:var(--text);
+      transition: transform 0.08s ease, background 0.2s ease, border 0.2s ease, opacity 0.2s ease;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      background: rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0); opacity:0.95; }
+    .btn .k{font-family:var(--mono); font-size:0.8rem; color:var(--pink2);}
+
+    .kv{
+      font-family: var(--mono);
+      font-size: 0.90rem;
+      color: rgba(255,255,255,0.92);
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      border-radius:14px;
+      padding:12px 12px;
+    }
+
+    .term{
+      font-family: var(--mono);
+      background: radial-gradient(900px 300px at 20% 0%, rgba(255,120,200,0.14), transparent 55%),
+                  rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      padding:12px 12px;
+    }
+    .term .line{display:flex; gap:8px; margin:6px 0; white-space:pre-wrap; word-break:break-word;}
+    .prompt{color:var(--pink2);}
+    .cursor{
+      display:inline-block;
+      width:9px;
+      height:1.1em;
+      background: var(--pink);
+      margin-left:2px;
+      animation: blink 1s steps(1) infinite;
+      vertical-align:-2px;
+      box-shadow:0 0 12px rgba(255,120,200,0.55);
+    }
+    @keyframes blink{50%{opacity:0;}}
+
+    .warn{
+      margin-top:10px;
+      font-family: var(--mono);
+      font-size:0.82rem;
+      color: rgba(255,179,230,0.92);
+      opacity:0.95;
+    }
+
+    .footer{
+      margin-top:22px;
+      text-align:center;
+      color:var(--muted);
+      font-size:0.86rem;
+      z-index:2;
+      position:relative;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 8a3 3 0 1 1 6 0v4a3 3 0 1 1-6 0V8Z" stroke="rgba(255,255,255,0.9)" stroke-width="1.7"/>
+            <path d="M3.5 10.5c0-2.9 2.3-5.2 5.2-5.2h6.6c2.9 0 5.2 2.3 5.2 5.2v3c0 2.9-2.3 5.2-5.2 5.2H8.7c-2.9 0-5.2-2.3-5.2-5.2v-3Z" stroke="rgba(255,120,200,0.85)" stroke-width="1.7"/>
+            <path d="M8.2 17.2h7.6" stroke="rgba(255,179,230,0.85)" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="titlebox">
+          <h1 class="pulseText">its so floppy</h1>
+          <div class="sub">static bot panel (no secrets here) • invite • copy • notes • lil terminal energy (:3)</div>
+        </div>
+      </div>
+
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong class="pulseText">static-only</strong></div>
+        <div class="chip">scope: <strong>bot + slash</strong></div>
+        <div class="chip">hp: <strong>stable</strong></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>invite / quick actions</h2>
+          <div class="small">copy + go</div>
+        </div>
+        <div class="panelInner">
+          <div class="btnRow" style="margin-top:0;">
+            <a class="btn" id="inviteBtn" target="_blank" rel="noreferrer">
+              <span class="k">oauth</span> invite bot
+            </a>
+            <button class="btn" id="copyInvite" type="button"><span class="k">cp</span> copy invite</button>
+            <button class="btn" id="copyApp" type="button"><span class="k">id</span> copy app id</button>
+            <button class="btn" id="backHome" type="button"><span class="k">cd</span> back to index</button>
+          </div>
+
+          <div class="warn">
+            reminder: github pages is public. never put your bot token in website js. tokens are raid loot for strangers.
+          </div>
+
+          <div style="margin-top:12px;" class="term" aria-label="terminal">
+            <div class="line">
+              <span class="prompt">bella@cactus</span><span>:</span><span>~/bot</span><span>$</span>
+              <span id="typed"></span><span class="cursor"></span>
+            </div>
+            <div id="termOut"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelTitle">
+          <h2>ids (safe to show)</h2>
+          <div class="small">public info</div>
+        </div>
+        <div class="panelInner">
+          <pre class="kv" id="kv"></pre>
+          <div class="btnRow">
+            <button class="btn" id="copyKey" type="button"><span class="k">pk</span> copy public key</button>
+            <a class="btn" href="https://discord.com/developers/applications" target="_blank" rel="noreferrer">
+              <span class="k">dev</span> dev portal
+            </a>
+          </div>
+
+          <div class="warn">
+            public key is for verifying interaction signatures if you ever use the interactions endpoint.
+            it’s not a secret. token is the secret.
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="panel" style="margin-top:14px;">
+      <div class="panelTitle">
+        <h2>commands (placeholder)</h2>
+        <div class="small">you can fill these later</div>
+      </div>
+      <div class="panelInner">
+        <pre class="kv">/help        shows commands
+/ping        latency check
+/link        posts your link hub
+/status      shows uptime + version
+(you can replace this list anytime)</pre>
+      </div>
+    </section>
+
+    <div class="footer">
+      © <span class="pulseText">bella cactus</span> • bot panel (static)
+    </div>
+  </div>
+
+  <script>
+    const APP_ID = "1359369770016968806";
+    const PUBLIC_KEY = "96c0cd622acd12a075252443e8cd47fb2a5eaad6ce8c4c6f9e2de3c5a54fb92e";
+    const INVITE = `https://discord.com/api/oauth2/authorize?client_id=${APP_ID}&permissions=0&scope=bot%20applications.commands`;
+
+    const $ = (id) => document.getElementById(id);
+
+    $("inviteBtn").href = INVITE;
+    $("kv").textContent =
+`app id:     ${APP_ID}
+public key: ${PUBLIC_KEY}
+invite:     ${INVITE}`;
+
+    async function copyText(t){
+      try{
+        await navigator.clipboard.writeText(t);
+        toast("copied");
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = t;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        toast("copied (fallback)");
+      }
+    }
+
+    let toastTimer = null;
+    function toast(msg){
+      clearTimeout(toastTimer);
+      const el = document.createElement("div");
+      el.textContent = msg;
+      el.style.position = "fixed";
+      el.style.left = "50%";
+      el.style.bottom = "18px";
+      el.style.transform = "translateX(-50%)";
+      el.style.padding = "10px 12px";
+      el.style.borderRadius = "12px";
+      el.style.border = "1px solid rgba(255,255,255,0.12)";
+      el.style.background = "rgba(0,0,0,0.55)";
+      el.style.backdropFilter = "blur(8px)";
+      el.style.boxShadow = "0 20px 70px rgba(0,0,0,0.55)";
+      el.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+      el.style.color = "rgba(255,255,255,0.92)";
+      el.style.zIndex = 9999;
+      document.body.appendChild(el);
+      toastTimer = setTimeout(()=> el.remove(), 900);
+    }
+
+    $("copyInvite").addEventListener("click", () => copyText(INVITE));
+    $("copyApp").addEventListener("click", () => copyText(APP_ID));
+    $("copyKey").addEventListener("click", () => copyText(PUBLIC_KEY));
+    $("backHome").addEventListener("click", () => { window.location.href = "../index.html"; });
+
+    // lil terminal typing
+    const typed = $("typed");
+    const out = $("termOut");
+    const script = [
+      { cmd: "bot --name", out: "its so floppy" },
+      { cmd: "bot --invite", out: INVITE },
+      { cmd: "bot --note", out: "static panel. no token. no backend. safe vibes." },
+      { cmd: "next", out: "optional: add a real /status endpoint later if you host it somewhere" }
+    ];
+    let li=0, ci=0;
+
+    function push(line){
+      const div = document.createElement("div");
+      div.className = "line";
+      div.innerHTML = `<span class="prompt">></span> <span>${escapeHtml(line)}</span>`;
+      out.appendChild(div);
+      while(out.children.length > 6) out.removeChild(out.firstChild);
+    }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function tick(){
+      const cur = script[li];
+      typed.textContent = cur.cmd.slice(0, ci++);
+      if (ci > cur.cmd.length){
+        push("$ " + cur.cmd);
+        push(cur.out);
+        li++;
+        ci = 0;
+        typed.textContent = "";
+        if (li >= script.length){
+          // idle loop
+          const pool = ["_", " ", ".", "..", "...", " ", "_"];
+          let i = 0;
+          setInterval(()=> typed.textContent = pool[i++ % pool.length], 280);
+          return;
+        }
+        setTimeout(tick, 520);
+      } else {
+        setTimeout(tick, 34 + Math.random()*22);
+      }
+    }
+    tick();
+  </script>
+</body>
+</html>
