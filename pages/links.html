@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>bella cactus • links</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- favicon (tab icon) -->
+  <link rel="icon" type="image/png" href="twi looking.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --pink:#ff78c8;
+      --pink2:#ffb3e6;
+      --pink3:#ff4db8;
+
+      --shadow: 0 10px 30px rgba(0,0,0,0.6);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 20% 20%, rgba(255,120,200,0.10), transparent 55%),
+        radial-gradient(900px 600px at 80% 30%, rgba(255,120,200,0.08), transparent 60%),
+        radial-gradient(900px 700px at 50% 80%, rgba(255,255,255,0.04), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+    }
+
+    /* subtle grain */
+    body:before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.20'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity: 0.18;
+      z-index:0;
+    }
+
+    /* scanline-ish drift */
+    .scan{
+      position:fixed; inset:-40px 0;
+      pointer-events:none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.00) 0px,
+        rgba(255,255,255,0.00) 5px,
+        rgba(255,255,255,0.03) 6px,
+        rgba(255,255,255,0.00) 12px
+      );
+      opacity:0.12;
+      filter: blur(0.2px);
+      transform: translateY(0);
+      animation: scan 10s linear infinite;
+      z-index:0;
+    }
+    @keyframes scan{
+      0%{ transform: translateY(-20px); }
+      100%{ transform: translateY(20px); }
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 70px;
+    }
+
+    header{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom: 14px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .h1{
+      font-family: var(--mono);
+      font-size: 18px;
+      letter-spacing: 0.2px;
+      line-height:1.2;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:10px;
+    }
+
+    .badge{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+    }
+
+    .badge.pink{
+      border-color: rgba(255,120,200,0.35);
+      color: rgba(255,120,200,0.95);
+      box-shadow: 0 0 0 1px rgba(255,120,200,0.07) inset;
+    }
+
+    .sub{
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.4;
+      max-width: 62ch;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .searchBox{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex: 1 1 420px;
+      min-width: 240px;
+    }
+
+    .prompt{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,120,200,0.95);
+      opacity: 0.95;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    input[type="text"]{
+      width:100%;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      outline:none;
+      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    }
+    input[type="text"]::placeholder{ color: rgba(185,185,194,0.70); }
+    input[type="text"]:focus{
+      border-color: rgba(255,120,200,0.50);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.12);
+      transform: translateY(-1px);
+    }
+
+    .btns{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex: 0 0 auto;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-size: 12px;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+      font-family: var(--mono);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.35);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+    .btn:active{ transform: translateY(0px); }
+    .btn .dot{
+      width:8px; height:8px;
+      border-radius:50%;
+      background: rgba(255,120,200,0.85);
+      box-shadow: 0 0 12px rgba(255,120,200,0.55);
+    }
+
+    .content{
+      padding: 14px 12px 12px;
+      display:grid;
+      gap: 12px;
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+
+    @media (max-width: 860px){
+      header{ flex-direction:column; align-items:flex-start; }
+      .content{ grid-template-columns: 1fr; }
+      .btns{ width:100%; justify-content:flex-start; }
+    }
+
+    .section{
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .section h2{
+      margin: 0 0 10px 0;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+      color: rgba(255,120,200,0.95);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .tiny{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(185,185,194,0.85);
+      margin-left:auto;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .card{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, filter .14s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.30);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+      filter: brightness(1.03);
+    }
+
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(280px 70px at 20% 0%, rgba(255,120,200,0.16), transparent 60%),
+        radial-gradient(220px 60px at 80% 30%, rgba(255,255,255,0.07), transparent 55%);
+      opacity:0.0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+    .card:hover:before{ opacity:1; }
+
+    .left{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+    }
+
+    .name{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 58ch;
+    }
+
+    .desc{
+      font-size: 12px;
+      color: rgba(185,185,194,0.9);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 62ch;
+    }
+
+    .right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex: 0 0 auto;
+    }
+
+    .pill{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      color: rgba(255,255,255,0.86);
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .pill.pink{
+      border-color: rgba(255,120,200,0.32);
+      color: rgba(255,120,200,0.95);
+    }
+
+    .star{
+      width: 34px;
+      height: 32px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      color: rgba(255,255,255,0.85);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      user-select:none;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .star:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,120,200,0.30);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+    .star.on{
+      border-color: rgba(255,120,200,0.45);
+      color: rgba(255,120,200,0.98);
+      box-shadow: 0 0 0 3px rgba(255,120,200,0.10);
+    }
+
+    a.link{
+      color: inherit;
+      text-decoration:none;
+    }
+
+    .meta{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      color: rgba(185,185,194,0.92);
+      font-family: var(--mono);
+      font-size: 11px;
+      background: rgba(0,0,0,0.14);
+    }
+
+    .meta .chip{
+      padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+    }
+    .meta .chip strong{ color: rgba(255,120,200,0.95); font-weight: 600; }
+
+    /* little floating spark */
+    .spark{
+      position:fixed;
+      width:6px; height:6px;
+      border-radius: 50%;
+      pointer-events:none;
+      background: rgba(255,120,200,0.9);
+      box-shadow: 0 0 14px rgba(255,120,200,0.7);
+      opacity:0;
+      transform: translate(-50%,-50%);
+      z-index:3;
+      animation: pop 600ms ease forwards;
+    }
+    @keyframes pop{
+      0%{ opacity:0; transform: translate(-50%,-50%) scale(0.6); }
+      25%{ opacity:1; }
+      100%{ opacity:0; transform: translate(-50%,-80%) scale(1.6); }
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .scan{ animation:none; }
+      .card, .btn, input[type="text"]{ transition:none; }
+      .spark{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scan"></div>
+
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <div class="h1">
+          <span>💜 bella cactus</span>
+          <span class="badge pink">links hub</span>
+          <span class="badge">static-only</span>
+          <span class="badge">terminal-core</span>
+        </div>
+        <div class="sub">
+          one link to rule them all. search with <span style="color:rgba(255,120,200,0.95);font-family:var(--mono)">/</span>,
+          pin your favs with ★, and go explore. (:3)
+        </div>
+      </div>
+
+      <div class="badge" id="statusBadge" title="totally real status">booting…</div>
+    </header>
+
+    <div class="panel" role="region" aria-label="links hub">
+      <div class="toolbar">
+        <div class="searchBox">
+          <div class="prompt">&gt; find:</div>
+          <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="type to filter… (ex: limiter, youtube, dreams, idle)" />
+        </div>
+
+        <div class="btns">
+          <button class="btn" id="copyHub" type="button" title="copy the one-link hub url">
+            <span class="dot" aria-hidden="true"></span>
+            copy hub url
+          </button>
+          <button class="btn" id="resetPins" type="button" title="clear pinned favorites">
+            reset pins
+          </button>
+          <a class="btn link" href="index.html" title="back to main hub">
+            back to index
+          </a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="section">
+          <h2>
+            internal pages
+            <span class="tiny" id="internalCount">0</span>
+          </h2>
+          <div class="list" id="internalList"></div>
+        </div>
+
+        <div class="section">
+          <h2>
+            external / socials
+            <span class="tiny" id="externalCount">0</span>
+          </h2>
+          <div class="list" id="externalList"></div>
+
+          <div style="height:10px"></div>
+
+          <h2>
+            pinned (favorites)
+            <span class="tiny" id="pinnedCount">0</span>
+          </h2>
+          <div class="list" id="pinnedList"></div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span class="chip">hp: <strong id="hp">100</strong>/100</span>
+        <span class="chip">buff: <strong id="buff">link magnet</strong></span>
+        <span class="chip">debuff: <strong id="debuff">none</strong></span>
+        <span class="chip">last sync: <strong id="sync">--</strong></span>
+        <span class="chip">tip: <strong>press / to search</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // === editable link data ===
+      // if you add more pages later, just add rows here.
+      // (keep "id" unique)
+      const internal = [
+        { id: "home",  name: "index.html",   desc: "main hub", href: "index.html", tag: "hub" },
+
+        // common pages from your project:
+        { id: "lim",   name: "limiter.html", desc: "limiter deep-dive / features", href: "pages/limiter.html", tag: "project" },
+        { id: "os",    name: "os.html",      desc: "fake cli / fake os", href: "pages/os.html", tag: "play" },
+        { id: "ascii", name: "ascii.html",   desc: "ascii zoo / creatures", href: "pages/ascii.html", tag: "zoo" },
+        { id: "idle",  name: "idle.html",    desc: "screensaver page (leave it open)", href: "pages/idle.html", tag: "idle" },
+        { id: "gl",    name: "glitch.html",  desc: "glitch / corruption playground", href: "pages/glitch.html", tag: "glitch" },
+        { id: "dr",    name: "dreams.html",  desc: "dream log w/ timestamps", href: "pages/dreams.html", tag: "log" },
+
+        // if you make the tamers archive page later, add it here:
+        // { id: "tam", name: "tamers.html", desc: "tamers archive vault", href: "pages/tamers.html", tag: "vault" },
+      ];
+
+      const external = [
+        { id: "git", name: "github", desc: "code + repos", href: "https://github.com/BellaCactus", tag: "social" },
+        { id: "yt",  name: "youtube", desc: "@BellaCactusYT", href: "https://youtube.com/@BellaCactusYT", tag: "social" },
+        { id: "limrepo", name: "bella limiter repo", desc: "source + releases", href: "https://github.com/BellaCactus/bella-limiter-", tag: "project" },
+
+        // add more if you want:
+        // { id: "twitch", name: "twitch", desc: "streams", href: "https://twitch.tv/...", tag: "social" },
+        // { id: "pony", name: "pony.tube", desc: "tamers archive channel", href: "https://pony.tube/c/tamersarchive/videos", tag: "video" },
+      ];
+
+      // === ui refs ===
+      const $ = (sel) => document.querySelector(sel);
+      const q = $("#q");
+      const internalList = $("#internalList");
+      const externalList = $("#externalList");
+      const pinnedList = $("#pinnedList");
+      const internalCount = $("#internalCount");
+      const externalCount = $("#externalCount");
+      const pinnedCount = $("#pinnedCount");
+      const statusBadge = $("#statusBadge");
+      const hp = $("#hp");
+      const buff = $("#buff");
+      const debuff = $("#debuff");
+      const sync = $("#sync");
+
+      const PIN_KEY = "bella_links_pins_v1";
+      const getPins = () => {
+        try {
+          const raw = localStorage.getItem(PIN_KEY);
+          const arr = raw ? JSON.parse(raw) : [];
+          return Array.isArray(arr) ? arr : [];
+        } catch { return []; }
+      };
+      const setPins = (arr) => localStorage.setItem(PIN_KEY, JSON.stringify(arr));
+
+      const all = [...internal.map(x => ({...x, scope:"internal"})), ...external.map(x => ({...x, scope:"external"}))];
+
+      function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+      function sparkle(x, y){
+        const s = document.createElement("div");
+        s.className = "spark";
+        s.style.left = x + "px";
+        s.style.top = y + "px";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 650);
+      }
+
+      function card(item, pinnedMode=false){
+        const wrap = document.createElement("div");
+        wrap.className = "card";
+        wrap.dataset.id = item.id;
+        wrap.dataset.scope = item.scope;
+        wrap.dataset.name = (item.name || "").toLowerCase();
+        wrap.dataset.desc = (item.desc || "").toLowerCase();
+        wrap.dataset.tag = (item.tag || "").toLowerCase();
+
+        const left = document.createElement("div");
+        left.className = "left";
+
+        const a = document.createElement("a");
+        a.className = "link";
+        a.href = item.href;
+        a.target = item.scope === "external" ? "_blank" : "_self";
+        a.rel = item.scope === "external" ? "noopener noreferrer" : "";
+        a.title = item.href;
+
+        const nm = document.createElement("div");
+        nm.className = "name";
+        nm.textContent = item.name;
+
+        const ds = document.createElement("div");
+        ds.className = "desc";
+        ds.textContent = item.desc || "";
+
+        a.appendChild(nm);
+        a.appendChild(ds);
+        left.appendChild(a);
+
+        const right = document.createElement("div");
+        right.className = "right";
+
+        const pill = document.createElement("div");
+        pill.className = "pill" + (item.scope === "internal" ? "" : " pink");
+        pill.textContent = item.tag || (item.scope === "internal" ? "page" : "link");
+
+        const star = document.createElement("button");
+        star.className = "star";
+        star.type = "button";
+        star.title = "pin/unpin";
+        star.setAttribute("aria-label", "pin or unpin");
+        star.textContent = "★";
+
+        // set star state from pins
+        const pins = getPins();
+        const key = item.scope + ":" + item.id;
+        if (pins.includes(key)) star.classList.add("on");
+
+        star.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const pinsNow = getPins();
+          const idx = pinsNow.indexOf(key);
+
+          if (idx >= 0){
+            pinsNow.splice(idx, 1);
+            star.classList.remove("on");
+            debuff.textContent = "un-pinned";
+          } else {
+            pinsNow.push(key);
+            star.classList.add("on");
+            debuff.textContent = "none";
+            buff.textContent = "favorite lock";
+          }
+          setPins(pinsNow);
+          render(); // refresh pinned section
+
+          // sparkle near click
+          const r = star.getBoundingClientRect();
+          sparkle(r.left + r.width/2, r.top + r.height/2);
+        });
+
+        right.appendChild(pill);
+        right.appendChild(star);
+
+        wrap.appendChild(left);
+        wrap.appendChild(right);
+
+        // tiny easter egg: type "pony" in search gives a wink in status
+        wrap.addEventListener("mouseenter", () => {
+          if (Math.random() < 0.06) {
+            statusBadge.textContent = "whispering to the wires…";
+            setTimeout(() => statusBadge.textContent = "online", 900);
+          }
+        });
+
+        // if pinned section, clicking whole card still goes to link, so we leave it normal.
+        return wrap;
+      }
+
+      function applyFilter(){
+        const t = (q.value || "").trim().toLowerCase();
+        const cards = document.querySelectorAll(".card");
+        let visible = 0;
+
+        cards.forEach(c => {
+          const hay = (c.dataset.name + " " + c.dataset.desc + " " + c.dataset.tag).toLowerCase();
+          const ok = !t || hay.includes(t);
+          c.style.display = ok ? "" : "none";
+          if (ok) visible++;
+        });
+
+        // goofy little "hp" feedback, but subtle
+        const base = 100;
+        const penalty = clamp(Math.floor((cards.length - visible) * 6), 0, 60);
+        hp.textContent = String(base - penalty);
+
+        if (t === "pony" || t === "mlp") {
+          statusBadge.textContent = "pony detected ;3";
+          setTimeout(() => { if ((q.value||"").trim().toLowerCase() === t) statusBadge.textContent = "online"; }, 1400);
+        }
+      }
+
+      function render(){
+        internalList.innerHTML = "";
+        externalList.innerHTML = "";
+        pinnedList.innerHTML = "";
+
+        const pins = getPins();
+
+        // render main lists
+        internal.forEach(item => internalList.appendChild(card({...item, scope:"internal"})));
+        external.forEach(item => externalList.appendChild(card({...item, scope:"external"})));
+
+        internalCount.textContent = internal.length + " items";
+        externalCount.textContent = external.length + " items";
+
+        // render pinned list (ordered by pin order)
+        const pinItems = pins
+          .map(k => {
+            const [scope, id] = k.split(":");
+            const found = all.find(x => x.scope === scope && x.id === id);
+            return found ? found : null;
+          })
+          .filter(Boolean);
+
+        if (pinItems.length === 0){
+          const empty = document.createElement("div");
+          empty.className = "card";
+          empty.style.opacity = "0.75";
+          empty.innerHTML = `
+            <div class="left">
+              <div class="name">no pins yet</div>
+              <div class="desc">click ★ on a link to keep it here</div>
+            </div>
+            <div class="right">
+              <div class="pill pink">tip</div>
+            </div>
+          `;
+          pinnedList.appendChild(empty);
+        } else {
+          pinItems.forEach(item => pinnedList.appendChild(card(item, true)));
+        }
+
+        pinnedCount.textContent = pinItems.length + " pinned";
+
+        applyFilter();
+      }
+
+      // copy hub url
+      $("#copyHub").addEventListener("click", async () => {
+        const url = location.origin + location.pathname.replace(/\/[^\/]*$/, "/") + "links.html";
+        try{
+          await navigator.clipboard.writeText(url);
+          statusBadge.textContent = "copied ✓";
+          buff.textContent = "clipboard loaded";
+          debuff.textContent = "none";
+        }catch{
+          // fallback
+          const tmp = document.createElement("input");
+          tmp.value = url;
+          document.body.appendChild(tmp);
+          tmp.select();
+          document.execCommand("copy");
+          tmp.remove();
+          statusBadge.textContent = "copied (fallback) ✓";
+          buff.textContent = "clipboard loaded";
+        }
+        setTimeout(() => statusBadge.textContent = "online", 1100);
+      });
+
+      // reset pins
+      $("#resetPins").addEventListener("click", () => {
+        localStorage.removeItem(PIN_KEY);
+        statusBadge.textContent = "pins cleared";
+        debuff.textContent = "memory wipe";
+        buff.textContent = "fresh start";
+        setTimeout(() => statusBadge.textContent = "online", 1200);
+        render();
+      });
+
+      // keyboard shortcuts
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey){
+          e.preventDefault();
+          q.focus();
+        }
+        if (e.key === "Escape"){
+          q.value = "";
+          q.blur();
+          applyFilter();
+          statusBadge.textContent = "calm";
+          setTimeout(() => statusBadge.textContent = "online", 800);
+        }
+      });
+
+      // search filtering
+      q.addEventListener("input", applyFilter);
+
+      // boot/status vibes
+      const phrases = [
+        "online",
+        "ready",
+        "awaiting input…",
+        "linking…",
+        "idle (but watching) 👁",
+        "routing packets of vibes…"
+      ];
+
+      function boot(){
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2,"0");
+        const mm = String(now.getMinutes()).padStart(2,"0");
+        sync.textContent = `${hh}:${mm} local`;
+
+        statusBadge.textContent = "online";
+        setInterval(() => {
+          const p = phrases[Math.floor(Math.random()*phrases.length)];
+          statusBadge.textContent = p;
+          setTimeout(() => statusBadge.textContent = "online", 900 + Math.random()*900);
+        }, 7000);
+
+        // occasional sparkle following cursor (very rare)
+        window.addEventListener("mousemove", (ev) => {
+          if (Math.random() < 0.01) sparkle(ev.clientX, ev.clientY);
+        }, { passive:true });
+      }
+
+      // initial render
+      render();
+      boot();
+    })();
+  </script>
+</body>
+</html>
