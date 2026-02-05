@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mc name tool</title>
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --accent:#b072ff;
+      --accent2:#d7a7ff;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    [data-theme="light"]{
+      --bg:#f4f4f7;
+      --bg2:#ffffff;
+      --panel: rgba(0,0,0,0.04);
+      --panel2: rgba(0,0,0,0.02);
+      --border: rgba(0,0,0,0.10);
+      --text:#0f0f14;
+      --muted:#4f5360;
+      --shadow: 0 22px 70px rgba(0,0,0,0.18);
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+      background:
+        radial-gradient(900px 600px at 20% 10%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 55%),
+        radial-gradient(900px 650px at 90% 30%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 58%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    /* background image layer */
+    .bgWrap{position:fixed; inset:0; z-index:0; pointer-events:none;}
+    .bgImg{position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity .25s ease;}
+    .bgImg.on{opacity:1;}
+    .bgDim{position:absolute; inset:0; background:rgba(0,0,0,0.35); transition:background .2s ease;}
+    [data-theme="light"] .bgDim{background:rgba(255,255,255,0.35);}
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:40px 16px 96px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .brand{display:flex; align-items:center; gap:14px; min-width:0;}
+    .badge{
+      width:56px; height:56px; border-radius:14px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--accent) 8%, transparent));
+      border:1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      display:grid; place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .badge span{font-family:var(--mono); font-weight:800; letter-spacing:.5px; font-size:14px; color:var(--text); opacity:.92;}
+    h1{margin:0; font-size:1.9rem; letter-spacing:.4px;}
+    .sub{margin:5px 0 0; color:var(--muted); font-size:0.98rem; max-width:680px;}
+    .chips{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .chip{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: var(--panel);
+      border:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      font-size:0.92rem;
+    }
+    .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent);}
+
+    .grid{display:grid; grid-template-columns: 360px 1fr; gap:16px; align-items:start;}
+    @media (max-width: 980px){ .grid{grid-template-columns: 1fr;} }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+    .panelTitle{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), transparent);
+    }
+    .panelTitle h2{margin:0; font-size:1.05rem; letter-spacing:.3px;}
+    .small{color:var(--muted); font-size:.92rem;}
+    .panelInner{padding:14px 16px 16px;}
+
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;}
+    @media (max-width: 980px){ .row{grid-template-columns: 1fr;} }
+
+    label{display:block; font-size:.88rem; color:var(--muted); margin:0 0 6px;}
+    input, select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder{color: color-mix(in srgb, var(--muted) 80%, transparent);}
+    input[type="checkbox"]{width:auto;}
+    input[type="color"]{padding:0; height:42px; border-radius:12px;}
+
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+    button{
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow: 0 14px 45px rgba(0,0,0,0.18);
+      transition: transform .08s ease, border-color .2s ease, background .2s ease;
+    }
+    button:hover{border-color: color-mix(in srgb, var(--accent) 45%, var(--border));}
+    button:active{transform: translateY(1px);}
+    button.primary{background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 34%, transparent), color-mix(in srgb, var(--accent) 16%, transparent)); border-color: color-mix(in srgb, var(--accent) 52%, transparent);}
+    button:disabled{opacity:.55; cursor:not-allowed; transform:none;}
+    .k{font-family:var(--mono); font-weight:800; letter-spacing:.4px; color:var(--accent);}
+
+    .statusLine{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:10px;}
+    .statusText{color:var(--muted); font-size:.95rem;}
+    .progressWrap{flex:1; min-width:180px; height:10px; border-radius:999px; background: color-mix(in srgb, var(--panel) 92%, transparent); border:1px solid var(--border); overflow:hidden;}
+    .progressBar{height:100%; width:0%; background: var(--accent); transition: width .15s ease;}
+
+    .tableTop{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+    .pills{display:flex; gap:10px; flex-wrap:wrap;}
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .pill strong{color:var(--text);}
+
+    table{width:100%; border-collapse:separate; border-spacing:0;}
+    thead th{
+      position:sticky; top:0;
+      text-align:left;
+      padding:12px 12px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, transparent), color-mix(in srgb, var(--panel) 75%, transparent));
+      border-bottom:1px solid var(--border);
+      z-index:1;
+      font-size:.92rem;
+      color:var(--muted);
+    }
+    tbody td{padding:10px 12px; border-bottom:1px solid color-mix(in srgb, var(--border) 70%, transparent); font-family:var(--mono); font-size:.92rem;}
+    tbody tr:hover td{background: color-mix(in srgb, var(--panel) 85%, transparent);}
+    .tableWrap{max-height: 520px; overflow:auto; border-radius: 14px; border:1px solid var(--border);}
+
+    .badgeStatus{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-family: var(--sans);
+      font-size:.86rem;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 86%, transparent);
+      color:var(--text);
+    }
+    .badgeStatus .sDot{width:8px; height:8px; border-radius:50%;}
+    .available .sDot{background:#58ffb0; box-shadow: 0 0 0 5px rgba(88,255,176,0.15);}
+    .taken .sDot{background:#ff6b8a; box-shadow: 0 0 0 5px rgba(255,107,138,0.14);}
+    .unknown .sDot{background:#ffd36b; box-shadow: 0 0 0 5px rgba(255,211,107,0.14);}
+
+    .mutedNote{color:var(--muted); font-size:.92rem; margin-top:10px;}
+    .err{color:#ff6b8a;}
+    .ok{color:#58ffb0;}
+
+    .foot{margin-top:16px; color:var(--muted); font-size:.92rem;}
+    .foot code{font-family:var(--mono); color:var(--text);}
+  </style>
+</head>
+
+<body>
+  <div class="bgWrap" aria-hidden="true">
+    <div class="bgImg" id="bgImg"></div>
+    <div class="bgDim" id="bgDim"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true"><span>mc</span></div>
+        <div class="titlebox">
+          <h1>mc name tool</h1>
+          <div class="sub">scan mojang usernames with spicy generation + filters. runs fully in your browser.</div>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong id="chipAccent">accent</strong></div>
+        <div class="chip">api: <strong>mojang</strong></div>
+        <div class="chip"><a href="../index.html">back home</a></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- left: controls -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>scan</h2>
+          <div class="small" id="status">idle.</div>
+        </div>
+        <div class="panelInner">
+          <div class="row">
+            <div>
+              <label for="base">base</label>
+              <input id="base" placeholder="bella" value="bella" maxlength="16" />
+            </div>
+            <div>
+              <label for="mode">mode</label>
+              <select id="mode">
+                <option value="prefix">prefix (bella + closest)</option>
+                <option value="edit1">1-edit fuzzy (insert/delete/replace)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="maxChecks">max checks</label>
+              <input id="maxChecks" type="number" min="1" max="5000" value="200" />
+            </div>
+            <div>
+              <label for="threads">threads</label>
+              <input id="threads" type="number" min="1" max="24" value="4" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="suffixLen">suffix max len</label>
+              <input id="suffixLen" type="number" min="0" max="12" value="4" />
+            </div>
+            <div>
+              <label for="alphabet">alphabet</label>
+              <input id="alphabet" value="abcdefghijklmnopqrstuvwxyz0123456789_" />
+            </div>
+          </div>
+
+          <div class="btnRow">
+            <button class="primary" id="start"><span class="k">go</span> start</button>
+            <button id="cancel" disabled><span class="k">x</span> cancel</button>
+            <button id="export" disabled><span class="k">csv</span> export</button>
+          </div>
+
+          <div class="statusLine">
+            <div class="statusText" id="counts">checked: 0 · available: 0 · taken: 0 · unknown: 0</div>
+            <div class="progressWrap" title="progress">
+              <div class="progressBar" id="progress"></div>
+            </div>
+          </div>
+
+          <div class="panelTitle" style="margin-top:14px; border-top:1px solid var(--border);">
+            <h2>filters</h2>
+            <div class="small">auto-applies</div>
+          </div>
+
+          <div class="panelInner" style="padding:14px 0 0;">
+            <div class="row" style="grid-template-columns: 1fr;">
+              <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <label style="margin:0; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="showAvailable" checked> available</label>
+                <label style="margin:0; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="showTaken" checked> taken</label>
+                <label style="margin:0; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="showUnknown" checked> unknown</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="minLen">len min</label>
+                <input id="minLen" type="number" min="1" max="16" value="3" />
+              </div>
+              <div>
+                <label for="maxLen">len max</label>
+                <input id="maxLen" type="number" min="1" max="16" value="16" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="contains">contains</label>
+                <input id="contains" placeholder="e.g. cat" />
+              </div>
+              <div>
+                <label for="startswith">starts with</label>
+                <input id="startswith" placeholder="e.g. bella" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="endswith">ends with</label>
+                <input id="endswith" placeholder="e.g. _" />
+              </div>
+              <div>
+                <label for="allowedRegex">allowed regex</label>
+                <input id="allowedRegex" placeholder="e.g. ^[a-z0-9_]+$" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panelTitle" style="margin-top:14px; border-top:1px solid var(--border);">
+            <h2>theme</h2>
+            <div class="small">saved locally</div>
+          </div>
+
+          <div class="panelInner" style="padding:14px 0 0;">
+            <div class="row">
+              <div>
+                <label for="theme">theme</label>
+                <select id="theme">
+                  <option value="dark">dark</option>
+                  <option value="light">light</option>
+                </select>
+              </div>
+              <div>
+                <label for="accent">accent</label>
+                <input id="accent" type="color" value="#b072ff" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="bgSelect">background</label>
+                <select id="bgSelect"></select>
+              </div>
+              <div>
+                <label for="bgDimSlider">dim</label>
+                <input id="bgDimSlider" type="range" min="0" max="0.85" step="0.01" value="0.35" />
+              </div>
+            </div>
+            <div class="mutedNote">note: background images are loaded from this repo’s <code>media/</code> folder.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- right: table -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>results</h2>
+          <div class="small">
+            <label style="margin:0; display:flex; gap:10px; align-items:center;">
+              <span style="color:var(--muted);">table search</span>
+              <input id="tableSearch" placeholder="bella / available / 200" style="width:220px;" />
+            </label>
+          </div>
+        </div>
+
+        <div class="panelInner">
+          <div class="tableTop">
+            <div class="pills" id="pills">
+              <div class="pill">checked: <strong id="pChecked">0</strong></div>
+              <div class="pill">available: <strong id="pAvail">0</strong></div>
+              <div class="pill">taken: <strong id="pTaken">0</strong></div>
+              <div class="pill">unknown: <strong id="pUnk">0</strong></div>
+            </div>
+            <div class="small" id="note">tip: click a username to copy.</div>
+          </div>
+
+          <div class="tableWrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:52%;">username</th>
+                  <th style="width:26%;">status</th>
+                  <th style="width:22%;">http</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="foot">
+            api: <code>https://api.mojang.com/users/profiles/minecraft/&lt;name&gt;</code> · 200 = taken · 204/404 = available · everything else = unknown
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --- tiny helpers ---
+    const $ = (id) => document.getElementById(id);
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const debounce = (fn, ms=180) => { let t=null; return (...args) => { clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; };
+
+    // --- constants (from your python vibes) ---
+    const MOJANG_PROFILE_URL = (u) => `https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(u)}`;
+    const DEFAULT_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789_";
+    const COMMON_SUFFIXES = [
+      "", "_", "__", "x", "xx", "1", "11", "12", "123", "321",
+      "0", "00", "007", "69", "420",
+      "a", "aa", "aaa", "b", "c", "d",
+      "cat", "kit", "qt", "cute", "girl", "angel",
+      "mc", "sky", "sb", "d2",
+      "nz", "au", "uk", "us",
+    ];
+
+    // backgrounds already in this repo
+    const BACKGROUNDS = [
+      { label: "none", path: "" },
+      { label: "tamers12345-mlp.gif", path: "../media/tamers12345-mlp.gif" },
+      { label: "tamers12345-flawless.gif", path: "../media/tamers12345-flawless.gif" },
+      { label: "tamers12345-tamers.gif", path: "../media/tamers12345-tamers.gif" },
+      { label: "tamers12345-tamersfuni.gif", path: "../media/tamers12345-tamersfuni.gif" },
+      { label: "tamers12345-flawlesssigma.gif", path: "../media/tamers12345-flawlesssigma.gif" },
+      { label: "twi and trixy.jpg", path: "../media/twi and trixy.jpg" },
+      { label: "ponies in bed.jpg", path: "../media/ponies in bed.jpg" },
+      { label: "yuri meme.png", path: "../media/yuri meme.png" },
+      { label: "oneko.gif", path: "../media/oneko.gif" },
+    ];
+
+    // --- state ---
+    const state = {
+      running: false,
+      stop: false,
+      planned: 0,
+      checked: 0,
+      available: 0,
+      taken: 0,
+      unknown: 0,
+      rows: [], // {username,status,code}
+    };
+
+    // --- settings persistence ---
+    const SETTINGS_KEY = "mc_name_tool_settings_v1";
+    function loadSettings(){
+      try{ return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") || {}; }catch{ return {}; }
+    }
+    function saveSettings(obj){
+      try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(obj)); }catch{}
+    }
+
+    // --- username validation (matches python) ---
+    function validUsername(name){
+      if(!name) return false;
+      if(name.length < 3 || name.length > 16) return false;
+      for(const ch of name){
+        const ok = (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch === '_';
+        if(!ok) return false;
+      }
+      return true;
+    }
+
+    // --- generators ---
+    function genEditDistance1(base, alphabet){
+      base = (base || "").toLowerCase();
+      const candidates = new Set();
+
+      // insert
+      for(let i=0;i<=base.length;i++){
+        for(const ch of alphabet){
+          candidates.add(base.slice(0,i) + ch + base.slice(i));
+        }
+      }
+
+      // delete
+      for(let i=0;i<base.length;i++){
+        candidates.add(base.slice(0,i) + base.slice(i+1));
+      }
+
+      // replace
+      for(let i=0;i<base.length;i++){
+        for(const ch of alphabet){
+          if(ch !== base[i]) candidates.add(base.slice(0,i) + ch + base.slice(i+1));
+        }
+      }
+
+      // extras
+      candidates.add("_" + base);
+      candidates.add(base + "_");
+      if(base) candidates.add(base + base[base.length-1]);
+
+      const out = Array.from(candidates).filter(validUsername);
+      out.sort((a,b)=>{
+        const da = Math.abs(a.length - base.length);
+        const db = Math.abs(b.length - base.length);
+        if(da !== db) return da - db;
+        if(a.length !== b.length) return a.length - b.length;
+        return a.localeCompare(b);
+      });
+      return out;
+    }
+
+    function genPrefixClosest(prefix, alphabet, suffixMaxLen, maxCandidates){
+      prefix = (prefix || "").toLowerCase();
+      const out = [];
+      const seen = new Set();
+      const push = (name) => {
+        if(seen.has(name)) return;
+        if(validUsername(name)){
+          seen.add(name);
+          out.push(name);
+        }
+      };
+
+      for(const suf of COMMON_SUFFIXES){
+        if(suf.length <= suffixMaxLen) push(prefix + suf);
+      }
+
+      if(suffixMaxLen >= 1){
+        for(const ch of alphabet) push(prefix + ch);
+      }
+
+      // brute force products, capped
+      function recBuild(curr, depth, target){
+        if(out.length >= maxCandidates) return true;
+        if(depth === target){
+          push(prefix + curr);
+          return out.length >= maxCandidates;
+        }
+        for(const ch of alphabet){
+          if(recBuild(curr + ch, depth+1, target)) return true;
+        }
+        return false;
+      }
+
+      for(let L=2; L<=suffixMaxLen; L++){
+        if(out.length >= maxCandidates) break;
+        recBuild("", 0, L);
+      }
+
+      return out.slice(0, maxCandidates);
+    }
+
+    // --- mojang check ---
+    async function mojangCheck(username){
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 25000);
+      try{
+        const r = await fetch(MOJANG_PROFILE_URL(username), { method: "GET", signal: controller.signal, cache: "no-store" });
+        const code = r.status;
+        if(code === 200) return { username, status: "taken", code };
+        if(code === 204 || code === 404) return { username, status: "available", code };
+        return { username, status: "unknown", code };
+      }catch{
+        return { username, status: "unknown", code: 0 };
+      }finally{
+        clearTimeout(timeout);
+      }
+    }
+
+    // --- filtering ---
+    function rowMatchesFilters(r){
+      const u = r.username.toLowerCase();
+      const showA = $("showAvailable").checked;
+      const showT = $("showTaken").checked;
+      const showU = $("showUnknown").checked;
+
+      if(r.status === "available" && !showA) return false;
+      if(r.status === "taken" && !showT) return false;
+      if(r.status === "unknown" && !showU) return false;
+
+      const mn = clamp(parseInt($("minLen").value || "3", 10) || 3, 1, 16);
+      const mx = clamp(parseInt($("maxLen").value || "16", 10) || 16, 1, 16);
+      if(u.length < mn || u.length > mx) return false;
+
+      const contains = ($("contains").value || "").trim().toLowerCase();
+      const startswith = ($("startswith").value || "").trim().toLowerCase();
+      const endswith = ($("endswith").value || "").trim().toLowerCase();
+      if(contains && !u.includes(contains)) return false;
+      if(startswith && !u.startsWith(startswith)) return false;
+      if(endswith && !u.endsWith(endswith)) return false;
+
+      const rx = ($("allowedRegex").value || "").trim();
+      if(rx){
+        try{
+          const re = new RegExp(rx);
+          if(!re.test(r.username)) return false;
+        }catch{
+          return false;
+        }
+      }
+
+      const q = ($("tableSearch").value || "").trim().toLowerCase();
+      if(q){
+        const hit = u.includes(q) || r.status.toLowerCase().includes(q) || String(r.code).includes(q);
+        if(!hit) return false;
+      }
+
+      return true;
+    }
+
+    function renderTable(){
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+
+      const frag = document.createDocumentFragment();
+      for(const r of state.rows){
+        if(!rowMatchesFilters(r)) continue;
+
+        const tr = document.createElement("tr");
+
+        const tdU = document.createElement("td");
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = r.username;
+        link.addEventListener("click", async (e)=>{
+          e.preventDefault();
+          try{ await navigator.clipboard.writeText(r.username); $("note").textContent = `copied: ${r.username}`; }
+          catch{ $("note").textContent = `couldn't copy (browser said no)`; }
+          setTimeout(()=>$("note").textContent = "tip: click a username to copy.", 1200);
+        });
+        tdU.appendChild(link);
+
+        const tdS = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = `badgeStatus ${r.status}`;
+        badge.innerHTML = `<span class="sDot"></span>${r.status}`;
+        tdS.appendChild(badge);
+
+        const tdC = document.createElement("td");
+        tdC.textContent = String(r.code);
+
+        tr.appendChild(tdU);
+        tr.appendChild(tdS);
+        tr.appendChild(tdC);
+        frag.appendChild(tr);
+      }
+      tbody.appendChild(frag);
+    }
+
+    const renderTableDebounced = debounce(renderTable, 100);
+
+    function updateCounters(){
+      $("counts").textContent = `checked: ${state.checked} · available: ${state.available} · taken: ${state.taken} · unknown: ${state.unknown}`;
+      $("pChecked").textContent = String(state.checked);
+      $("pAvail").textContent = String(state.available);
+      $("pTaken").textContent = String(state.taken);
+      $("pUnk").textContent = String(state.unknown);
+      const pct = state.planned ? (state.checked / state.planned) * 100 : 0;
+      $("progress").style.width = `${clamp(pct, 0, 100).toFixed(2)}%`;
+      $("export").disabled = state.rows.length === 0;
+    }
+
+    function resetRun(){
+      state.running = false;
+      state.stop = false;
+      state.planned = 0;
+      state.checked = 0;
+      state.available = 0;
+      state.taken = 0;
+      state.unknown = 0;
+      state.rows = [];
+      updateCounters();
+      renderTable();
+    }
+
+    // --- scanning workers ---
+    async function runScan(candidates, threads){
+      state.running = true;
+      state.stop = false;
+      state.planned = candidates.length;
+      updateCounters();
+      $("status").textContent = `scanning ${state.planned} names...`;
+      $("start").disabled = true;
+      $("cancel").disabled = false;
+
+      let idx = 0;
+      const minDelay = 60; // ms
+
+      async function worker(){
+        while(!state.stop){
+          const my = idx++;
+          if(my >= candidates.length) return;
+          const name = candidates[my];
+          const row = await mojangCheck(name);
+          state.rows.push(row);
+          state.checked++;
+          if(row.status === "available") state.available++;
+          else if(row.status === "taken") state.taken++;
+          else state.unknown++;
+          updateCounters();
+          renderTableDebounced();
+          await sleep(minDelay);
+        }
+      }
+
+      const pool = Array.from({length: threads}, () => worker());
+      await Promise.allSettled(pool);
+
+      state.running = false;
+      $("start").disabled = false;
+      $("cancel").disabled = true;
+      $("status").textContent = state.stop ? "stopped." : "done.";
+      renderTable();
+    }
+
+    // --- export ---
+    function exportCSV(){
+      if(!state.rows.length) return;
+      let csv = "username,status,http_code\n";
+      for(const r of state.rows){
+        const line = `${r.username},${r.status},${r.code}`;
+        csv += line + "\n";
+      }
+      const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mc-name-tool-results.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    }
+
+    // --- theme/background apply ---
+    function applyTheme(theme){
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    function applyAccent(hex){
+      document.documentElement.style.setProperty("--accent", hex);
+      // derive a lighter accent2
+      document.documentElement.style.setProperty("--accent2", lighten(hex, 0.35));
+      $("chipAccent").textContent = `accent: ${hex.toLowerCase()}`;
+    }
+    function applyBackground(path){
+      const el = $("bgImg");
+      if(!path){
+        el.style.backgroundImage = "";
+        el.classList.remove("on");
+        return;
+      }
+      el.style.backgroundImage = `url('${path.replace(/'/g, "\\'")}')`;
+      el.classList.add("on");
+    }
+    function applyDim(v){
+      const theme = $("theme").value;
+      const n = clamp(parseFloat(v), 0, 0.85);
+      if(theme === "light") $("bgDim").style.background = `rgba(255,255,255,${n})`;
+      else $("bgDim").style.background = `rgba(0,0,0,${n})`;
+    }
+
+    // tiny color helper
+    function lighten(hex, amt){
+      try{
+        const h = hex.replace('#','');
+        const r = parseInt(h.slice(0,2),16);
+        const g = parseInt(h.slice(2,4),16);
+        const b = parseInt(h.slice(4,6),16);
+        const mix = (c) => Math.round(c + (255 - c) * amt);
+        const rr = mix(r).toString(16).padStart(2,'0');
+        const gg = mix(g).toString(16).padStart(2,'0');
+        const bb = mix(b).toString(16).padStart(2,'0');
+        return `#${rr}${gg}${bb}`;
+      }catch{ return "#d7a7ff"; }
+    }
+
+    // --- wiring ---
+    function getUISettings(){
+      return {
+        base: $("base").value,
+        mode: $("mode").value,
+        maxChecks: clamp(parseInt($("maxChecks").value||"200",10)||200, 1, 5000),
+        threads: clamp(parseInt($("threads").value||"4",10)||4, 1, 24),
+        suffixLen: clamp(parseInt($("suffixLen").value||"4",10)||4, 0, 12),
+        alphabet: ($("alphabet").value || DEFAULT_ALPHABET).trim() || DEFAULT_ALPHABET,
+      };
+    }
+
+    function persist(){
+      const s = {
+        theme: $("theme").value,
+        accent: $("accent").value,
+        bg: $("bgSelect").value,
+        dim: parseFloat($("bgDimSlider").value),
+
+        // filters
+        showAvailable: $("showAvailable").checked,
+        showTaken: $("showTaken").checked,
+        showUnknown: $("showUnknown").checked,
+        minLen: $("minLen").value,
+        maxLen: $("maxLen").value,
+        contains: $("contains").value,
+        startswith: $("startswith").value,
+        endswith: $("endswith").value,
+        allowedRegex: $("allowedRegex").value,
+        tableSearch: $("tableSearch").value,
+
+        // scan
+        base: $("base").value,
+        mode: $("mode").value,
+        maxChecks: $("maxChecks").value,
+        threads: $("threads").value,
+        suffixLen: $("suffixLen").value,
+        alphabet: $("alphabet").value,
+      };
+      saveSettings(s);
+    }
+
+    const persistDebounced = debounce(persist, 250);
+
+    function restore(){
+      const s = loadSettings();
+      if(s.base) $("base").value = s.base;
+      if(s.mode) $("mode").value = s.mode;
+      if(s.maxChecks) $("maxChecks").value = s.maxChecks;
+      if(s.threads) $("threads").value = s.threads;
+      if(s.suffixLen !== undefined) $("suffixLen").value = s.suffixLen;
+      if(s.alphabet) $("alphabet").value = s.alphabet;
+
+      if(s.showAvailable !== undefined) $("showAvailable").checked = !!s.showAvailable;
+      if(s.showTaken !== undefined) $("showTaken").checked = !!s.showTaken;
+      if(s.showUnknown !== undefined) $("showUnknown").checked = !!s.showUnknown;
+      if(s.minLen) $("minLen").value = s.minLen;
+      if(s.maxLen) $("maxLen").value = s.maxLen;
+      if(s.contains) $("contains").value = s.contains;
+      if(s.startswith) $("startswith").value = s.startswith;
+      if(s.endswith) $("endswith").value = s.endswith;
+      if(s.allowedRegex) $("allowedRegex").value = s.allowedRegex;
+      if(s.tableSearch) $("tableSearch").value = s.tableSearch;
+
+      if(s.theme) $("theme").value = s.theme;
+      if(s.accent) $("accent").value = s.accent;
+      if(s.dim !== undefined) $("bgDimSlider").value = s.dim;
+      // bg is applied after bgSelect is populated
+      return s;
+    }
+
+    function initBackgroundSelect(saved){
+      const sel = $("bgSelect");
+      sel.innerHTML = "";
+      for(const b of BACKGROUNDS){
+        const opt = document.createElement("option");
+        opt.value = b.path;
+        opt.textContent = b.label;
+        sel.appendChild(opt);
+      }
+      if(saved && saved.bg !== undefined) sel.value = saved.bg;
+      applyBackground(sel.value);
+    }
+
+    function bind(){
+      // filters
+      const rerender = () => { renderTable(); persistDebounced(); };
+      const rerenderDebounced = debounce(()=>{ renderTable(); persistDebounced(); }, 120);
+      ["showAvailable","showTaken","showUnknown","minLen","maxLen","contains","startswith","endswith","allowedRegex","tableSearch"].forEach(id=>{
+        $(id).addEventListener("input", rerenderDebounced);
+        $(id).addEventListener("change", rerenderDebounced);
+      });
+
+      // scan controls persist
+      ["base","mode","maxChecks","threads","suffixLen","alphabet"].forEach(id=>{
+        $(id).addEventListener("input", persistDebounced);
+        $(id).addEventListener("change", persistDebounced);
+      });
+
+      // theme
+      $("theme").addEventListener("change", ()=>{
+        applyTheme($("theme").value);
+        applyDim($("bgDimSlider").value);
+        persistDebounced();
+      });
+      $("accent").addEventListener("input", ()=>{ applyAccent($("accent").value); persistDebounced(); });
+      $("bgSelect").addEventListener("change", ()=>{ applyBackground($("bgSelect").value); persistDebounced(); });
+      $("bgDimSlider").addEventListener("input", ()=>{ applyDim($("bgDimSlider").value); persistDebounced(); });
+
+      // buttons
+      $("start").addEventListener("click", async ()=>{
+        if(state.running) return;
+        const ui = getUISettings();
+        const base = (ui.base || "").trim();
+        if(!base){ $("status").textContent = "type a base name first."; return; }
+        if(base.length > 16){ $("status").textContent = "base name is longer than 16 chars."; return; }
+
+        resetRun();
+        $("status").textContent = "generating candidates...";
+        const alphabet = (ui.alphabet || DEFAULT_ALPHABET).toLowerCase();
+
+        let candidates = [];
+        if(ui.mode === "prefix") candidates = genPrefixClosest(base, alphabet, ui.suffixLen, ui.maxChecks);
+        else candidates = genEditDistance1(base, alphabet).slice(0, ui.maxChecks);
+
+        if(!candidates.length){ $("status").textContent = "no valid candidates generated."; return; }
+
+        // de-dupe just in case
+        candidates = Array.from(new Set(candidates)).slice(0, ui.maxChecks);
+        await runScan(candidates, ui.threads);
+      });
+
+      $("cancel").addEventListener("click", ()=>{
+        if(!state.running) return;
+        state.stop = true;
+        $("status").textContent = "cancelling...";
+        $("cancel").disabled = true;
+      });
+
+      $("export").addEventListener("click", exportCSV);
+    }
+
+    // --- boot ---
+    (function boot(){
+      // fill background select first
+      const saved = restore();
+      initBackgroundSelect(saved);
+
+      // apply theme/accent
+      applyTheme($("theme").value || "dark");
+      applyAccent($("accent").value || "#b072ff");
+      applyDim($("bgDimSlider").value);
+
+      bind();
+      renderTable();
+      updateCounters();
+      persistDebounced();
+    })();
+  </script>
+</body>
+</html>
