@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>unicode decor picker</title>
+  <link rel="icon" type="image/png" href="../media/favicon.png" />
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg2:#0b0b0b;
+      --panel: rgba(255,255,255,0.055);
+      --panel2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.10);
+
+      --text:#f7f7f7;
+      --muted:#b9b9c2;
+
+      --accent:#b072ff;
+      --accent2:#d7a7ff;
+
+      --shadow: 0 20px 70px rgba(0,0,0,0.55);
+      --radius:16px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    [data-theme="light"]{
+      --bg:#f4f4f7;
+      --bg2:#ffffff;
+      --panel: rgba(0,0,0,0.04);
+      --panel2: rgba(0,0,0,0.02);
+      --border: rgba(0,0,0,0.10);
+      --text:#0f0f14;
+      --muted:#4f5360;
+      --shadow: 0 22px 70px rgba(0,0,0,0.18);
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: var(--sans);
+      line-height:1.55;
+      overflow-x:hidden;
+      background:
+        radial-gradient(900px 600px at 20% 10%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 55%),
+        radial-gradient(900px 650px at 90% 30%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 58%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .bgWrap{position:fixed; inset:0; z-index:0; pointer-events:none;}
+    .bgImg{position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity .25s ease;}
+    .bgImg.on{opacity:1;}
+    .bgDim{position:absolute; inset:0; background:rgba(0,0,0,0.35); transition:background .2s ease;}
+    [data-theme="light"] .bgDim{background:rgba(255,255,255,0.35);}
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:40px 16px 96px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .brand{display:flex; align-items:center; gap:14px; min-width:0;}
+    .badge{
+      width:56px; height:56px; border-radius:14px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--accent) 8%, transparent));
+      border:1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      display:grid; place-items:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .badge span{font-family:var(--mono); font-weight:800; letter-spacing:.5px; font-size:14px; color:var(--text); opacity:.92;}
+    h1{margin:0; font-size:1.9rem; letter-spacing:.4px;}
+    .sub{margin:5px 0 0; color:var(--muted); font-size:0.98rem; max-width:680px;}
+    .chips{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .chip{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: var(--panel);
+      border:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      font-size:0.92rem;
+    }
+    .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent);}
+
+    .grid{display:grid; grid-template-columns: 380px 1fr; gap:16px; align-items:start;}
+    @media (max-width: 980px){ .grid{grid-template-columns: 1fr;} }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+    .panelTitle{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), transparent);
+    }
+    .panelTitle h2{margin:0; font-size:1.05rem; letter-spacing:.3px;}
+    .small{color:var(--muted); font-size:.92rem;}
+    .panelInner{padding:14px 16px 16px;}
+
+    label{display:block; font-size:.88rem; color:var(--muted); margin:0 0 6px;}
+    input, select, textarea{
+      width:100%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 72%, transparent);
+      color:var(--text);
+      outline:none;
+      font-family: var(--sans);
+    }
+    textarea{min-height:140px; resize:vertical; font-family: var(--mono); line-height:1.35;}
+    input::placeholder, textarea::placeholder{color: color-mix(in srgb, var(--muted) 80%, transparent);}
+    input[type="color"]{padding:0; height:42px; border-radius:12px;}
+
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;}
+    @media (max-width: 980px){ .row{grid-template-columns: 1fr;} }
+
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+    button{
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow: 0 14px 45px rgba(0,0,0,0.18);
+      transition: transform .08s ease, border-color .2s ease, background .2s ease;
+    }
+    button:hover{border-color: color-mix(in srgb, var(--accent) 45%, var(--border));}
+    button:active{transform: translateY(1px);}
+    button.primary{
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 34%, transparent), color-mix(in srgb, var(--accent) 16%, transparent));
+      border-color: color-mix(in srgb, var(--accent) 52%, transparent);
+    }
+    .k{font-family:var(--mono); font-weight:800; letter-spacing:.4px; color:var(--accent);}
+    .mutedNote{color:var(--muted); font-size:.92rem; margin-top:10px;}
+    .hint{color:var(--muted); font-size:.9rem;}
+    .toast{
+      margin-top:10px;
+      font-size:.92rem;
+      color:var(--muted);
+      min-height:1.2em;
+    }
+    .toast strong{color:var(--text);}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap;}
+    .tab{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      color:var(--muted);
+      cursor:pointer;
+      user-select:none;
+      font-size:.9rem;
+    }
+    .tab.on{
+      color:var(--text);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, transparent), color-mix(in srgb, var(--panel) 70%, transparent));
+    }
+
+    .listWrap{
+      max-height: 560px;
+      overflow:auto;
+      border-radius: 14px;
+      border:1px solid var(--border);
+      padding:10px;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+    }
+
+    .chiplet{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      margin:6px 6px 0 0;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.16);
+      cursor:pointer;
+      user-select:none;
+      font-family: var(--mono);
+      font-size: 0.95rem;
+    }
+    .chiplet:hover{
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    }
+    .chiplet .star{
+      width:18px; height:18px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      border:1px solid color-mix(in srgb, var(--border) 80%, transparent);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .chiplet.fav .star{ color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); }
+    .chiplet .text{
+      display:inline-block;
+      max-width: 320px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .compose{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .composeTop{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+    .composeTop .hint{flex:1; min-width: 200px;}
+    .actions{display:flex; gap:10px; flex-wrap:wrap;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: color-mix(in srgb, var(--panel) 78%, transparent);
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .pill strong{color:var(--text);}
+  </style>
+</head>
+
+<body>
+  <div class="bgWrap" aria-hidden="true">
+    <div class="bgImg" id="bgImg"></div>
+    <div class="bgDim" id="bgDim"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="badge" aria-hidden="true"><span>uni</span></div>
+        <div class="titlebox">
+          <h1>unicode decor picker</h1>
+          <div class="sub">click to copy, click star to favorite, click to append into your little spellbook box.</div>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="dot"></span><strong id="chipAccent">accent</strong></div>
+        <div class="chip"><a href="../index.html">back home</a></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- left: controls -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>compose</h2>
+          <div class="small">saved locally</div>
+        </div>
+
+        <div class="panelInner">
+          <div class="compose">
+            <div class="composeTop">
+              <div class="hint">tip: click any symbol chip to copy it. <span class="k">shift-click</span> to append to the box without copying.</div>
+              <div class="actions">
+                <button class="primary" id="copyAll"><span class="k">cpy</span> copy box</button>
+                <button id="clearBox"><span class="k">x</span> clear</button>
+              </div>
+            </div>
+
+            <textarea id="box" placeholder="build a header… a divider… a cursed little emoticon…"></textarea>
+
+            <div class="row">
+              <div>
+                <label for="search">search</label>
+                <input id="search" placeholder="type to filter… (e.g. star, heart, 𒐫)" />
+              </div>
+              <div>
+                <label for="onlyFav">filter</label>
+                <select id="onlyFav">
+                  <option value="all">all</option>
+                  <option value="fav">favorites only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="theme">theme</label>
+                <select id="theme">
+                  <option value="dark">dark</option>
+                  <option value="light">light</option>
+                </select>
+              </div>
+              <div>
+                <label for="accent">accent</label>
+                <input id="accent" type="color" value="#b072ff" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label for="bgSelect">background</label>
+                <select id="bgSelect"></select>
+              </div>
+              <div>
+                <label for="bgDimSlider">dim</label>
+                <input id="bgDimSlider" type="range" min="0" max="0.85" step="0.01" value="0.35" />
+              </div>
+            </div>
+
+            <div class="toast" id="toast"></div>
+            <div class="mutedNote">note: backgrounds load from <span class="k">media/</span>.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- right: list -->
+      <section class="panel">
+        <div class="panelTitle">
+          <h2>symbols</h2>
+          <div class="small">
+            <span class="pill">showing: <strong id="showCount">0</strong></span>
+            <span class="pill">favorites: <strong id="favCount">0</strong></span>
+          </div>
+        </div>
+        <div class="panelInner">
+          <div class="tabs" id="tabs"></div>
+          <div style="height:10px;"></div>
+          <div class="listWrap" id="list"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const debounce = (fn, ms=180) => { let t=null; return (...args) => { clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; };
+
+    // backgrounds already in this repo (same list style as your mc tool)
+    const BACKGROUNDS = [
+      { label: "none", path: "" },
+      { label: "tamers12345-mlp.gif", path: "../media/tamers12345-mlp.gif" },
+      { label: "tamers12345-flawless.gif", path: "../media/tamers12345-flawless.gif" },
+      { label: "tamers12345-tamers.gif", path: "../media/tamers12345-tamers.gif" },
+      { label: "tamers12345-tamersfuni.gif", path: "../media/tamers12345-tamersfuni.gif" },
+      { label: "tamers12345-flawlesssigma.gif", path: "../media/tamers12345-flawlesssigma.gif" },
+      { label: "twi and trixy.jpg", path: "../media/twi and trixy.jpg" },
+      { label: "ponies in bed.jpg", path: "../media/ponies in bed.jpg" },
+      { label: "yuri meme.png", path: "../media/yuri meme.png" },
+      { label: "oneko.gif", path: "../media/oneko.gif" },
+    ];
+
+    // ---- your symbol sets ----
+    const GROUPS = [
+      {
+        key: "widest",
+        label: "wide / cursed",
+        desc: "from shorter to wider (top 14)",
+        items: ["Ǆ","؁","‱","ஹ","௸","௵","꧄",".","ဪ","꧅","⸻","𒈙","𒐫","﷽"]
+      },
+      {
+        key: "cuneiform",
+        label: "cuneiform (wide = 2ch)",
+        desc: "widest from cuneiform signs block",
+        items: ["𒌄","𒈟","𒍼","𒁎","𒀱","𒌧","𒅃","𒈓","𒍙","𒊎","𒄡","𒅌","𒁏","𒀰","𒐪","𒐩","𒈙","𒐫"]
+      },
+      {
+        key: "dense",
+        label: "dense strokes",
+        desc: "bonus: most dense characters",
+        items: ["𱁬","𰽔","𪚥","䨻","龘","䲜"]
+      },
+      {
+        key: "privates",
+        label: "privates / oddities",
+        desc: "cool privates + tall zalgo + weird ones",
+        items: ["","","","","","","","á́́́́","ͩͩͩͩͩ","😃⃢","👍","༼;´༎ຶ","۝","༎ຶ༽","🥶⃤"]
+      },
+      {
+        key: "symbols",
+        label: "symbols / shapes",
+        desc: "big dump",
+        items: [
+          "☠","☮","☯","♠","Ω","♤","♣","♧","♥","♡","♦","♢","♔","♕","♚","♛","⚜","★","☆","✮","✯","☄","☾","☽","☼","☀",
+          "☁","☂","☃","☻","☺","☹","۞","۩","εїз","Ƹ̵̡Ӝ̵̨̄Ʒ","ξЖЗ","εжз","☎","☏","¢","☚","☛","☜","☝","☞","☟",
+          "✍","✌","☢","☣","♨","๑","❀","✿","ψ","♆","☪","♪","♩","♫","♬","✄","✂","✆","✉","✦","✧","♱","♰",
+          "∞","♂","♀","☿","❤","❥","❦","❧","™","®","©","✖","✗","✘","♒",
+          "■","□","▢","▲","△","▼","▽","◆","◇","○","◎","●","◯","Δ","◕","◔","ʊ","ϟ","ღ","ツ","回","₪","¿","¡",
+          "½","⅓","⅔","¼","¾","⅛","⅜","⅝","⅞","℅","№","⇨","❝","❞","#","&","℃","∃","∧","∠","∨","∩","⊂","⊃","∪","⊥","∀",
+          "Ξ","Γ","ɐ","ə","ɘ","ε","β","ɟ","ɥ","ɯ","ɔ","и","๏","ɹ","ʁ","я","ʌ","ʍ","λ","ч","Σ","Π",
+          "➀","➁","➂","➃","➄","➅","➆","➇","➈","➉",
+          "Ⓐ","Ⓑ","Ⓒ","Ⓓ","Ⓔ","Ⓕ","Ⓖ","Ⓗ","Ⓘ","Ⓙ","Ⓚ","Ⓛ","Ⓜ","Ⓝ","Ⓞ","Ⓟ","Ⓠ","Ⓡ","Ⓢ","Ⓣ","Ⓤ","Ⓥ","Ⓦ","Ⓧ","Ⓨ","Ⓩ",
+          "ⓐ","ⓑ","ⓒ","ⓓ","ⓔ","ⓕ","ⓖ","ⓗ","ⓘ","ⓙ","ⓚ","ⓛ","ⓜ","ⓝ","ⓞ","ⓟ","ⓠ","ⓡ","ⓢ","ⓣ","ⓤ","ⓥ","ⓦ","ⓧ","ⓨ","ⓩ",
+          "{｡^◕‿◕^(","(◕^^◕)","*^_^*","^-^","^_^","^︵^","∵","∴","‖","︱","︳","︴","﹏","﹋","﹌","◠","◡","╭","╮","╯","╰",
+          "▆","▇","██","▓","〓","≡","╝","╚","╔","╗","╬","═","╓","╩","┠","┨","┯","┷","┏","┓","┗","┛","┳","⊥","﹃","﹄","┌","┐","└","┘","∟","「","」",
+          "↑","↓","→","←","↘","↙","↔","↕","┇","┅","﹉","﹊","﹍","﹎",
+          "✓","✔","✕","㊚","㊛","⊙","¤","㊣","㊨","￡","✎","✟","ஐ","≈","✲","❈","➹","❣","✚","✪","✣","✤","✥","❉","❃","❂","❁"
+        ]
+      }
+    ];
+
+    // ---- persistence ----
+    const KEY = "unicode_decor_picker_v1";
+    function loadState(){ try{ return JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch{ return {}; } }
+    function saveState(obj){ try{ localStorage.setItem(KEY, JSON.stringify(obj)); }catch{} }
+
+    const state = {
+      tab: GROUPS[0].key,
+      fav: new Set(),
+      box: "",
+      search: "",
+      onlyFav: "all",
+      theme: "dark",
+      accent: "#b072ff",
+      bg: "",
+      dim: 0.35,
+    };
+
+    function applyTheme(theme){ document.documentElement.setAttribute("data-theme", theme); }
+    function lighten(hex, amt){
+      try{
+        const h = hex.replace('#','');
+        const r = parseInt(h.slice(0,2),16);
+        const g = parseInt(h.slice(2,4),16);
+        const b = parseInt(h.slice(4,6),16);
+        const mix = (c) => Math.round(c + (255 - c) * amt);
+        const rr = mix(r).toString(16).padStart(2,'0');
+        const gg = mix(g).toString(16).padStart(2,'0');
+        const bb = mix(b).toString(16).padStart(2,'0');
+        return `#${rr}${gg}${bb}`;
+      }catch{ return "#d7a7ff"; }
+    }
+    function applyAccent(hex){
+      document.documentElement.style.setProperty("--accent", hex);
+      document.documentElement.style.setProperty("--accent2", lighten(hex, 0.35));
+      $("chipAccent").textContent = `accent: ${hex.toLowerCase()}`;
+    }
+    function applyBackground(path){
+      const el = $("bgImg");
+      if(!path){ el.style.backgroundImage = ""; el.classList.remove("on"); return; }
+      el.style.backgroundImage = `url('${path.replace(/'/g, "\\'")}')`;
+      el.classList.add("on");
+    }
+    function applyDim(v){
+      const theme = $("theme").value;
+      const n = clamp(parseFloat(v), 0, 0.85);
+      if(theme === "light") $("bgDim").style.background = `rgba(255,255,255,${n})`;
+      else $("bgDim").style.background = `rgba(0,0,0,${n})`;
+    }
+
+    function toast(msg){
+      $("toast").innerHTML = msg;
+      setTimeout(()=>{ if($("toast").innerHTML === msg) $("toast").innerHTML = ""; }, 1200);
+    }
+
+    async function copyText(t){
+      try{ await navigator.clipboard.writeText(t); toast(`copied: <strong>${escapeHTML(t)}</strong>`); }
+      catch{ toast(`<span class="err">couldn't copy (browser said no)</span>`); }
+    }
+    function escapeHTML(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+
+    function persist(){
+      const out = {
+        tab: state.tab,
+        fav: Array.from(state.fav),
+        box: $("box").value,
+        search: $("search").value,
+        onlyFav: $("onlyFav").value,
+        theme: $("theme").value,
+        accent: $("accent").value,
+        bg: $("bgSelect").value,
+        dim: parseFloat($("bgDimSlider").value),
+      };
+      saveState(out);
+    }
+    const persistDebounced = debounce(persist, 250);
+
+    function restore(){
+      const s = loadState();
+      if(s.tab) state.tab = s.tab;
+      if(Array.isArray(s.fav)) state.fav = new Set(s.fav);
+      if(typeof s.box === "string") state.box = s.box;
+      if(typeof s.search === "string") state.search = s.search;
+      if(s.onlyFav) state.onlyFav = s.onlyFav;
+      if(s.theme) state.theme = s.theme;
+      if(s.accent) state.accent = s.accent;
+      if(s.bg !== undefined) state.bg = s.bg;
+      if(s.dim !== undefined) state.dim = s.dim;
+    }
+
+    function initBackgroundSelect(){
+      const sel = $("bgSelect");
+      sel.innerHTML = "";
+      for(const b of BACKGROUNDS){
+        const opt = document.createElement("option");
+        opt.value = b.path;
+        opt.textContent = b.label;
+        sel.appendChild(opt);
+      }
+      sel.value = state.bg || "";
+      applyBackground(sel.value);
+    }
+
+    function renderTabs(){
+      const tabs = $("tabs");
+      tabs.innerHTML = "";
+      for(const g of GROUPS){
+        const t = document.createElement("div");
+        t.className = "tab" + (g.key === state.tab ? " on" : "");
+        t.textContent = g.label;
+        t.title = g.desc || "";
+        t.addEventListener("click", ()=>{
+          state.tab = g.key;
+          renderTabs();
+          renderList();
+          persistDebounced();
+        });
+        tabs.appendChild(t);
+      }
+    }
+
+    function matchesSearch(text, query){
+      if(!query) return true;
+      const q = query.toLowerCase();
+      return text.toLowerCase().includes(q);
+    }
+
+    function renderList(){
+      const list = $("list");
+      list.innerHTML = "";
+
+      const g = GROUPS.find(x => x.key === state.tab) || GROUPS[0];
+      const q = ($("search").value || "").trim();
+      const onlyFav = $("onlyFav").value;
+      const frag = document.createDocumentFragment();
+
+      let show = 0;
+      for(const item of g.items){
+        const isFav = state.fav.has(item);
+        if(onlyFav === "fav" && !isFav) continue;
+
+        // allow searching either the symbol itself OR by a tiny label of common names
+        const meta = `${item} ${symbolHint(item)}`;
+        if(!matchesSearch(meta, q)) continue;
+
+        const chip = document.createElement("div");
+        chip.className = "chiplet" + (isFav ? " fav" : "");
+        chip.title = symbolHint(item) || "click to copy";
+        const star = document.createElement("div");
+        star.className = "star";
+        star.textContent = isFav ? "★" : "☆";
+        star.title = isFav ? "unfavorite" : "favorite";
+
+        star.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          if(state.fav.has(item)) state.fav.delete(item);
+          else state.fav.add(item);
+          renderList();
+          updateCounts();
+          persistDebounced();
+        });
+
+        const span = document.createElement("div");
+        span.className = "text";
+        span.textContent = item;
+
+        chip.appendChild(star);
+        chip.appendChild(span);
+
+        chip.addEventListener("click", async (e)=>{
+          const shift = e.shiftKey;
+          if(shift){
+            // shift-click: append only
+            $("box").value += item;
+            toast(`appended: <strong>${escapeHTML(item)}</strong>`);
+            persistDebounced();
+            return;
+          }
+          // normal click: copy, and also append (nice UX)
+          await copyText(item);
+          $("box").value += item;
+          persistDebounced();
+        });
+
+        frag.appendChild(chip);
+        show++;
+      }
+
+      list.appendChild(frag);
+      $("showCount").textContent = String(show);
+      updateCounts();
+    }
+
+    function updateCounts(){
+      $("favCount").textContent = String(state.fav.size);
+    }
+
+    function symbolHint(sym){
+      // tiny lil hint mapper (not exhaustive, just helpful)
+      const map = new Map([
+        ["☠","skull"],["☮","peace"],["☯","yin yang"],["★","star"],["☆","star"],["✮","star"],["✯","star"],
+        ["♥","heart"],["♡","heart"],["❤","heart"],["♦","diamond"],["♢","diamond"],["♠","spade"],["♣","club"],
+        ["♪","music"],["♫","music"],["♬","music"],["✂","scissors"],["✄","scissors"],["✉","mail"],
+        ["∞","infinity"],["™","tm"],["®","registered"],["©","copyright"],["ツ","tsu face"],["۝","weird"],["﷽","bismillah"],
+        ["⸻","long dash"],["Ǆ","latin ligature"],["؁","arabic mark"],["‱","permyriad"],["௸","tamil"],["௵","tamil"],["꧄","javanese"],["꧅","javanese"],
+        ["𒐫","cuneiform"],["𒈙","cuneiform"],["龘","dragon dragon"],["䨻","thunder"],["ͩͩͩͩͩ","zalgo stack"],
+      ]);
+      return map.get(sym) || "";
+    }
+
+    function bind(){
+      $("box").addEventListener("input", persistDebounced);
+
+      $("search").value = state.search || "";
+      $("search").addEventListener("input", debounce(()=>{ renderList(); persistDebounced(); }, 120));
+
+      $("onlyFav").value = state.onlyFav || "all";
+      $("onlyFav").addEventListener("change", ()=>{ renderList(); persistDebounced(); });
+
+      $("copyAll").addEventListener("click", ()=> copyText($("box").value || ""));
+      $("clearBox").addEventListener("click", ()=>{
+        $("box").value = "";
+        toast("cleared.");
+        persistDebounced();
+      });
+
+      $("theme").addEventListener("change", ()=>{
+        applyTheme($("theme").value);
+        applyDim($("bgDimSlider").value);
+        persistDebounced();
+      });
+      $("accent").addEventListener("input", ()=>{ applyAccent($("accent").value); persistDebounced(); });
+      $("bgSelect").addEventListener("change", ()=>{ applyBackground($("bgSelect").value); persistDebounced(); });
+      $("bgDimSlider").addEventListener("input", ()=>{ applyDim($("bgDimSlider").value); persistDebounced(); });
+    }
+
+    (function boot(){
+      restore();
+
+      $("box").value = state.box || "";
+
+      $("theme").value = state.theme || "dark";
+      $("accent").value = state.accent || "#b072ff";
+      $("bgDimSlider").value = (state.dim !== undefined ? state.dim : 0.35);
+
+      applyTheme($("theme").value);
+      applyAccent($("accent").value);
+
+      initBackgroundSelect();
+      applyDim($("bgDimSlider").value);
+
+      renderTabs();
+      bind();
+      renderList();
+      persistDebounced();
+    })();
+  </script>
+</body>
+</html>
