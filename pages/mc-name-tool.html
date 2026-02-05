@@ -413,7 +413,7 @@
           </div>
 
           <div class="foot">
-            api: <code>https://api.mojang.com/users/profiles/minecraft/&lt;name&gt;</code> · 200 = taken · 204/404 = available · everything else = unknown
+            api: <code>https://mojang-proxy.bowencactusyt.workers.dev/?name=&lt;name&gt;</code> · 200 = taken · 204/404 = available · everything else = unknown
           </div>
         </div>
       </section>
@@ -428,7 +428,7 @@
     const debounce = (fn, ms=180) => { let t=null; return (...args) => { clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; };
 
     // --- constants (from your python vibes) ---
-    const MOJANG_PROFILE_URL = (u) => `https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(u)}`;
+    const MOJANG_PROFILE_URL = (u) => `https://mojang-proxy.bowencactusyt.workers.dev/?name=${encodeURIComponent(u)}`;
     const DEFAULT_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789_";
     const COMMON_SUFFIXES = [
       "", "_", "__", "x", "xx", "1", "11", "12", "123", "321",
